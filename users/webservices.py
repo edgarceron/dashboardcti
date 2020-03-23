@@ -8,7 +8,7 @@ def add_user(request):
     user_serializer = UserSerializer(data = request.data)
     if(user_serializer.is_valid()):
         user_serializer.save()
-        return Response({"data":"Usuario guardado"}, status=status.HTTP_201_CREATED)
+        return Response({"data":"Usuario guardado"}, status=status.HTTP_201_CREATED, content_type='application/json')
     else:
         error_details = []
         for key in user_serializer.errors.keys():
@@ -22,4 +22,4 @@ def add_user(request):
             }
         }
 
-        return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')

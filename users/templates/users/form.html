@@ -14,8 +14,8 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="emailInput">Correo</label>
-                    <input type="email" class="form-control appform" id="emailInput">
+                    <label for="usernameInput">Correo</label>
+                    <input type="username" class="form-control appform" id="usernameInput">
                 </div>
             </div>
             <div class="col-md-6">
@@ -50,6 +50,16 @@
         <div class='row'>
             <div class='col-md-6'>
                 <div class='form-group'>
+                    <label for='profileInput'></label>
+                    <select class='form-control appform' id='profileInput'>
+                        <option value="">Ningun perfil</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-md-6'>
+                <div class='form-group'>
                     <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
                 </div>
             </div>
@@ -63,5 +73,5 @@
 {% endblock %}
 
 {% block ready %}
-var id = {{ id }}
+    var id = {{ id }}
 {% endblock %}

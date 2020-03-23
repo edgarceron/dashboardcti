@@ -132,3 +132,5 @@ activate.bat
 deactivate.bat
 
 dashboardcti/settings.py
+
+.vscode/
