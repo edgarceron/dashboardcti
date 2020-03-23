@@ -17,12 +17,12 @@ class Profile(models.Model):
     name     = models.CharField(unique=True, max_length=50, verbose_name="Nombre del perfil")
 
 class User(models.Model):
-    username = models.EmailField(unique=True, verbose_name="Nombre de usuario")
-    password = models.CharField(max_length=50, verbose_name="Constraseña")
-    name     = models.CharField(max_length=100, verbose_name="Nombres")
-    lastname = models.CharField(max_length=100, verbose_name="Apellidos")
-    active   = models.BooleanField(verbose_name="Activo/Inactivo") 
-    profile  = models.ForeignKey(Profile, on_delete=models.DO_NOTHING)
+    username = models.EmailField(unique=True, verbose_name="Nombre de usuario", null=False)
+    password = models.CharField(max_length=50, verbose_name="Constraseña", null=False)
+    name     = models.CharField(max_length=100, verbose_name="Nombres", null=False)
+    lastname = models.CharField(max_length=100, verbose_name="Apellidos", null=False)
+    active   = models.BooleanField(verbose_name="Activo/Inactivo", null=False) 
+    profile  = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, null=True)
 
 class UserDeveloper(models.Model):
     username    = models.ForeignKey(User, on_delete=models.CASCADE)

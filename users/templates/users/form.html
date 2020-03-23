@@ -1,0 +1,67 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+{{ action }} usuario
+{% endblock %}
+
+{% block topTitle %}
+{{ action }} usuario
+{% endblock %}
+{% block content %}
+<div class="row">
+    <form action="" class="w-100"></form>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="emailInput">Correo</label>
+                    <input type="email" class="form-control appform" id="emailInput">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="passwordInput">Contraseña</label>
+                    <input type="password" class="form-control appform" id="passwordInput">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nameInput">Nombres</label>
+                    <input type="text" class="form-control appform" id="nameInput">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="lastnameInput">Apellidos</label>
+                    <input type="text" class="form-control appform" id="lastnameInput">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="activeInput">
+                    <label for="activeInput">Activo</label>
+                </div>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-md-6'>
+                <div class='form-group'>
+                    <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'users/js/app/form.js' %}"></script>
+{% endblock %}
+
+{% block ready %}
+var id = {{ id }}
+{% endblock %}

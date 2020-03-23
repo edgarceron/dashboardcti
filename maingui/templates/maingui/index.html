@@ -657,6 +657,14 @@
     <script type="text/javascript" src="{% static 'maingui/js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'maingui/js/demo/chart-pie-demo.js' %}"></script>
     {% endblock %}
+
+    <script>
+        $( document ).ready(function() {
+            {% block ready %}
+
+            {% endblock %}
+        });
+    </script>
 </body>
 
 </html>
