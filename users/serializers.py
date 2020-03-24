@@ -4,7 +4,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model  = User
-        fields = ['username','password','name','lastname','active','profile']
+        fields = ['username','password','name','lastname','active','profile','needPassword']
 
     def create(self, validated_data):
         user_obj     = User(**validated_data)
@@ -18,5 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
         instance.lastname   = validated_data["lastname"]
         instance.active     = validated_data["active"]
         instance.profile    = validated_data["profile"]
+        instance.save()
+        return instance
+    
+    def resetPassword(self, instance):
+        instance.needPassword = True
         instance.save()
         return instance

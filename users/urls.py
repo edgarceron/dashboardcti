@@ -8,6 +8,6 @@ urlpatterns = [
     path('create', views.form, name='create'),
     path('update/<int:id>', views.form, name='update'),
 
-    path('add', webservices.add_user, 'add'),
+    path('add', webservices.add_user, name='add'),
 
 ]

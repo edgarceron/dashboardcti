@@ -8,7 +8,7 @@ def add_user(request):
     user_serializer = UserSerializer(data = request.data)
     if(user_serializer.is_valid()):
         user_serializer.save()
-        return Response({"data":"Usuario guardado"}, status=status.HTTP_201_CREATED, content_type='application/json')
+        return Response({"success":True}, status=status.HTTP_201_CREATED, content_type='application/json')
     else:
         error_details = []
         for key in user_serializer.errors.keys():
@@ -16,10 +16,15 @@ def add_user(request):
 
         data = {
             "Error": {
+                "success": False,
                 "status": 400,
                 "message": "Los datos enviados no son validos",
-                "error_details": error_details
+                "details": error_details
             }
         }
 
         return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+
+""" @api_view(['POST'])
+def replace_user:
+    return Response() """
