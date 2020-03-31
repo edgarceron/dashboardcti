@@ -1,21 +1,12 @@
 from django.db import models
 from django.db.models import Q
+from profiles.models import Profile
 
 class Tecnology(models.Model):
     pass
 
 class Location(models.Model):
     pass
-
-class App(models.Model):
-    name     = models.CharField(unique=True, max_length=50, verbose_name="App")
-
-class Action(models.Model):
-    name     = models.CharField(unique=True, max_length=50, verbose_name="Modulo")
-    app      = models.ForeignKey(App, on_delete=models.CASCADE)
-
-class Profile(models.Model):
-    name     = models.CharField(unique=True, max_length=50, verbose_name="Nombre del perfil")
 
 class User(models.Model):
     username     = models.EmailField(unique=True, verbose_name="Nombre de usuario", null=False, error_messages={'unique':'Ya existe un usuario registrado con este correo'})
@@ -43,14 +34,4 @@ class DeveloperTecnologies(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['developer', 'tecnology'], name="DeveloperTecnology")
-        ]
-
-class ProfilePermissions(models.Model):
-    profile    = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    action     = models.ForeignKey(Action, on_delete=models.CASCADE)
-    permission = models.BooleanField(verbose_name="Estado")
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['profile', 'action'], name="ProfileAction")
         ]

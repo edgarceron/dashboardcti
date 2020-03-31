@@ -2,6 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import User, Profile
 
+def get_actions():
+    actions = [
+       {"name": "index", "label": "Pagina principal del modulo de usuario"},
+       {"name": "form", "label": "Pagina del formulario de usuario"}
+    ]
+    return actions
+
 def index(request):
     #TODO verificar usuario y permisos
     return render(
