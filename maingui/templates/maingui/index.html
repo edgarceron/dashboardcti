@@ -10,26 +10,10 @@
 
     <title>{% block title %}Pagína Principal{% endblock %}</title>
     {% load static %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'maingui/favicon.ico' %}"/>
-    <!-- Custom fonts for this template-->
-    <link href="{% static 'maingui/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'maingui/css/nuito.css' %}" rel="stylesheet">
-    <link href="{% static 'maingui/css/bootstrap.min.css' %}" rel="stylesheet">
-    <!-- Custom styles for this template-->
-    <link href="{% static 'maingui/css/sb-admin-2.min.css' %}" rel="stylesheet">
-
+    {% include "./cssload.html" %}
+    {% include "./jscriptload.html" %}
     <!-- Bootstrap core JavaScript-->
-    <script src="{% static 'maingui/vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'maingui/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="{% static 'maingui/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="{% static 'maingui/js/sb-admin-2.min.js' %}"></script>
-    <script src="{% static 'maingui/js/bootstrap.min.js' %}"></script>
-    <!-- Page level plugins -->
-    <script src="{% static 'maingui/vendor/chart.js/Chart.min.js' %}"></script>
 </head>
 
 <body id="page-top">

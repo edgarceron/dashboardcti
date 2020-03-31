@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 class Tecnology(models.Model):
     pass
@@ -24,6 +25,13 @@ class User(models.Model):
     active       = models.BooleanField(verbose_name="Activo/Inactivo", null=False) 
     profile      = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, null=True)
     needPassword = models.BooleanField(verbose_name="Cambiar contraseña", null=False, default=True)
+
+    @staticmethod
+    def usersPickerFilter(value):
+        return list(User.objects.filter(
+            Q(active = True), 
+            Q(username__contains = value) | Q(name__contains = value) | Q(lastname__contains = value)
+        )[:10])
 
 class UserDeveloper(models.Model):
     username    = models.ForeignKey(User, on_delete=models.CASCADE)

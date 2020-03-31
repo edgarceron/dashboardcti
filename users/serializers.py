@@ -4,7 +4,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model  = User
-        fields = ['username','password','name','lastname','active','profile','needPassword']
+        fields = ['id','username','password','name','lastname','active','profile','needPassword']
 
     def create(self, validated_data):
         user_obj     = User(**validated_data)
@@ -25,3 +25,8 @@ class UserSerializer(serializers.ModelSerializer):
         instance.needPassword = True
         instance.save()
         return instance
+
+class BasicUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = User
+        fields = ['id','username','name','lastname']
