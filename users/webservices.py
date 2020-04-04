@@ -10,6 +10,7 @@ def get_actions():
        {"name": "replace_user", "label": "Webservice actualizar usuario"},
        {"name": "delete_user", "label": "Webservice borrar usuario"},
        {"name": "picker_search_user", "label": "Webservice picker de usuarios"},
+       {"name": "list_user", "label": "Webservice del listado de usuarios"},
     ]
     return actions
 
@@ -18,13 +19,13 @@ def add_user(request):
     #TODO verificar usuario y permisos
     user_serializer = UserSerializer(data = request.data)
     if(user_serializer.is_valid()):
-        user_serializer.create()
+        user_serializer.save()
         return Response({"success":True}, status=status.HTTP_201_CREATED, content_type='application/json')
     else:
         data = error_data(user_serializer)
         return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def replace_user(request, id):
     #TODO verificar usuario y permisos
     user_obj = User.objects.get(id = id)
@@ -63,6 +64,14 @@ def picker_search_user(request):
         "result": result
     }
     return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+
+@api_view(['POST'])
+def list_user(request):
+    user_list = User.objects.all()
+    result    = BasicUserSerializer(user_list, many=True)
+    data      = result.data
+    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+
 
 def error_data(user_serializer):
     error_details = []

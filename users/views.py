@@ -5,7 +5,8 @@ from .models import User, Profile
 def get_actions():
     actions = [
        {"name": "index", "label": "Pagina principal del modulo de usuario"},
-       {"name": "form", "label": "Pagina del formulario de usuario"}
+       {"name": "form", "label": "Pagina del formulario de usuario"},
+       {"name": "listing", "label": "Pagina del listado de usuarios"}
     ]
     return actions
 
@@ -32,6 +33,16 @@ def form(request, id = 0):
         {
             'id':id,
             'action':action,
+            'username': "Mauricio"
+        }
+    )
+
+def listing(request):
+    #TODO verificar usuario y permisos
+    return render(
+        request,
+        'users/listing.html',
+        {
             'username': "Mauricio"
         }
     )

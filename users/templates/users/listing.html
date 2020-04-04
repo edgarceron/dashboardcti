@@ -1,0 +1,38 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+    Listado de usuarios
+{% endblock %}
+
+{% block topTitle %}
+    Listado de usuarios
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <table id="listing" class="table table-striped table-bordered w-100" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Correo</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascript %}
+<script>
+    var url = "{% url 'data_list' %}";
+</script>
+<script src="{% static 'maingui/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'users/js/app/listing.js' %}"></script>
+{% endblock %}
+
+{% block ready %}
+    
+{% endblock %}
