@@ -1,27 +1,18 @@
+"Contains the views for the users app."
 from django.shortcuts import render
-from django.http import HttpResponse
-from .models import User, Profile
 
 def get_actions():
+    "Returns the list of actions to be registered for permissions module."
     actions = [
-       {"name": "index", "label": "Pagina principal del modulo de usuario"},
-       {"name": "form", "label": "Pagina del formulario de usuario"},
-       {"name": "listing", "label": "Pagina del listado de usuarios"}
+        {"name": "index", "label": "Pagina principal del modulo de usuario"},
+        {"name": "form", "label": "Pagina del formulario de usuario"},
+        {"name": "listing", "label": "Pagina del listado de usuarios"}
     ]
     return actions
 
-def index(request):
-    #TODO verificar usuario y permisos
-    return render(
-        request,
-        'users/index.html',
-        {
-            'username': "Mauricio"
-        }
-    )
-
-def form(request, id = 0):
-    if(id == 0):
+def form(request, user_id=0):
+    "Returns the rendered template for the given user."
+    if user_id == 0:
         action = "Crear"
     else:
         action = "Actualizar"
@@ -31,13 +22,14 @@ def form(request, id = 0):
         request,
         'users/form.html',
         {
-            'id':id,
+            'id':user_id,
             'action':action,
             'username': "Mauricio"
         }
     )
 
 def listing(request):
+    "Returns the rendered template for user listing."
     #TODO verificar usuario y permisos
     return render(
         request,

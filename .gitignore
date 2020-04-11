@@ -130,6 +130,7 @@ dmypy.json
 
 activate.bat
 deactivate.bat
+postgres.bat
 
 dashboardcti/settings.py
 

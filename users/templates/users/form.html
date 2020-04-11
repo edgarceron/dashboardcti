@@ -83,7 +83,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="modalTitle">Modal title</h5>
+            <h5 class="modal-title" id="modalTitle">Unos segundos por favor</h5>
             </div>
             <div class="modal-body">
                 <div class="alert alert-success" role="alert" id="modalMessage">
@@ -96,12 +96,24 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
 <script src="{% static 'users/js/app/form.js' %}"></script>
+
+<script>
+    $( document ).ready(function() {
+        id = {{ id }};
+        listing_url = "{% url 'listing_user' %}";
+        replace_url = "{% url 'replace_user' user_id=0 %}";
+        replace_url = replace_url.slice(0, -1);
+        if(id != 0){
+            getUser(id);
+        }
+    });
+</script>
 {% endblock %}
 
-{% block ready %}
-    id = {{ id }};
-{% endblock %}
+
+    

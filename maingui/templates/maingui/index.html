@@ -53,13 +53,12 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
+                    <span>Opciones</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <a class="collapse-item" href="{% url 'listing_user' %}">Usuarios</a>
+                        <a class="collapse-item" href="cards.html">Perfiles</a>
                     </div>
                 </div>
             </li>
@@ -642,13 +641,6 @@
     <script src="{% static 'maingui/js/demo/chart-pie-demo.js' %}"></script>
     {% endblock %}
 
-    <script>
-        $( document ).ready(function() {
-            {% block ready %}
-
-            {% endblock %}
-        });
-    </script>
 </body>
 
 </html>
