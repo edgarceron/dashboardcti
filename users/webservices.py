@@ -130,9 +130,6 @@ def list_user(request):
 
     records_total = User.objects.count()
 
-    print(start)
-    print(length)
-
     if search != '':
         queryset = User.users_listing_filter(search, start, length)
         records_filtered = User.users_listing_filter(search, start, length, True)

@@ -5,7 +5,7 @@ var listing_url;
 var errorFields = [];
 var singleOperationRestriction = false;
 
-function addUser(){
+function addData(){
     if(!singleOperationRestriction){
         singleOperationRestriction = true;
         $.ajax({
@@ -48,7 +48,7 @@ function addUser(){
     }
 }
 
-function updateUser(user_id){
+function updateData(user_id){
     $.ajax({
         url: replace_url + user_id,
         method: 'PUT',
@@ -86,7 +86,7 @@ function updateUser(user_id){
     });
 }
 
-function getUser(user_id){
+function getData(user_id){
     $.ajax({
         url: '/users/get/' + user_id,
         method: 'POST',
@@ -120,10 +120,10 @@ function setValue(input, value){
 
 function saveFunction(){
     if(id == 0){
-        addUser();
+        addData();
     }
     else{
-        updateUser(id);
+        updateData(id);
     }
 }
 

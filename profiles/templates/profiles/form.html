@@ -1,0 +1,58 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+    {{ action }} profile
+{% endblock %}
+{% block topTitle %}
+    {{ action }} profile
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <form action="" class="needs-validation w-100" novalidate>
+            <div class="col-md-12">
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <label for='nameInput'></label>
+                        <input type='text' class='form-control appform' id='nameInput'>
+                        <div class='valid-feedback' id='nameValid'>Correcto.</div>
+                        <div class='invalid-feedback' id = 'nameInvalid'>Debe ingresar un nombre valido.</div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class='modal fade' tabindex='-1' role='dialog' id='successModal'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='modalTitle'>Unos segundos por favor</h5>
+                </div>
+                <div class='modal-body'>
+                    <div class='alert alert-success' role='alert' id='modalMessage'>
+                        Guardado con exito!
+                    </div>
+                </div>
+                <div class='modal-footer'>
+                    Redirigiendo...
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
+    <script src="{% static 'profiles/js/app/form.js' %}"></script>
+    <script>
+        $( document ).ready(function() {
+            id = {{ id }};
+            listing_url = "{% url 'listing_profile' %}";
+            replace_url = "{% url 'replace_profile' _id=0 %}";
+            replace_url = replace_url.slice(0, -1);
+            if(id != 0){
+                getData(id);
+            }
+        });
+    </script>
+{% endblock %}
+

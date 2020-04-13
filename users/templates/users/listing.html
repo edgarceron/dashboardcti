@@ -68,12 +68,16 @@
 
 {% endblock %}
 {% block javascript %}
+<script src="{% static 'maingui/js/app/SoftNotification.js' %}"></script>
 <script>
     var url = "{% url 'data_list_user' %}";
-    var user_update_url = "{% url 'update_user' user_id=0 %}";
-    var user_delete_url = "{% url 'delete_user' user_id=0 %}";
-    user_update_url = user_update_url.slice(0, -1);
-    user_delete_url = user_delete_url.slice(0, -1);
+    var update_url = "{% url 'update_user' user_id=0 %}";
+    var delete_url = "{% url 'delete_user' user_id=0 %}";
+    var toggle_url = "{% url 'toggle_user' user_id=0 %}";
+    update_url = update_url.slice(0, -1);
+    delete_url = delete_url.slice(0, -1);
+    toggle_url = toggle_url.slice(0, -1);
+
 </script>
 <script src="{% static 'maingui/vendor/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'users/js/app/listing.js' %}"></script>
