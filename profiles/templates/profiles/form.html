@@ -1,21 +1,37 @@
 {% extends 'maingui/index.html' %}
 {% load static %}
 {% block title %}
-    {{ action }} profile
+    {{ action }} perfil
 {% endblock %}
 {% block topTitle %}
-    {{ action }} profile
+    {{ action }} perfil
 {% endblock %}
 {% block content %}
     <div class="row">
         <form action="" class="needs-validation w-100" novalidate>
-            <div class="col-md-12">
+            <div class="row">
                 <div class='col-md-6'>
                     <div class='form-group'>
-                        <label for='nameInput'></label>
+                        <label for='nameInput'>Nombre del perfil</label>
                         <input type='text' class='form-control appform' id='nameInput'>
                         <div class='valid-feedback' id='nameValid'>Correcto.</div>
                         <div class='invalid-feedback' id = 'nameInvalid'>Debe ingresar un nombre valido.</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="checkboxgroup">Estado</label>
+                    <div class="custom-control custom-checkbox" id="checkboxgroup">
+                        <input class="custom-control-input" type="checkbox" value="" id="activeInput">
+                        <label class="custom-control-label" for="activeInput">Activo</label>
+                        <div class="valid-feedback" id='activeValid'>Valid.</div>
+                        <div class="invalid-feedback" id = 'activeInvalid'>Please fill out this field.</div>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -47,8 +63,12 @@
         $( document ).ready(function() {
             id = {{ id }};
             listing_url = "{% url 'listing_profile' %}";
-            replace_url = "{% url 'replace_profile' _id=0 %}";
+            add_url = "{% url 'add_profile' %}";
+            get_url = "{% url 'get_profile' profile_id=0 %}";
+            replace_url = "{% url 'replace_profile' profile_id=0 %}";
+            get_url = replace_url.slice(0, -1);
             replace_url = replace_url.slice(0, -1);
+
             if(id != 0){
                 getData(id);
             }

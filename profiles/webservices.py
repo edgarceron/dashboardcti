@@ -50,6 +50,19 @@ def replace_profile(request, profile_id):
     data = error_data(profile_serializer)
     return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
 
+@api_view(['POST'])
+def get_profile(request, profile_id):
+    "Return a JSON response with profile data for the given id"
+    #TODO verificar usuario y permisos
+    profile_obj = Profile.objects.get(id=profile_id)
+    profile_serializer = ProfileSerializer(profile_obj)
+
+    data = {
+        "success":True,
+        "data": profile_serializer.data
+    }
+    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+
 @api_view(['DELETE'])
 def delete_profile(request, profile_id):
     """Tries to delete an profile and returns the result."""
