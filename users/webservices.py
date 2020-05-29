@@ -1,4 +1,5 @@
 """Contains the webservices for the users app"""
+from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -23,7 +24,11 @@ def get_actions():
 def add_user(request):
     """Tries to create an user and returns the result"""
     #TODO verificar usuario y permisos
-    user_serializer = UserSerializer(data = request.data)
+    data = request.data
+    password = data['password']
+    hasher = PBKDF2PasswordHasher()
+    data['password'] = hasher.encode(password, "Wake Up, Girls!")
+    user_serializer = UserSerializer(data=request.data)
     if user_serializer.is_valid():
         user_serializer.save()
         return Response(
