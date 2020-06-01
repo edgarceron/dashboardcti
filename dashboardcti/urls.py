@@ -21,6 +21,7 @@ urlpatterns = [
     path('', include('maingui.urls')),
     path('users/', include('users.urls')),
     path('profiles/', include('profiles.urls')),
+    path('dashboard/', include('dashboard.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

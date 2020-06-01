@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import UserSerializer, BasicUserSerializer
-from .models import User
-from .models import LoginSession
+from .models import User, LoginSession
+from .permission_validation import PermissionValidation
 
 
 def get_actions():
@@ -25,20 +25,26 @@ def get_actions():
 @api_view(['POST'])
 def add_user(request):
     """Tries to create an user and returns the result"""
-    #TODO verificar usuario y permisos
-    data = request.data.copy()
-    password = data['password']
-    hasher = PBKDF2PasswordHasher()
-    data['password'] = hasher.encode(password, "Wake Up, Girls!")
-    user_serializer = UserSerializer(data=data)
-    if user_serializer.is_valid():
-        user_serializer.save()
-        return Response(
-            {"success":True}, 
-            status=status.HTTP_201_CREATED, content_type='application/json')
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('add_user')
+    if validation['status']:
+        data = request.data.copy()
+        password = data['password']
+        hasher = PBKDF2PasswordHasher()
+        data['password'] = hasher.encode(password, "Wake Up, Girls!")
+        user_serializer = UserSerializer(data=data)
+        if user_serializer.is_valid():
+            user_serializer.save()
+            return Response(
+                {"success":True},
+                status=status.HTTP_201_CREATED,
+                content_type='application/json')
 
-    data = error_data(user_serializer)
-    return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+        data = error_data(user_serializer)
+        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+
+    return PermissionValidation.error_response_webservice(validation, request)
+
 
 @api_view(['PUT'])
 def replace_user(request, user_id):
@@ -160,7 +166,7 @@ def login(request):
     password = request.data['password']
 
     user = User.objects.get(username=username)
-    if user != None:
+    if user is not None:
         encoded = user.password
         hasher = PBKDF2PasswordHasher()
         login_valid = hasher.verify(password, encoded)
@@ -169,8 +175,7 @@ def login(request):
             key = username + str(datetime.datetime.now())
             key = hasher.encode(key, 'key', 10)
             life = datetime.datetime.now() + datetime.timedelta(hours=14)
-            profile = user.profile
-            loginsession = LoginSession(key=key, life=life, profile=profile)
+            loginsession = LoginSession(key=key, life=life, user=user)
             loginsession.save()
             request.session['loginsession'] = key
             data = {

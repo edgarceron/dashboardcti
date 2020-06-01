@@ -7,7 +7,7 @@ class App(models.Model):
     label = models.CharField(max_length=100, verbose_name="Etiqueta", default="")
 
 class Action(models.Model):
-    name = models.CharField(max_length=50, verbose_name="Modulo")
+    name = models.CharField(max_length=50, verbose_name="Modulo", unique=True)
     label = models.CharField(max_length=150, verbose_name="Etiqueta")
     app = models.ForeignKey(App, on_delete=models.CASCADE)
 

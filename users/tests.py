@@ -1,9 +1,11 @@
+import json
 from django.urls import reverse
 from django.test import TestCase
-from .models import User
+from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from rest_framework.test import APITestCase
 from rest_framework import status
-from users.models import LoginSession
+from users.models import LoginSession, User
+from profiles.models import Profile, Action, App
 
 class UserModelTest(TestCase):
     def test_user_picker_filter(self):
@@ -124,23 +126,22 @@ class UserWebserviceTest(TestCase):
         self.assertEqual(search, [])
 
     def test_login_user(self):
-        user1 = {
-            'username':'test@yahoo.com',
-            'password':'password',
-            'name':'Edgar',
-            'lastname':'Ceron',
-            'active':True,
-            'profile':'',
-        }
-
-        url_set = reverse('add_user')
-        response = self.client.post(url_set, user1, format='json')
-        self.assertEqual(True, True)
-        created = response.data['success']
-        self.assertEqual(created, True)
-
+        password = 'password'
+        username = 'test@yahoo.com'
+        hasher = PBKDF2PasswordHasher()
+        encoded = hasher.encode(password, "Wake Up, Girls!")
+        user1 = User(
+            username=username,
+            password=encoded,
+            name='Edgar',
+            lastname='Ceron',
+            active=True,
+            profile=None
+        )
+        user1.save()
+        print('USER ID ----------------------------')
         url = reverse('login')
-        data = {'username':'test@yahoo.com', 'password':'password'}       
+        data = {'username':username, 'password':password}
         response = self.client.post(url, data, format='json')
         result = response.data['success']
         self.assertEqual(result, True)
@@ -158,3 +159,76 @@ class UserWebserviceTest(TestCase):
         response2 = self.client.post(url, data, format='json')
         result2 = response2.data['success']
         self.assertEqual(result2, False)
+
+    def test_check_permissions(self):
+        app_a = App(name="Usuarios")
+        app_a.save()
+
+        action_a = Action(name='add_user', label="", app=app_a)
+        action_b = Action(name='delete_user', label="", app=app_a)
+        action_c = Action(name='replace_user', label="", app=app_a)
+        action_d = Action(name='toggle_user', label="", app=app_a)
+
+        action_a.save()
+        action_b.save()
+        action_c.save()
+        action_d.save()
+        actions = []
+        actions.append({'action':action_a.id, 'permission': True})
+        actions.append({'action':action_b.id, 'permission': True})
+        actions.append({'action':action_c.id, 'permission': False})
+        actions.append({'action':action_d.id, 'permission': False})
+        
+        data = {
+            'name':'Admin',
+            'active': True,
+            'actions': json.dumps(actions)
+        }
+
+        url = reverse('add_profile')
+        response = self.client.post(url, data, format='json')
+        success = response.data['success']
+        self.assertEqual(success, True)
+
+        profile = Profile.objects.get(name='Admin')
+
+
+        password = 'password'
+        username = 'edgar@yahoo.com'
+        hasher = PBKDF2PasswordHasher()
+        encoded = hasher.encode(password, "Wake Up, Girls!")
+        user1 = User(
+            username=username,
+            password=encoded,
+            name='Edgar',
+            lastname='Ceron',
+            active=True,
+            profile=profile
+        )
+        user1.save()
+
+
+        url = reverse('login')
+        data = {'username':username, 'password':password}       
+        response = self.client.post(url, data, format='json')
+
+        key = response.data['key']
+        print(key)
+
+        url_set = reverse('add_user')
+        user_data = {
+            'username':'test2@yahoo.com',
+            'password':'password',
+            'name':'Michael',
+            'lastname':'Light',
+            'active':True,
+            'profile':'',
+        }
+        response = self.client.post(url_set, user_data, format='json')
+        success = response.data['success']
+
+        self.assertEqual(success, True)
+
+
+
+
