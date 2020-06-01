@@ -4,6 +4,7 @@ from django.db.models import Q
 
 class App(models.Model):
     name = models.CharField(unique=True, max_length=50, verbose_name="App")
+    label = models.CharField(max_length=100, verbose_name="Etiqueta", default="")
 
 class Action(models.Model):
     name = models.CharField(max_length=50, verbose_name="Modulo")

@@ -1,9 +1,10 @@
 """Contains the webservices for the profiles app"""
+import json
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import ProfileSerializer
-from .models import Profile
+from .serializers import ProfileSerializer, ProfilePermissionsSerializer
+from .models import Profile, ProfilePermissions
 
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
@@ -17,16 +18,26 @@ def get_actions():
         {"name": "toggle_profile", "label": "Webservice para cambiar estado del perfil"},
     ]
     return actions
-
+   
 @api_view(['POST'])
 def add_profile(request):
     """Tries to create an profile and returns the result"""
     #TODO verificar usuario y permisos
-    profile_serializer = ProfileSerializer(data = request.data)
+    json_actions = request.data['actions']
+    profile_serializer = ProfileSerializer(data=request.data)
+    actions = json.loads(json_actions)
+
     if profile_serializer.is_valid():
         profile_serializer.save()
+        profile_id = profile_serializer.data['id']
+        for x in range(0, len(actions)):
+            actions[x]['profile'] = profile_id
+            permission_serializer = ProfilePermissionsSerializer(data=actions[x])
+            if permission_serializer.is_valid():
+                permission_serializer.save()
+
         return Response(
-            {"success":True}, 
+            {"success":True},
             status=status.HTTP_201_CREATED, content_type='application/json')
 
     data = error_data(profile_serializer)
@@ -38,9 +49,28 @@ def replace_profile(request, profile_id):
     #TODO verificar usuario y permisos
     profile_obj = Profile.objects.get(id=profile_id)
     profile_serializer = ProfileSerializer(profile_obj, data=request.data)
+    json_actions = request.data['actions']
+    actions = json.loads(json_actions)
 
     if profile_serializer.is_valid():
         profile_serializer.save()
+        profile_id = profile_serializer.data['id']
+        for element in range(0, len(actions)):
+            action_id = actions[element]['action']
+            try:
+                permission_obj = ProfilePermissions.objects.get(
+                    profile=profile_id, action=action_id)
+                actions[element]['profile'] = profile_id
+                permission_serializer = ProfilePermissionsSerializer(
+                    permission_obj, data=actions[element])
+            except:
+                actions[element]['profile'] = profile_id
+                permission_serializer = ProfilePermissionsSerializer(data=actions[element])
+            
+            if permission_serializer.is_valid():
+                permission_serializer.save()
+            else:
+                print(permission_serializer.errors)
         return Response(
             {"success":True},
             status=status.HTTP_200_OK,
@@ -56,10 +86,13 @@ def get_profile(request, profile_id):
     #TODO verificar usuario y permisos
     profile_obj = Profile.objects.get(id=profile_id)
     profile_serializer = ProfileSerializer(profile_obj)
+    permission_list = ProfilePermissions.objects.filter(profile=profile_obj.id)
+    permissions_serializer = ProfilePermissionsSerializer(permission_list, many=True)
 
     data = {
         "success":True,
-        "data": profile_serializer.data
+        "data": profile_serializer.data,
+        "actions": permissions_serializer.data
     }
     return Response(data, status=status.HTTP_200_OK, content_type='application/json')
 

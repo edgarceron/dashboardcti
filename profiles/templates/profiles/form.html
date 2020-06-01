@@ -28,6 +28,31 @@
                     </div>
                 </div>
             </div>
+
+            {% for app in result %}
+            <div class="card">
+                <div class="card-header">
+                  {{ app.label }}
+                </div>
+                <ul class="list-group list-group-flush">
+                {% for action in app.actions %}
+                    <li class="list-group-item">
+                        <div class="custom-control custom-checkbox">
+                            <input 
+                                class="custom-control-input action_check" 
+                                type="checkbox" 
+                                value="" 
+                                id="actionInput{{ action.id }}"
+                                data-id="{{ action.id }}"
+                            >
+                            <label class="custom-control-label" for="actionInput{{ action.id }}">{{ action.label }}</label>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+
             <div class='row'>
                 <div class='col-md-6'>
                     <div class='form-group'>
@@ -55,6 +80,8 @@
             </div>
         </div>
     </div>
+
+
 {% endblock %}
 {% block javascript %}
     <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
@@ -66,7 +93,7 @@
             add_url = "{% url 'add_profile' %}";
             get_url = "{% url 'get_profile' profile_id=0 %}";
             replace_url = "{% url 'replace_profile' profile_id=0 %}";
-            get_url = replace_url.slice(0, -1);
+            get_url = get_url.slice(0, -1);
             replace_url = replace_url.slice(0, -1);
 
             if(id != 0){

@@ -70,9 +70,9 @@ Listado de perfiles
 <script src="{% static 'maingui/js/app/SoftNotification.js' %}"></script>
 <script>
     var url = "{% url 'data_list_profile' %}";
-    var update_url = "{% url 'update_user' user_id=0 %}";
-    var delete_url = "{% url 'delete_user' user_id=0 %}";
-    var toggle_url = "{% url 'toggle_user' user_id=0 %}";
+    var update_url = "{% url 'update_profile' profile_id=0 %}";
+    var delete_url = "{% url 'delete_profile' profile_id=0 %}";
+    var toggle_url = "{% url 'toggle_profile' profile_id=0 %}";
     update_url = update_url.slice(0, -1);
     delete_url = delete_url.slice(0, -1);
     toggle_url = toggle_url.slice(0, -1);

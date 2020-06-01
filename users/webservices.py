@@ -1,10 +1,12 @@
 """Contains the webservices for the users app"""
+import datetime
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import UserSerializer, BasicUserSerializer
 from .models import User
+from .models import LoginSession
 
 
 def get_actions():
@@ -24,11 +26,11 @@ def get_actions():
 def add_user(request):
     """Tries to create an user and returns the result"""
     #TODO verificar usuario y permisos
-    data = request.data
+    data = request.data.copy()
     password = data['password']
     hasher = PBKDF2PasswordHasher()
     data['password'] = hasher.encode(password, "Wake Up, Girls!")
-    user_serializer = UserSerializer(data=request.data)
+    user_serializer = UserSerializer(data=data)
     if user_serializer.is_valid():
         user_serializer.save()
         return Response(
@@ -123,7 +125,6 @@ def picker_search_user(request):
     }
     return Response(data, status=status.HTTP_200_OK, content_type='application/json')
 
-
 @api_view(['POST'])
 def list_user(request):
     """ Returns a JSON response containing registered users"""
@@ -152,6 +153,37 @@ def list_user(request):
     }
     return Response(data, status=status.HTTP_200_OK, content_type='application/json')
 
+@api_view(['POST'])
+def login(request):
+    """Logs in the user if given credentials are valid"""
+    username = request.data['username']
+    password = request.data['password']
+
+    user = User.objects.get(username=username)
+    if user != None:
+        encoded = user.password
+        hasher = PBKDF2PasswordHasher()
+        login_valid = hasher.verify(password, encoded)
+
+        if login_valid:
+            key = username + str(datetime.datetime.now())
+            key = hasher.encode(key, 'key', 10)
+            life = datetime.datetime.now() + datetime.timedelta(hours=14)
+            profile = user.profile
+            loginsession = LoginSession(key=key, life=life, profile=profile)
+            loginsession.save()
+            request.session['loginsession'] = key
+            data = {
+                'success': True,
+                'key': key
+            }
+            return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+        
+    data = {
+        'success': False,
+        'message':"Nombre de usuario o contraseña incorrectos"
+    }
+    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
 
 def error_data(user_serializer):
     """Return a common JSON error result"""

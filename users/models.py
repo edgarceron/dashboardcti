@@ -16,7 +16,7 @@ class User(models.Model):
         verbose_name="Nombre de usuario",
         null=False,
         error_messages={'unique':'Ya existe un usuario registrado con este correo'})
-    password = models.CharField(max_length=50, verbose_name="Constraseña", null=False)
+    password = models.CharField(max_length=255, verbose_name="Constraseña", null=False)
     name = models.CharField(max_length=100, verbose_name="Nombres", null=False)
     lastname = models.CharField(max_length=100, verbose_name="Apellidos", null=False)
     active = models.BooleanField(verbose_name="Activo/Inactivo", null=False) 
@@ -57,3 +57,9 @@ class DeveloperTecnologies(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['developer', 'tecnology'], name="DeveloperTecnology")
         ]
+
+class LoginSession(models.Model):
+    key = models.CharField(unique=True, null=False, max_length=255)
+    life = models.DateTimeField(null=False)
+    profile = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, null=True)
+    

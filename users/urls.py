@@ -14,4 +14,5 @@ urlpatterns = [
     path('get/<int:user_id>', webservices.get_user, name='get_user'),
     path('delete/<int:user_id>', webservices.delete_user, name='delete_user'),
     path('toggle/<int:user_id>', webservices.toggle_user, name='toggle_user'),
+    path('login', webservices.login, name='login')
 ]

@@ -1,6 +1,6 @@
 """Contains the serializers for the profiles module"""
 from rest_framework import serializers
-from .models import Profile, App, Action
+from .models import Profile, App, Action, ProfilePermissions
 
 class ProfileSerializer(serializers.ModelSerializer):
     """Serializer for profile model"""
@@ -23,7 +23,7 @@ class AppSerializer(serializers.ModelSerializer):
     """Serializer for app model"""
     class Meta:
         model  = App
-        fields = ['name']
+        fields = ['name', 'label']
 
     def create(self, validated_data):
         app_obj     = App(**validated_data)
@@ -49,5 +49,23 @@ class ActionSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.name = validated_data["name"]
         instance.app = validated_data["app"]
+        instance.save()
+        return instance
+
+class ProfilePermissionsSerializer(serializers.ModelSerializer):
+    """Serializer for teh ProfilePermissionsModel"""
+    class Meta:
+        model = ProfilePermissions
+        fields = ['profile', 'action', 'permission']
+
+    def create(self, validated_data):
+        profile_perimission_obj = ProfilePermissions(**validated_data)
+        profile_perimission_obj.save()
+        return profile_perimission_obj
+
+    def update(self, instance, validated_data):
+        instance.profile = validated_data["profile"]
+        instance.action = validated_data["action"]
+        instance.permission = validated_data["permission"]
         instance.save()
         return instance
