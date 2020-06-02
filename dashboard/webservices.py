@@ -3,7 +3,8 @@ from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from users.models import User
+from .serializers import DatosPersonalesSerializer
+from .models import DatosPersonales
 
 # Create your views here.
 def get_actions():
@@ -12,3 +13,68 @@ def get_actions():
     ]
     return actions
 
+@api_view(['POST'])
+def add_datos(request):
+    """Tries to create an data and returns the result"""
+    datos_serializer = DatosPersonalesSerializer(data=request.data)
+
+    if datos_serializer.is_valid():
+        datos_serializer.save()
+        return Response(
+            {"success":True},
+            status=status.HTTP_201_CREATED, content_type='application/json')
+
+    data = error_data(datos_serializer)
+    return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+
+@api_view(['PUT'])
+def replace_datos(request, datos_id):
+    "Tries to update an datos and returns the result"
+    #TODO verificar usuario y permisos
+    datos_obj = DatosPersonales.objects.get(id=datos_id)
+    datos_serializer = DatosPersonalesSerializer(datos_obj, data=request.data)
+
+    if datos_serializer.is_valid():
+        datos_serializer.save()
+        return Response(
+            {"success":True},
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
+
+    data = error_data(datos_serializer)
+    return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+
+@api_view(['POST'])
+def get_datos(request, datos_id):
+    "Return a JSON response with datos data for the given id"
+    #TODO verificar usuario y permisos
+    datos_obj = DatosPersonales.objects.get(id=datos_id)
+    datos_serializer = DatosPersonalesSerializer(datos_obj)
+
+    data = {
+        "success":True,
+        "data": datos_serializer.data
+    }
+ 
+    return Response(
+        data,
+        status=status.HTTP_200_OK,
+        content_type='application/json'
+    )
+    
+def error_data(datos_serializer):
+    """Return a common JSON error result"""
+    error_details = []
+    for key in datos_serializer.errors.keys():
+        error_details.append({"field": key, "message": datos_serializer.errors[key][0]})
+
+    data = {
+        "Error": {
+            "success": False,
+            "status": 400,
+            "message": "Los datos enviados no son validos",
+            "details": error_details
+        }
+    }
+    return data

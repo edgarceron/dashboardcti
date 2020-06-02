@@ -5,8 +5,8 @@ from .models import Action, App
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
     actions = [
-        {"name": "listing", "label": "Pagina de listado del modulo de perfiles"},
-        {"name": "form", "label": "Pagina de formulario del modulo de perfiles"}
+        {"name": "listing_profile", "label": "Pagina de listado del modulo de perfiles"},
+        {"name": "form_profile", "label": "Pagina de formulario del modulo de perfiles"}
     ]
     return actions
 

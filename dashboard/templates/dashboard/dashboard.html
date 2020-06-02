@@ -8,80 +8,97 @@
 {% endblock %}
 {% block content %}
 
-    <div class='modal fade' tabindex='-1' role='dialog' id='successModal'>
-        <div class='modal-dialog text-dark' style="max-width: 80%;" role='document'>
-            <div class='modal-content'>
-                    <div class='modal-header'>
-                        <h3 class='modal-title' id='modalTitle'>Llamada entrante</h3>
-                    </div>
-                    <div class='modal-body'>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h5 class="text-right" id="phoneText">AQUI TELEFONO ENTRANTE</h5>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="text-right">
-                                    <h5 class="text-right">Cedula ingresada: 
-                                        <span class="font-weight-bold" id="identificacionText">
-                                            1144166082
-                                        </span>
-                                    </h5>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-12">
-                                <h5 class="font-weight-bold">Datos registrados: </h5>
-                                <div class="card">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p>Nombre: <span id="nombresText"></span></p>
-                                            <p>Apellido: 
-                                                <span id="primer_apellidoText"></span>
-                                                <span id="segundo_apellidoText"></span>
-                                            </p>
-                                            <p>Teléfono: <span id="telefonoText"></span></p>
-                                            <p>E-mail: <span id="emailText"></span></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p>Direccion: <span id="direccionText"></span></p>
-                                            <p>Departamento: <span id="departamentoText"></span></p>
-                                            <span id="municipio"></span>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <h5 class="font-weight-bold">Seguimiento</h5>
-                                <div class="card">
-                                    <p><a href="#">Reclamación datos erroneos CUN: 000000000000</a></p>
-                                    <p><a href="#">Reclamación mala atención personal CUN: 000000000000</a></p>
-                                    <p><a href="#">Reclamación estafa CUN: 000000000000</a></p>
-                                </div>
-                            </div>
-
-                            <div class="col-md 12">
-                                <div class='form-group'>
-                                    <button type="button" class="btn btn-primary" id="agregar">
-                                        Registrar nueva solicitud
-                                    </button>
-                                </div>
+<div class='modal fade' tabindex='-1' role='dialog' id='successModal'>
+    <div class='modal-dialog text-dark' style="max-width: 80%;" role='document'>
+        <div class='modal-content'>
+                <div class='modal-header'>
+                    <div class="row w-100">
+                        <div class="col-md-10">
+                            <h3 class='modal-title' id='modalTitle'>Llamada entrante</h3>
+                        </div>
+                        <div class="col-md-2">
+                            <div class='form-group'>
+                                <button type="button" class="btn btn-primary" id="agregar">
+                                    Editar datos
+                                </button>
                             </div>
                         </div>
                     </div>
-            </div>
+                </div>
+                <div class='modal-body'>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 class="text-right" id="phoneText">AQUI TELEFONO ENTRANTE</h5>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="text-right">
+                                <h5 class="text-right">Cedula ingresada: 
+                                    <span class="font-weight-bold" id="identificacionText">
+                                        1144166082
+                                    </span>
+                                </h5>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <h5 class="font-weight-bold">Datos registrados: </h5>
+                            <div class="card">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p>Nombre: <span id="nombresText"></span></p>
+                                        <p>Apellido: 
+                                            <span id="primer_apellidoText"></span>
+                                            <span id="segundo_apellidoText"></span>
+                                        </p>
+                                        <p>Teléfono: <span id="telefonoText"></span></p>
+                                        <p>E-mail: <span id="emailText"></span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>Direccion: <span id="direccionText"></span></p>
+                                        <p>Departamento: <span id="departamentoText"></span></p>
+                                        <span id="municipio"></span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h5 class="font-weight-bold">Seguimiento</h5>
+                            <div class="card">
+                                <p><a href="#">Reclamación datos erroneos CUN: 000000000000</a></p>
+                                <p><a href="#">Reclamación mala atención personal CUN: 000000000000</a></p>
+                                <p><a href="#">Reclamación estafa CUN: 000000000000</a></p>
+                            </div>
+                        </div>
+
+                        <div class="col-md 12">
+                            <div class='form-group'>
+                                <button type="button" class="btn btn-primary" id="agregar">
+                                    Registrar nueva solicitud
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
+</div>
 
 
 {% endblock %}
 {% block javascript %}
     <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
-    <script src="{% static 'profiles/js/app/form.js' %}"></script>
+    <script src="{% static 'dashboard/js/app/modal.js' %}"></script>
     <script>
         $( document ).ready(function() {
             $('#successModal').modal('toggle');
             $('#successModal').modal({backdrop:'static', keyboard:false}); 
+            add_url = "{% url 'add_datos' %}";
+            get_url = "{% url 'get_datos' datos_id=0 %}";
+            replace_url = "{% url 'replace_datos' datos_id=0 %}";
+            get_url = get_url.slice(0, -1);
+            replace_url = replace_url.slice(0, -1);
+            getTextData(2);
         });
     </script>
 {% endblock %}

@@ -4,9 +4,8 @@ from django.shortcuts import render
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
     actions = [
-        {"name": "index", "label": "Pagina principal del modulo de usuario"},
-        {"name": "form", "label": "Pagina del formulario de usuario"},
-        {"name": "listing", "label": "Pagina del listado de usuarios"}
+        {"name": "form_user", "label": "Pagina del formulario de usuario"},
+        {"name": "listing_user", "label": "Pagina del listado de usuarios"}
     ]
     return actions
 

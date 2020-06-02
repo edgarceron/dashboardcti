@@ -18,3 +18,22 @@ def dashboard(request, user_id=0):
             'username': "Mauricio"
         }
     )
+
+def form(request, datos_id=0):
+    "Returns the rendered template for the given datos."
+    if datos_id == 0:
+        action = "Crear"
+    else:
+        action = "Actualizar"
+    #TODO verificar usuario y permisos
+
+    return render(
+        request,
+        'dashboard/form.html',
+        {
+            'id':datos_id,
+            'action':action,
+            'username': "Mauricio"
+        }
+    )
+    

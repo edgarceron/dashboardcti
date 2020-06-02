@@ -71,13 +71,10 @@ class Command(BaseCommand):
             data = {"name": action["name"], "label": action["label"], "app": app_id}
             action_serializer = ActionSerializer(data=data)
             if(action_serializer.is_valid()):
-                try:
-                    action_serializer.save()
-                    self.stdout.write("Se creo la acción " + action["name"] + " para el modulo " + app_name)
-                except:
-                    self.stdout.write("Ya existe la acción " + action["name"] + " para el modulo " + app_name)
+                action_serializer.save()
+                self.stdout.write("Se creo la acción " + action["name"] + " para el modulo " + app_name)
             else:
-                self.stdout.write(action_serializer.errors)
+                self.stdout.write("Ya existe la acción " + action["name"] + " para el modulo " + app_name)
 
     def handle(self, *args, **options):
         registered_apps = App.objects.all()
