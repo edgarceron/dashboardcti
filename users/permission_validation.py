@@ -3,6 +3,7 @@ import pytz
 from datetime import datetime
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import render
 from profiles.models import Profile, Action, ProfilePermissions
 from .models import User, LoginSession
 
@@ -107,9 +108,47 @@ class PermissionValidation():
 
         data = {
             "success": False,
-            "message": "No se hay un mensaje para este error (" + validation['error'] + ")"
+            "message": "No hay un mensaje para este error (" + validation['error'] + ")"
         }
         return Response(
             data,
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content_type='application/json')
+
+    @staticmethod
+    def error_response_view(validation, request):
+        """Returns an error response depending on the validation"""
+        if validation['error'] == 'Session expire':
+            del request.session['loginsession']
+            data = {
+                "error": 401,
+                "message": "Su sessión expiro por favor ingrese nuevamente"
+            }
+            return render(request, 'maingui/http_error.html', data, status=401)
+
+        if validation['error'] == 'Not logged':
+            data = {
+                "error": 401,
+                "message": "Debe ingresar antes de realizar esta solicitud"
+            }
+            return render(request, 'maingui/http_error.html', data, status=401)
+
+        if validation['error'] == 'Forbidden':
+            data = {
+                "error": 403,
+                "message": "El usuario no tiene permisos para realizar esta acción"
+            }
+            return render(request, 'maingui/http_error.html', data, status=403)
+
+        if validation['error'] == 'Database error':
+            data = {
+                "error": 500,
+                "message": "El usuario, perfil o acción no se encontraron en la base de datos"
+            }
+            return render(request, 'maingui/http_error.html', data, status=500)
+
+        data = {
+            "error": 500,
+            "message": "No hay un mensaje para este error (" + validation['error'] + ")"
+        }
+        return render(request, 'maingui/http_error.html', data, status=500)

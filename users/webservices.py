@@ -45,55 +45,62 @@ def add_user(request):
         return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
     return PermissionValidation.error_response_webservice(validation, request)
 
-
 @api_view(['PUT'])
 def replace_user(request, user_id):
     "Tries to update an user and returns the result"
-    #TODO verificar usuario y permisos
-    user_obj = User.objects.get(id=user_id)
-    user_serializer = UserSerializer(user_obj, data=request.data)
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('replace_user')
+    if validation['status']:
+        user_obj = User.objects.get(id=user_id)
+        user_serializer = UserSerializer(user_obj, data=request.data)
 
-    if user_serializer.is_valid():
-        user_serializer.save()
-        return Response(
-            {"success":True},
-            status=status.HTTP_200_OK,
-            content_type='application/json'
-        )
+        if user_serializer.is_valid():
+            user_serializer.save()
+            return Response(
+                {"success":True},
+                status=status.HTTP_200_OK,
+                content_type='application/json'
+            )
 
-    data = error_data(user_serializer)
-    return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+        data = error_data(user_serializer)
+        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+    return PermissionValidation.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def get_user(request, user_id):
     "Return a JSON response with user data for the given id"
-    #TODO verificar usuario y permisos
-    user_obj = User.objects.get(id=user_id)
-    user_serializer = UserSerializer(user_obj)
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('get_user')
+    if validation['status']:
+        user_obj = User.objects.get(id=user_id)
+        user_serializer = UserSerializer(user_obj)
 
-    data = {
-        "success":True,
-        "data": user_serializer.data
-    }
- 
-
-    return Response(
-        data,
-        status=status.HTTP_200_OK,
-        content_type='application/json'
-    )
+        data = {
+            "success":True,
+            "data":user_serializer.data
+        }
+    
+        return Response(
+            data,
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
+    return PermissionValidation.error_response_webservice(validation, request)
 
 @api_view(['DELETE'])
 def delete_user(request, user_id):
     """Tries to delete an user and returns the result."""
-    #TODO verificar usuario y permisos
-    user_obj = User.objects.get(id=user_id)
-    user_obj.delete()
-    data = {
-        "success": True,
-        "message": "Usuario elminado exitosamente"
-    }
-    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('get_user')
+    if validation['status']:
+        user_obj = User.objects.get(id=user_id)
+        user_obj.delete()
+        data = {
+            "success": True,
+            "message": "Usuario elminado exitosamente"
+        }
+        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+    return PermissionValidation.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def toggle_user(request, user_id):
@@ -121,46 +128,52 @@ def toggle_user(request, user_id):
 @api_view(['POST'])
 def picker_search_user(request):
     "Returns a JSON response with user data for a selectpicker."
-    #TODO verificar usuario y permisos
-    value = request.data['value']
-    #result     = User.usersPickerFilter(value)
-    queryset = User.usersPickerFilter(value)
-    serializer = BasicUserSerializer(queryset, many=True)
-    result = serializer.data
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('picker_search_user')
+    if validation['status']:
+        value = request.data['value']
+        queryset = User.usersPickerFilter(value)
+        serializer = BasicUserSerializer(queryset, many=True)
+        result = serializer.data
 
-    data = {
-        "success": True,
-        "result": result
-    }
-    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+        data = {
+            "success": True,
+            "result": result
+        }
+        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+    return PermissionValidation.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def list_user(request):
     """ Returns a JSON response containing registered users"""
-    sent_data = request.data
-    draw = int(sent_data['draw'])
-    start = int(sent_data['start'])
-    length = int(sent_data['length'])
-    search = sent_data['search[value]']
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('list_user')
+    if validation['status']:
+        sent_data = request.data
+        draw = int(sent_data['draw'])
+        start = int(sent_data['start'])
+        length = int(sent_data['length'])
+        search = sent_data['search[value]']
 
-    records_total = User.objects.count()
+        records_total = User.objects.count()
 
-    if search != '':
-        queryset = User.users_listing_filter(search, start, length)
-        records_filtered = User.users_listing_filter(search, start, length, True)
-    else:
-        queryset = User.objects.all()[start:start + length]
-        records_filtered = records_total
+        if search != '':
+            queryset = User.users_listing_filter(search, start, length)
+            records_filtered = User.users_listing_filter(search, start, length, True)
+        else:
+            queryset = User.objects.all()[start:start + length]
+            records_filtered = records_total
 
 
-    result = BasicUserSerializer(queryset, many=True)
-    data = {
-        'draw': draw,
-        'recordsTotal': records_total,
-        'recordsFiltered': records_filtered,
-        'data': result.data
-    }
-    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+        result = BasicUserSerializer(queryset, many=True)
+        data = {
+            'draw': draw,
+            'recordsTotal': records_total,
+            'recordsFiltered': records_filtered,
+            'data': result.data
+        }
+        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+    return PermissionValidation.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def login(request):

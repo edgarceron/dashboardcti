@@ -4,9 +4,9 @@ from . import views
 from . import webservices
 
 urlpatterns = [
-    path('create', views.form, name='create_user'),
-    path('listing', views.listing, name='listing_user'),
-    path('update/<int:user_id>', views.form, name='update_user'),
+    path('create', views.form_user, name='create_user'),
+    path('listing', views.listing_user, name='listing_user'),
+    path('update/<int:user_id>', views.form_user, name='update_user'),
     path('add', webservices.add_user, name='add_user'),
     path('replace/<int:user_id>', webservices.replace_user, name='replace_user'),
     path('picker_list', webservices.picker_search_user, name='picker_list_user'),

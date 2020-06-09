@@ -67,7 +67,6 @@ Listado de perfiles
     </div>
 {% endblock %}
 {% block javascript %}
-<script src="{% static 'maingui/js/app/SoftNotification.js' %}"></script>
 <script>
     var url = "{% url 'data_list_profile' %}";
     var update_url = "{% url 'update_profile' profile_id=0 %}";

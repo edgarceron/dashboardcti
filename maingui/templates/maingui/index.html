@@ -630,11 +630,9 @@
     </div>
 
     <!-- Page level custom scripts -->
-    {% block javascript %}
-    <script type="text/javascript" src="{% static 'maingui/js/demo/chart-area-demo.js' %}"></script>
-    <script src="{% static 'maingui/js/demo/chart-pie-demo.js' %}"></script>
-    <script src='{% static "maingui/js/app/SoftNotification.js" %}'></script>
     <script src='{% static "maingui/js/app/maingui.js" %}'></script>
+    <script src='{% static "maingui/js/app/SoftNotification.js" %}'></script>
+
     <script>
         logout_url = "{% url 'logout' %}";
         login_url = "{% url 'login' %}";
@@ -648,6 +646,9 @@
             });
         });
     </script>
+    {% block javascript %}
+    <script type="text/javascript" src="{% static 'maingui/js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'maingui/js/demo/chart-pie-demo.js' %}"></script> 
     {% endblock %}
 
 </body>

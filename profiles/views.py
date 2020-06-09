@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from users.permission_validation import PermissionValidation
 from .models import Action, App
 
 # Create your views here.
@@ -10,26 +11,28 @@ def get_actions():
     ]
     return actions
 
-def form(request, profile_id=0):
+def form_profile(request, profile_id=0):
     "Returns the rendered template for the given profile."
-    if profile_id == 0:
-        action = "Crear"
-    else:
-        action = "Actualizar"
-    #TODO verificar usuario y permisos
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('form_profile')
+    if validation['status']:
+        if profile_id == 0:
+            action = "Crear"
+        else:
+            action = "Actualizar"
 
-    
-    result = actions_by_app()
-    return render(
-        request,
-        'profiles/form.html',
-        {
-            'id':profile_id,
-            'action':action,
-            'result': result,
-            'username': "Mauricio"
-        }
-    )
+        result = actions_by_app()
+        return render(
+            request,
+            'profiles/form.html',
+            {
+                'id':profile_id,
+                'action':action,
+                'result': result,
+                'username': "Mauricio"
+            }
+        )
+    return PermissionValidation.error_response_view(validation, request)
 
 def actions_by_app():
     """Return a list which contains each app with its info and actios"""
@@ -44,13 +47,16 @@ def actions_by_app():
         result.append({'id': app.id, 'label': app.label, 'actions': actionslist})
     return result
 
-def listing(request):
+def listing_profile(request):
     "Returns the rendered template for profile listing."
-    #TODO verificar usuario y permisos
-    return render(
-        request,
-        'profiles/listing.html',
-        {
-            'username': "Mauricio"
-        }
-    )
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('listing_profile')
+    if validation['status']:
+        return render(
+            request,
+            'profiles/listing.html',
+            {
+                'username': "Mauricio"
+            }
+        )
+    return PermissionValidation.error_response_view(validation, request)

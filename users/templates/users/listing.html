@@ -68,7 +68,6 @@
 
 {% endblock %}
 {% block javascript %}
-<script src="{% static 'maingui/js/app/SoftNotification.js' %}"></script>
 <script>
     var url = "{% url 'data_list_user' %}";
     var update_url = "{% url 'update_user' user_id=0 %}";

@@ -1,5 +1,6 @@
 "Contains the views for the users app."
 from django.shortcuts import render
+from .permission_validation import PermissionValidation
 
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
@@ -9,31 +10,37 @@ def get_actions():
     ]
     return actions
 
-def form(request, user_id=0):
+def form_user(request, user_id=0):
     "Returns the rendered template for the given user."
-    if user_id == 0:
-        action = "Crear"
-    else:
-        action = "Actualizar"
-    #TODO verificar usuario y permisos
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('form_user')
+    if validation['status']:
+        if user_id == 0:
+            action = "Crear"
+        else:
+            action = "Actualizar"
 
-    return render(
-        request,
-        'users/form.html',
-        {
-            'id':user_id,
-            'action':action,
-            'username': "Mauricio"
-        }
-    )
+        return render(
+            request,
+            'users/form.html',
+            {
+                'id':user_id,
+                'action':action,
+                'username': "Mauricio"
+            }
+        )
+    return PermissionValidation.error_response_view(validation, request)
 
-def listing(request):
+def listing_user(request):
     "Returns the rendered template for user listing."
-    #TODO verificar usuario y permisos
-    return render(
-        request,
-        'users/listing.html',
-        {
-            'username': "Mauricio"
-        }
-    )
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('form_user')
+    if validation['status']:
+        return render(
+            request,
+            'users/listing.html',
+            {
+                'username': "Mauricio"
+            }
+        )
+    return PermissionValidation.error_response_view(validation, request)
