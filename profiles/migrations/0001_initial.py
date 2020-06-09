@@ -48,12 +48,4 @@ class Migration(migrations.Migration):
             name='app',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='profiles.App'),
         ),
-        migrations.AddConstraint(
-            model_name='profilepermissions',
-            constraint=models.UniqueConstraint(fields=('profile', 'action'), name='ProfileAction'),
-        ),
-        migrations.AddConstraint(
-            model_name='action',
-            constraint=models.UniqueConstraint(fields=('app', 'name'), name='AppAction'),
-        ),
     ]

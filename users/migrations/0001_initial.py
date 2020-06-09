@@ -53,9 +53,5 @@ class Migration(migrations.Migration):
                 ('developer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.UserDeveloper')),
                 ('tecnology', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.Tecnology')),
             ],
-        ),
-        migrations.AddConstraint(
-            model_name='developertecnologies',
-            constraint=models.UniqueConstraint(fields=('developer', 'tecnology'), name='DeveloperTecnology'),
-        ),
+        )
     ]

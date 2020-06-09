@@ -26,10 +26,10 @@
             <input type="password" id="inputPassword" class="form-control" placeholder="Contraseña" required="">
             <div class="checkbox mb-3">
             <label>
-                <input type="checkbox" value="remember-me"> Recuerdame
+                <input id="inputRemember" type="checkbox" value="remember-me"> Recuerdame
             </label>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
+            <button class="btn btn-lg btn-primary btn-block" id="ingresar">Ingresar</button>
             <p class="mt-5 mb-3 text-muted">© 2019-{{year}}</p>
         </form>
     </div>
@@ -38,5 +38,24 @@
     {% endblock %}
 
 </body>
+<script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
+<script src="{% static 'maingui/js/app/login-form.js' %}"></script>
+<script>
+    $( document ).ready(function() {
+        login_url = "{% url 'login_user' %}";
+        index_url = "{% url 'index' %}";
 
+        $('#ingresar').click(function(event){
+            event.preventDefault();
+            login();
+        });
+
+        $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+                event.preventDefault();
+                login();
+            }
+        });
+    });
+</script>
 </html>

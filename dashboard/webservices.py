@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import DatosPersonalesSerializer
-from .models import DatosPersonales
+from .models import DatosPersonales, CurrentCallEntry
 
 # Create your views here.
 def get_actions():
@@ -47,7 +47,7 @@ def replace_datos(request, datos_id):
 
 @api_view(['POST'])
 def get_datos(request, datos_id):
-    "Return a JSON response with datos data for the given id"
+    """Return a JSON response with datos data for the given id"""
     #TODO verificar usuario y permisos
     datos_obj = DatosPersonales.objects.get(id=datos_id)
     datos_serializer = DatosPersonalesSerializer(datos_obj)
@@ -55,6 +55,53 @@ def get_datos(request, datos_id):
     data = {
         "success":True,
         "data": datos_serializer.data
+    }
+ 
+    return Response(
+        data,
+        status=status.HTTP_200_OK,
+        content_type='application/json'
+    )
+
+@api_view(['POST'])
+def get_cedula(request):
+    cedula = request.data['cedula']
+    try:
+        datos_obj = DatosPersonales.objects.get(identificacion=cedula)
+        datos_serializer = DatosPersonalesSerializer(datos_obj)
+        data = datos_serializer.data
+    except:
+        data = None
+
+    data = {
+        "success":True,
+        "data": data
+    }
+ 
+    return Response(
+        data,
+        status=status.HTTP_200_OK,
+        content_type='application/json'
+    )
+    
+
+@api_view(['POST'])
+def get_llamadas(request):
+    tel = None
+    try:
+        llamada = CurrentCallEntry.objects.get(id_agent=9)
+        tel = llamada.callerid
+        datos_obj = DatosPersonales.objects.get(telefono=tel)
+        datos_serializer = DatosPersonalesSerializer(datos_obj)
+        data = datos_serializer.data
+    except:
+        data = None
+        
+
+    data = {
+        "success":True,
+        "data": data,
+        "phone": tel
     }
  
     return Response(

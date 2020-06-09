@@ -1,5 +1,6 @@
 """Contains the webservices for the users app"""
 import datetime
+import pytz
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -42,7 +43,6 @@ def add_user(request):
 
         data = error_data(user_serializer)
         return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
-
     return PermissionValidation.error_response_webservice(validation, request)
 
 
@@ -98,22 +98,25 @@ def delete_user(request, user_id):
 @api_view(['POST'])
 def toggle_user(request, user_id):
     """Toogles the active state for a given user"""
-    #TODO verificar usuario y permisos
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('toggle_user')
+
     user_obj = User.objects.get(id=user_id)
     previous = user_obj.active
+    if validation['status']:
+        if previous:
+            message = "Usuario desactivado con exito"
+        else:
+            message = "Usuario activado con exito"
 
-    if previous:
-        message = "Usuario desactivado con exito"
-    else:
-        message = "Usuario activado con exito"
-
-    user_obj.active = not user_obj.active
-    user_obj.save()
-    data = {
-        "success": True,
-        "message": message
-    }
-    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+        user_obj.active = not user_obj.active
+        user_obj.save()
+        data = {
+            "success": True,
+            "message": message
+        }
+        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+    return PermissionValidation.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def picker_search_user(request):
@@ -164,8 +167,10 @@ def login(request):
     """Logs in the user if given credentials are valid"""
     username = request.data['username']
     password = request.data['password']
-
-    user = User.objects.get(username=username)
+    try:
+        user = User.objects.get(username=username)
+    except:
+        user = None
     if user is not None:
         encoded = user.password
         hasher = PBKDF2PasswordHasher()
@@ -175,7 +180,9 @@ def login(request):
             key = username + str(datetime.datetime.now())
             key = hasher.encode(key, 'key', 10)
             life = datetime.datetime.now() + datetime.timedelta(hours=14)
-            loginsession = LoginSession(key=key, life=life, user=user)
+            timezone = pytz.timezone("America/Bogota")
+            life_aware = timezone.localize(life)
+            loginsession = LoginSession(key=key, life=life_aware, user=user)
             loginsession.save()
             request.session['loginsession'] = key
             data = {
@@ -187,6 +194,16 @@ def login(request):
     data = {
         'success': False,
         'message':"Nombre de usuario o contraseña incorrectos"
+    }
+    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+
+@api_view(['POST'])
+def logout(request):
+    """ Logs out the user from the system"""
+    permission_obj = PermissionValidation(request)
+    permission_obj.logout(request)
+    data = {
+        'success': True
     }
     return Response(data, status=status.HTTP_200_OK, content_type='application/json')
 

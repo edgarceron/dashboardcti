@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from rest_framework.test import APITestCase
 from rest_framework import status
 from users.models import LoginSession, User
-from profiles.models import Profile, Action, App
+from profiles.models import Profile, Action, App, ProfilePermissions
 
 class UserModelTest(TestCase):
     def test_user_picker_filter(self):
@@ -139,7 +139,6 @@ class UserWebserviceTest(TestCase):
             profile=None
         )
         user1.save()
-        print('USER ID ----------------------------')
         url = reverse('login')
         data = {'username':username, 'password':password}
         response = self.client.post(url, data, format='json')
@@ -173,25 +172,14 @@ class UserWebserviceTest(TestCase):
         action_b.save()
         action_c.save()
         action_d.save()
-        actions = []
-        actions.append({'action':action_a.id, 'permission': True})
-        actions.append({'action':action_b.id, 'permission': True})
-        actions.append({'action':action_c.id, 'permission': False})
-        actions.append({'action':action_d.id, 'permission': False})
-        
-        data = {
-            'name':'Admin',
-            'active': True,
-            'actions': json.dumps(actions)
-        }
 
-        url = reverse('add_profile')
-        response = self.client.post(url, data, format='json')
-        success = response.data['success']
-        self.assertEqual(success, True)
+        profile = Profile(name='Admin', active=True)
+        profile.save()
 
-        profile = Profile.objects.get(name='Admin')
-
+        ProfilePermissions(profile=profile, action=action_a, permission=True).save()
+        ProfilePermissions(profile=profile, action=action_b, permission=True).save()
+        ProfilePermissions(profile=profile, action=action_c, permission=False).save()
+        ProfilePermissions(profile=profile, action=action_d, permission=False).save()
 
         password = 'password'
         username = 'edgar@yahoo.com'
@@ -207,28 +195,25 @@ class UserWebserviceTest(TestCase):
         )
         user1.save()
 
-
         url = reverse('login')
         data = {'username':username, 'password':password}       
         response = self.client.post(url, data, format='json')
-
-        key = response.data['key']
-        print(key)
 
         url_set = reverse('add_user')
         user_data = {
             'username':'test2@yahoo.com',
             'password':'password',
-            'name':'Michael',
+            'name':'Michelle',
             'lastname':'Light',
             'active':True,
             'profile':'',
         }
+
         response = self.client.post(url_set, user_data, format='json')
         success = response.data['success']
-
         self.assertEqual(success, True)
 
-
-
-
+        url_set = reverse('toggle_user', kwargs={'user_id': user1.id})
+        response = self.client.post(url_set, format='json')
+        success = response.data['success']
+        self.assertEqual(success, False)

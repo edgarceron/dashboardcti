@@ -1,7 +1,7 @@
 class SoftNotification{
-    static show(text){
+    static show(text, type='info'){
         var topc = 30;
-        var className = 'collapse alert alert-info alert-dismissible';
+        var className = `collapse alert alert-${type} alert-dismissible`;
 
         var iDiv = document.createElement('div');
 		iDiv.className = className;

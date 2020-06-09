@@ -54,9 +54,7 @@ class DeveloperTecnologies(models.Model):
     developer = models.ForeignKey(UserDeveloper, on_delete=models.CASCADE)
     tecnology = models.ForeignKey('Tecnology', on_delete=models.CASCADE)
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['developer', 'tecnology'], name="DeveloperTecnology")
-        ]
+        unique_together = ('developer', 'tecnology')
 
 class LoginSession(models.Model):
     key = models.CharField(unique=True, null=False, max_length=255)

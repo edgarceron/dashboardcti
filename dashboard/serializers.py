@@ -7,7 +7,7 @@ class DatosPersonalesSerializer(serializers.ModelSerializer):
     class Meta:
         model = DatosPersonales
         fields = [
-            'nombres', 'primer_apellido', 'segundo_apellido', 
+            'id','nombres', 'primer_apellido', 'segundo_apellido', 
             'fecha_nacimiento', 'tipo_documento', 'identificacion', 
             'telefono', 'email', 'direccion', 'departamento', 'barrio', 
             'municipio', 'tipo_servicio']

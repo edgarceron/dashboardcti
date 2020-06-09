@@ -1,4 +1,5 @@
 """Class for permission validation"""
+import pytz
 from datetime import datetime
 from rest_framework.response import Response
 from rest_framework import status
@@ -22,12 +23,16 @@ class PermissionValidation():
                 'status': False,
                 'error': 'Not logged'
             }
-        if self.login_session.life < datetime.now():
+
+        timezone = pytz.timezone("America/Bogota")
+        date_aware = timezone.localize(datetime.now())
+  
+        if self.login_session.life > date_aware:
             try:
                 action = Action.objects.get(name=action_name)
-                user = User.objects.get(id=self.login_session.user)
-                profile = Profile.objects.get(id=user.profile)
-                if self.action_possible(profile, action):
+                user = User.objects.get(id=self.login_session.user.id)
+                profile = user.profile
+                if self.action_possible(profile.id, action.id):
                     return {'status': True}
                 else:
                     return {
@@ -41,6 +46,11 @@ class PermissionValidation():
                 }
         else:
             return {'status': False, 'error':'Not logged'}
+
+    def logout(self, request):
+        """Deletes the loginsession key to denout logout"""
+        if self.login_session is not None:
+            del request.session['loginsession']
 
     @staticmethod
     def action_possible(profile, action):

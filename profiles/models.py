@@ -12,9 +12,7 @@ class Action(models.Model):
     app = models.ForeignKey(App, on_delete=models.CASCADE)
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['app', 'name'], name="AppAction")
-        ]
+        unique_together = ('name', 'app')
 
 class Profile(models.Model):
     name = models.CharField(unique=True, max_length=50, verbose_name="Nombre del perfil")
@@ -45,7 +43,5 @@ class ProfilePermissions(models.Model):
     permission = models.BooleanField(verbose_name="Estado")
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['profile', 'action'], name="ProfileAction")
-        ]
+        unique_together = ('profile', 'action')
 # Create your models here.
