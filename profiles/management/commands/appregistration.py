@@ -80,6 +80,7 @@ class Command(BaseCommand):
         registered_apps = App.objects.all()
         self.delete_removed_apps(registered_apps)
         self.create_apps()
+        registered_apps = App.objects.all()
 
         for app in registered_apps:
             app_id             = app.id

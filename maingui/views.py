@@ -1,18 +1,20 @@
 """ Contains the views for the maingui module"""
 import datetime
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from users.permission_validation import PermissionValidation
 
 def index(request):
     """ Returns the render for the index page"""
-    return render(
-        request,
-        'maingui/index.html',
-        {
-            'username': "Invitado"
-        }
-    )
+    permission_obj = PermissionValidation(request)
+    if permission_obj.login_session is not None:
+        return render(
+            request,
+            'maingui/index.html',
+            {
+                'username': permission_obj.user.name
+            }
+        )
+    return redirect('login')
 
 def login(request):
     """ Returns the render for the login page"""

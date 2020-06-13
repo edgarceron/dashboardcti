@@ -1,0 +1,47 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+Consola de agente
+{% endblock %}
+
+{% block topTitle %}
+Consola de agente
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-9">
+                <h3>Estado del agente: <span id="lblStatus">Conectado</span></h3>
+            </div>
+            <div class="col-3">
+                <h3>Hace: <span id="lblStatusTime">2:54</span></h3> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="successModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Unos segundos por favor</h5>
+            </div>
+            <div class="modal-body">
+                <p>Llamada entrante de: 3176483290</p>
+                <p>Número de cedula ingresado: 1144166082</p>
+            </div>
+            <div class="modal-footer">
+                <h3>Redirigiendo...</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+{% block javascript %}
+
+<script>
+    get_console_data_url = "{% url 'get_console_data' user_id=0 %}";
+</script>
+{% endblock %}

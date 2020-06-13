@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import DatosPersonalesSerializer
-from .models import DatosPersonales, CurrentCallEntry
+from .models import DatosPersonales
+from agent_console.models import CurrentCallEntry
 
 # Create your views here.
 def get_actions():

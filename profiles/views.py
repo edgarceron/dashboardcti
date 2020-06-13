@@ -29,7 +29,7 @@ def form_profile(request, profile_id=0):
                 'id':profile_id,
                 'action':action,
                 'result': result,
-                'username': "Mauricio"
+                'username': permission_obj.user.name
             }
         )
     return PermissionValidation.error_response_view(validation, request)
@@ -56,7 +56,7 @@ def listing_profile(request):
             request,
             'profiles/listing.html',
             {
-                'username': "Mauricio"
+                'username': permission_obj.user.name
             }
         )
     return PermissionValidation.error_response_view(validation, request)

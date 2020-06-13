@@ -26,7 +26,7 @@ def form_user(request, user_id=0):
             {
                 'id':user_id,
                 'action':action,
-                'username': "Mauricio"
+                'username': permission_obj.user.name
             }
         )
     return PermissionValidation.error_response_view(validation, request)
@@ -40,7 +40,7 @@ def listing_user(request):
             request,
             'users/listing.html',
             {
-                'username': "Mauricio"
+                'username': permission_obj.user.name
             }
         )
     return PermissionValidation.error_response_view(validation, request)

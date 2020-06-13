@@ -37,7 +37,7 @@ def add_user(request):
         if user_serializer.is_valid():
             user_serializer.save()
             return Response(
-                {"success":True},
+                {"success":True, "user_id":user_serializer.data.id},
                 status=status.HTTP_201_CREATED,
                 content_type='application/json')
 
@@ -52,12 +52,20 @@ def replace_user(request, user_id):
     validation = permission_obj.validate('replace_user')
     if validation['status']:
         user_obj = User.objects.get(id=user_id)
-        user_serializer = UserSerializer(user_obj, data=request.data)
+        data = request.data.copy()
+        password = data['password']
+        if password == "":
+            data['password'] = user_obj.password
+        else:
+            hasher = PBKDF2PasswordHasher()
+            data['password'] = hasher.encode(password, "Wake Up, Girls!")
+        
+        user_serializer = UserSerializer(user_obj, data=data)
 
         if user_serializer.is_valid():
             user_serializer.save()
             return Response(
-                {"success":True},
+                {"success":True, "user_id":user_id},
                 status=status.HTTP_200_OK,
                 content_type='application/json'
             )
@@ -74,10 +82,12 @@ def get_user(request, user_id):
     if validation['status']:
         user_obj = User.objects.get(id=user_id)
         user_serializer = UserSerializer(user_obj)
+        user_data = user_serializer.data.copy()
+        del user_data['password']
 
         data = {
             "success":True,
-            "data":user_serializer.data
+            "data":user_data
         }
     
         return Response(

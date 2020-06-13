@@ -68,6 +68,10 @@
                 </div>
             </div>
         </div>
+
+        {% block additional_fields %}
+
+        {% endblock additional_fields %}
         <div class='row'>
             <div class='col-md-6'>
                 <div class='form-group'>
@@ -97,7 +101,7 @@
     </div>
 </div>
 
-{% endblock %}
+{% endblock content %}
 {% block javascript %}
 <script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
 <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
@@ -107,15 +111,19 @@
     id = {{ id }};
     listing_url = "{% url 'listing_user' %}";
     add_url = "{% url 'add_user' %}";
-    list_profile_url = "{% url 'picker_list_profile' %}";
-    get_profile_url = "{% url 'get_profile' profile_id=0 %}"
+    picker_search_profile_url = "{% url 'picker_search_profile' %}";
+    get_profile_url = "{% url 'get_profile' profile_id=0 %}";
     get_url = "{% url 'get_user' user_id=0 %}";
     replace_url = "{% url 'replace_user' user_id=0 %}";
     replace_url = replace_url.slice(0, -1);
     get_url = get_url.slice(0, -1);
     get_profile_url = get_profile_url.slice(0, -1);
 </script>
-{% endblock %}
+{% block additional_javascript %}
+
+{% endblock additional_javascript %}
+
+{% endblock javascript %}
 
 
     

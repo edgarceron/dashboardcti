@@ -27,7 +27,8 @@ class IntegrationRouter:
         'form_data_recolected_entry',
         'form_field',
         'queue_call_entry',
-        'valor_config'
+        'valor_config',
+        'cedula_llamada'
     }
 
     def db_for_read(self, model, **hints):
@@ -52,10 +53,10 @@ class IntegrationRouter:
         involved.
         """
         if (
-            obj1._meta.db_table in self.call_center_tables or
-            obj2._meta.db_table in self.call_center_tables
+                obj1._meta.db_table in self.call_center_tables or
+                obj2._meta.db_table in self.call_center_tables
         ):
-           return True
+            return True
         return None
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
@@ -63,6 +64,6 @@ class IntegrationRouter:
         Make sure the call_center tables only appear in the
         'call_center' database.
         """
-        if app_label in self.call_center_tables:
+        if model_name in self.call_center_tables:
             return db == 'call_center'
         return None

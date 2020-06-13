@@ -16,6 +16,9 @@ class PermissionValidation():
         else:
             login_session = None
         self.login_session = login_session
+        if login_session is not None:
+            self.user = User.objects.get(id=self.login_session.user.id)
+            self.profile = self.user.profile
 
     def validate(self, action_name):
         """Checks if the login_session has permissions to execute the action"""
@@ -31,15 +34,12 @@ class PermissionValidation():
         if self.login_session.life > date_aware:
             try:
                 action = Action.objects.get(name=action_name)
-                user = User.objects.get(id=self.login_session.user.id)
-                profile = user.profile
-                if self.action_possible(profile.id, action.id):
+                if self.action_possible(self.profile.id, action.id):
                     return {'status': True}
-                else:
-                    return {
-                        'status': False,
-                        'error': 'Forbidden'
-                    }
+                return {
+                    'status': False,
+                    'error': 'Forbidden'
+                }
             except:
                 return {
                     'status': False,

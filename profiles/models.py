@@ -19,7 +19,7 @@ class Profile(models.Model):
     active = models.BooleanField(verbose_name="Activo/Inactivo", null=False, default=True)
 
     @staticmethod
-    def profilePickerFilter(value):
+    def profile_picker_filter(value):
         return list(Profile.objects.filter(
             Q(active=True),
             Q(name__contains=value)

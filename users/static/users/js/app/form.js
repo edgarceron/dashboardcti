@@ -5,6 +5,18 @@ var listing_url;
 var errorFields = [];
 var singleOperationRestriction = false;
 
+saveSuccess = function(result){
+    if(result.success){
+        FormFunctions.resetFormErrors(errorFields);
+        errorFields = [];
+        $('#successModal').modal('toggle');
+        $('#successModal').modal({backdrop:'static', keyboard:false}); 
+        setTimeout(function(){ 
+            $(location).attr('href', listing_url);
+        }, 2000);
+    }
+}
+
 function addData(){
     if(!singleOperationRestriction){
         singleOperationRestriction = true;
@@ -25,15 +37,7 @@ function addData(){
 
             },
             success: function(result){
-                if(result.success){
-                    FormFunctions.resetFormErrors(errorFields);
-                    errorFields = [];
-                    $('#successModal').modal('toggle');
-                    $('#successModal').modal({backdrop:'static', keyboard:false}); 
-                    setTimeout(function(){ 
-                        $(location).attr('href', listing_url);
-                    }, 2000);
-                }
+                saveSuccess(result);
             },
             error: function (request, status, error, result){
                 var details = request.responseJSON.Error.details;
@@ -64,15 +68,7 @@ function updateData(user_id){
         },
         beforeSend: function(){},
         success: function(result){
-            if(result.success){
-                FormFunctions.resetFormErrors(errorFields);
-                errorFields = [];
-                $('#successModal').modal('toggle');
-                $('#successModal').modal({backdrop:'static', keyboard:false}); 
-                setTimeout(function(){ 
-                    $(location).attr('href', listing_url);
-                }, 2000);
-            }
+            saveSuccess(result);
         },
         error: function (request, status, error, result){
             var details = request.responseJSON.Error.details;
@@ -130,12 +126,22 @@ function saveFunction(){
     }
 }
 
-function updatePicker(pickerName, value, text){
+function updatePicker(pickerName, resultados){
     var input = $(pickerName);
     input.html('');
-    var option = `<option value="${value}">${text}</option>`;
-    input.append(option);
+    var opVal;
+    var opText;
+    for(let data of resultados){
+        opVal = data.id;
+        opText = data.name;
+        addOption(input, opVal, opText);
+    }
     input.selectpicker("refresh");
+}
+
+function addOption(input, val, text){
+    var option = `<option value="${val}">${text}</option>`;
+    input.append(option);
 }
 
 function getProfileData(id_profile){ 
@@ -147,12 +153,10 @@ function getProfileData(id_profile){
             dataType: 'json',
             success: function(result){
                 if(result.success){
-                    profile = result.data;
+                    profile = [result.data];
                     if(profile != null){
-                        var opVal = profile.id;
-                        var opText = profile.name;
                         pickerName = '#profileInput';
-                        updatePicker(pickerName, opVal, opText);
+                        updatePicker(pickerName, profile);
                     }
                 }
             }
@@ -174,35 +178,8 @@ $( document ).ready(function() {
 
     if(id != 0){
         getData(id);
+        $('#passwordInput').attr("placeholder", "Ingrese aquí una nueva contraseña temporal");
     }
 
-    $('#profileInput').siblings().find("input[type='text']").keyup(
-        function(event){
-            var target = $(event.target);
-            var text = target.val();
-            if(text.length > 1){
-                $.ajax({
-                    url: list_profile_url,
-                    method: 'POST',
-                    async: false,
-                    dataType: 'json',
-                    data: {'value': text},
-                    beforeSend: function(){},
-                    success: function(result){
-                        if(result.success){
-                            data = result.result[0];
-                            pickerName = '#profileInput';
-                            var opVal = data.id;
-                            var opText = data.name;
-                            updatePicker(pickerName, opVal, opText);
-                        }
-                    },
-                    error: function (result, request, status, error){},
-                    complete: function(){
-                        singleOperationRestriction=false
-                    },
-                });
-            }
-        }
-    )
+    FormFunctions.setAjaxLoadPicker('#profileInput', picker_search_profile_url, updatePicker);
 });
