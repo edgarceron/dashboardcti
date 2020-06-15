@@ -4,7 +4,7 @@ from . import views
 from . import webservices
 
 urlpatterns = [
-    path('create', views.form_profile, name='create_profile'),
+    path('create', views.form_profile, name='form_profile'),
     path('listing_profile', views.listing_profile, name='listing_profile'),
     path('update/<int:profile_id>', views.form_profile, name='update_profile'),
     path('add', webservices.add_profile, name='add_profile'),

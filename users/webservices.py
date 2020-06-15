@@ -37,7 +37,7 @@ def add_user(request):
         if user_serializer.is_valid():
             user_serializer.save()
             return Response(
-                {"success":True, "user_id":user_serializer.data.id},
+                {"success":True, "user_id":user_serializer.data['id']},
                 status=status.HTTP_201_CREATED,
                 content_type='application/json')
 

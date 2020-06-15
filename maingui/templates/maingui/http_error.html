@@ -23,15 +23,6 @@
 <script src="{% static 'users/js/app/form.js' %}"></script>
 
 <script>
-    id = {{ id }};
-    listing_url = "{% url 'listing_user' %}";
-    add_url = "{% url 'add_user' %}";
-    list_profile_url = "{% url 'picker_list_profile' %}";
-    get_profile_url = "{% url 'get_profile' profile_id=0 %}"
-    get_url = "{% url 'get_user' user_id=0 %}";
-    replace_url = "{% url 'replace_user' user_id=0 %}";
-    replace_url = replace_url.slice(0, -1);
-    get_url = get_url.slice(0, -1);
-    get_profile_url = get_profile_url.slice(0, -1);
+
 </script>
 {% endblock %}

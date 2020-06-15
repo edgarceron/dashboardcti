@@ -1,4 +1,3 @@
-import json
 from django.urls import reverse
 from django.test import TestCase
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
@@ -53,12 +52,18 @@ class UserModelTest(TestCase):
 
 
 class UserWebserviceTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        actions = ['picker_search_user', 'delete_user', 'add_user', 'replace_user', 'toggle_user']
+        cls.create_credentials(actions)
+
     def test_picker_search_user(self):
+        self.login_with_permissions()
         user1 = User(
             username = 'test@yahoo.com',
             password = 'asdf',
             name = 'Edgar',
-            lastname = 'Ceron',
+            lastname = 'Florez',
             active = True,
             profile = None,
             need_password = True
@@ -76,16 +81,16 @@ class UserWebserviceTest(TestCase):
         user1.save()
         user2.save()
         
-        url = reverse('picker_list_user')
+        url = reverse('picker_search_user')
         data = {'value':'Edgar'}
         response = self.client.post(url, data, format='json')
         result = response.data['result']
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(dict(result[0])['username'], user1.username)
-        self.assertEqual(dict(result[1])['username'], user2.username)
+        self.assertEqual(len(result), 2)
 
     def test_picker_search_user_limit(self):
+        self.login_with_permissions()
         for x in range(20):
             aux = User(
                 username    = 'test' + str(x) + '@yahoo.com',
@@ -99,7 +104,7 @@ class UserWebserviceTest(TestCase):
             aux.save()
             aux = None
 
-        url = reverse('picker_list_user')
+        url = reverse('picker_search_user')
         data = {'value':'test'}
         response = self.client.post(url, data, format='json')
         result = response.data['result']
@@ -108,6 +113,7 @@ class UserWebserviceTest(TestCase):
         self.assertEqual(len(result), 10)
 
     def test_delete_user_test(self):
+        self.login_with_permissions()
         user1 = User(
             username='test@yahoo.com',
             password='asdf',
@@ -126,6 +132,7 @@ class UserWebserviceTest(TestCase):
         self.assertEqual(search, [])
 
     def test_login_user(self):
+        
         password = 'password'
         username = 'test@yahoo.com'
         hasher = PBKDF2PasswordHasher()
@@ -139,7 +146,7 @@ class UserWebserviceTest(TestCase):
             profile=None
         )
         user1.save()
-        url = reverse('login')
+        url = reverse('login_user')
         data = {'username':username, 'password':password}
         response = self.client.post(url, data, format='json')
         result = response.data['success']
@@ -160,45 +167,7 @@ class UserWebserviceTest(TestCase):
         self.assertEqual(result2, False)
 
     def test_check_permissions(self):
-        app_a = App(name="Usuarios")
-        app_a.save()
-
-        action_a = Action(name='add_user', label="", app=app_a)
-        action_b = Action(name='delete_user', label="", app=app_a)
-        action_c = Action(name='replace_user', label="", app=app_a)
-        action_d = Action(name='toggle_user', label="", app=app_a)
-
-        action_a.save()
-        action_b.save()
-        action_c.save()
-        action_d.save()
-
-        profile = Profile(name='Admin', active=True)
-        profile.save()
-
-        ProfilePermissions(profile=profile, action=action_a, permission=True).save()
-        ProfilePermissions(profile=profile, action=action_b, permission=True).save()
-        ProfilePermissions(profile=profile, action=action_c, permission=False).save()
-        ProfilePermissions(profile=profile, action=action_d, permission=False).save()
-
-        password = 'password'
-        username = 'edgar@yahoo.com'
-        hasher = PBKDF2PasswordHasher()
-        encoded = hasher.encode(password, "Wake Up, Girls!")
-        user1 = User(
-            username=username,
-            password=encoded,
-            name='Edgar',
-            lastname='Ceron',
-            active=True,
-            profile=profile
-        )
-        user1.save()
-
-        url = reverse('login')
-        data = {'username':username, 'password':password}       
-        response = self.client.post(url, data, format='json')
-
+        self.login_with_permissions()
         url_set = reverse('add_user')
         user_data = {
             'username':'test2@yahoo.com',
@@ -211,9 +180,52 @@ class UserWebserviceTest(TestCase):
 
         response = self.client.post(url_set, user_data, format='json')
         success = response.data['success']
+        user_id = response.data['user_id']
         self.assertEqual(success, True)
 
-        url_set = reverse('toggle_user', kwargs={'user_id': user1.id})
+        url_set = reverse('toggle_user', kwargs={'user_id': user_id})
         response = self.client.post(url_set, format='json')
         success = response.data['success']
-        self.assertEqual(success, False)
+        self.assertEqual(success, True)
+
+    def login_with_permissions(self):
+        password = 'password'
+        username = 'edgar@yahoo.com'
+        url = reverse('login_user')
+        data = {'username':username, 'password':password}       
+        self.client.post(url, data, format='json')
+
+    @staticmethod
+    def create_credentials(actions):
+        """Creates a login session with permissión for the given actions"""
+        app_a = App(name="Usuarios")
+        app_a.save()
+
+        created_actions = []
+        for action in actions:
+            created_actions.append(Action(name=action, label="", app=app_a))
+
+        for i in range(0, len(created_actions)):
+            created_actions[i].save()
+
+        profile = Profile(name='Admin', active=True)
+        profile.save()
+
+        for action in created_actions:
+            ProfilePermissions(profile=profile, action=action, permission=True).save()
+
+        password = 'password'
+        username = 'edgar@yahoo.com'
+        hasher = PBKDF2PasswordHasher()
+        encoded = hasher.encode(password, "Wake Up, Girls!")
+        user1 = User(
+            username=username,
+            password=encoded,
+            name='ADMINISTRADOR',
+            lastname='ADMINISTRADOR',
+            active=True,
+            profile=profile
+        )
+        user1.save()
+
+        return user1

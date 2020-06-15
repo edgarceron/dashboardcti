@@ -11,6 +11,7 @@ class PermissionValidation():
     """Class for permission validation"""
     def __init__(self, request):
         key = request.session.get('loginsession')
+
         if key is not None:
             login_session = LoginSession.objects.get(key=key)
         else:
@@ -59,7 +60,7 @@ class PermissionValidation():
         try:
             permission = ProfilePermissions.objects.get(profile=profile, action=action)
             return permission.permission
-        except:
+        except:    
             return False
 
     @staticmethod

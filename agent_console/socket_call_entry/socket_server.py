@@ -1,8 +1,8 @@
+"""Manage a tcp server for the call on each agen as a new connection"""
 import socket
-import sys
 import json
 import time
-from _thread import *
+from _thread import start_new_thread
 from agent_console.models import Audit, Agent, CurrentCallEntry, CedulaLlamada
 
 def is_loged(id_agent):
@@ -67,6 +67,7 @@ def get_answer(state, current_call=None):
         answer['phone'] = current_call.callerid
         answer['cedula'] = get_cedula(current_call.uniqueid)
 
+    answer = json.dumps(answer)
     return answer
 
 def threaded_client(connection, client_address):
