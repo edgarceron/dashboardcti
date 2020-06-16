@@ -329,3 +329,10 @@ class UserAgent(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, unique=True)
     agent = models.IntegerField(unique=True)
     fake = models.CharField(max_length=100, default="")
+
+class ServerLog(models.Model):
+    """Saves the events in the server log, test or debug only"""
+    event = models.CharField(max_length=1)
+    agent = models.CharField(max_length=10)
+    description = models.CharField(max_length=200)
+    datetime = models.DateTimeField()
