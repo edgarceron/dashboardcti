@@ -7,10 +7,15 @@ import json
 
 class AgentConsoleSocketClient():
     sel = selectors.DefaultSelector()
+    message = 0
+
+    def __init__(self, verbosity=False):
+        self.verbosity = verbosity
 
     def start_connection(self, host, port, data):
         server_addr = (host, port)
-        print("starting connection to", server_addr)
+        if self.verbosity:
+            print("starting connection to", server_addr)
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setblocking(False)
         sock.connect_ex(server_addr)
@@ -19,31 +24,36 @@ class AgentConsoleSocketClient():
 
     def service_connection(self, key, mask):
         sock = key.fileobj
-        data = key.data
-        if mask & selectors.EVENT_READ:
-            recv_data = sock.recv(1024)  # Should be ready to read
-            if recv_data:
-                print("received", repr(recv_data), "from connection", data.connid)
+        try:
+            if mask & selectors.EVENT_READ:
+                recv_data = sock.recv(1024)  # Should be ready to read
+                if recv_data:
+                    if self.verbosity:
+                        print("Client: received", repr(recv_data))
+                if recv_data == "close":
+                    if self.verbosity:
+                        print("Client: closing connection")
+                    self.sel.unregister(sock)
+                    sock.close()
+            if mask & selectors.EVENT_WRITE:
+                if self.message:
+                    if self.verbosity:
+                        print("sending", repr(self.message), "to connection")
+                    sock.send(self.message)  # Should be ready to write
+                    self.message = 0
+        except BlockingIOError:
+            if self.verbosity:
+                print("Socket bloqueado")
 
-            if recv_data == "close":
-                print("closing connection", data.connid)
-                self.sel.unregister(sock)
-                sock.close()
-        if mask & selectors.EVENT_WRITE:
-            if data.message:
-                print("sending", repr(data.message), "to connection")
-                sent = sock.send(data.outb)  # Should be ready to write
-                data.message = 0
-
+    def set_message(self, data):
+        json_data = json.dumps(data)
+        self.message = bytes(json_data, 'utf-8')
 
     def start_client(self):
         host = '127.0.0.1'
         port = 16899
-        json_data = json.dumps({'id':'103'})
-        data = types.SimpleNamespace(
-                    message=json_data
-        )
-        self.start_connection(host, int(port), data)
+        
+        self.start_connection(host, int(port), None)
 
         try:
             while True:

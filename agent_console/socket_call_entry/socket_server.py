@@ -8,9 +8,16 @@ import pytz
 from _thread import start_new_thread
 from agent_console.models import Audit, Agent, CurrentCallEntry, CedulaLlamada, ServerLog
 
-class AgentConsoleSockectServer():
+class AgentConsoleSocketServer():
     server = None
     sel = selectors.DefaultSelector()
+    agents = {}
+    connections = []
+    previous_states = {}
+    previous_calls = {}
+
+    def __init__(self, verbosity=0):
+        self.verbosity = verbosity
 
     @staticmethod
     def is_loged(id_agent):
@@ -52,8 +59,7 @@ class AgentConsoleSockectServer():
         except CedulaLlamada.DoesNotExist:
             return None
 
-    @staticmethod
-    def get_answer(state, id_agent, current_call=None, log=False):
+    def get_answer(self, state, id_agent, current_call=None):
         """Returns the server answer given a state"""
         answer = {}
         if state == "1":
@@ -76,133 +82,130 @@ class AgentConsoleSockectServer():
             answer['call'] = True
             answer['status'] = "Conectado"
             answer['phone'] = current_call.callerid
-            answer['cedula'] = AgentConsoleSockectServer.get_cedula(current_call.uniqueid)
+            answer['cedula'] = AgentConsoleSocketServer.get_cedula(current_call.uniqueid)
 
-        if log:
+        if self.verbosity:
             timezone = pytz.timezone("America/Bogota")
             server_log = ServerLog(
                 event=state,
                 agent=id_agent,
-                description=answer['messsage'],
+                description=answer['message'],
                 datetime=timezone.localize(datetime.now())
             )
             server_log.save()
+            print("saved " + str(id_agent))
         answer = json.dumps(answer)
-        return answer
+        return bytes(answer, 'utf-8')
 
     @staticmethod
-    def threaded_client(connection, client_address):
-        """Starts a new client as a thread"""
-        events = selectors.EVENT_READ | selectors.EVENT_WRITE
-        self.sel.register(connection, events, data=None)
+    def check_state(id_agent):
+        call_id=""
+        if not AgentConsoleSocketServer.agent_exist(id_agent):
+            state = "1"
+        elif not AgentConsoleSocketServer.is_loged(id_agent):
+            state = "2"
+        else:
+            current_call = AgentConsoleSocketServer.agent_current_call(id_agent)
+            if current_call is None:
+                state = "3"
+            else:
+                state = "4"
+                call_id = current_call.uniqueid
 
-        try:
-            print('connection from', client_address)
-            # Receive the data in small chunks and retransmit it
-            id_agent = ""
+        return state, call_id
 
-            while True:
-                #Server recibe de cliente
-                data = connection.recv(2048)
-                data = data.decode("utf-8")
-                print('received {!r}'.format(data))
-                agent_info = json.loads(data)
-                id_agent = agent_info['id']
-                if id_agent != "":
-                    break
 
-            previus = -1
-            state = ""
-            past_call = ""
-            while True:
-                if not AgentConsoleSockectServer.agent_exist(id_agent):
-                    state = "1"
-                elif not AgentConsoleSockectServer.is_loged(id_agent):
-                    state = "2"
-                else:
-                    current_call = AgentConsoleSockectServer.agent_current_call(id_agent)
-                    if current_call is None:
-                        state = "3"
-                    else:
-                        state = "4"
-                if state == "4":
-                    if current_call.uniqueid != past_call:
-                        past_call = current_call.uniqueid
-                        answer = AgentConsoleSockectServer.get_answer(state, id_agent, current_call)
-                        connection.sendall(answer)
-                elif previus != state:
-                    previus = state
-                    answer = AgentConsoleSockectServer.get_answer(state, id_agent)
-                    connection.sendall(answer)
-
-                time.sleep(1)
-        finally:
-            # Clean up the connection
-            connection.close()
-
-    @staticmethod
-    def manage_incoming_data(recv_data):
+    def manage_incoming_data(self, recv_data):
         id_agent = ""
         if recv_data:
             recv_data = recv_data.decode("utf-8")
             print('received {!r}'.format(recv_data))
             agent_info = json.loads(recv_data)
             id_agent = agent_info['id']
-        if recv_data == "close":
-            print("closing connection to", data.addr)
-            sel.unregister(sock)
-            sock.close()
+            if recv_data == "close":
+                print("closing connection")
+                self.sel.unregister(self.server)
+                self.server.close()
         return id_agent
 
     def service_connection(self, key, mask):
         sock = key.fileobj
-        data = key.data
-        id_agent = ""
+        state = ""
 
         if mask & selectors.EVENT_READ:
             recv_data = sock.recv(1024)  # Should be ready to read
-            id_agent = self.manage_incoming_data(recv_data)
+            if recv_data:
+                print("Se lee un mensaje")
+                self.agents[sock.getpeername()] = self.manage_incoming_data(recv_data)
 
         if mask & selectors.EVENT_WRITE:
-            if data.outb:
-                print("echoing", repr(data.outb), "to", data.addr)
-                sent = sock.send(data.outb)  # Should be ready to write
-                data.outb = data.outb[sent:]
-                
+            if sock.getpeername() in self.agents:
+                id_agent = self.agents[sock.getpeername()]
+                if not id_agent in self.previous_states:
+                    self.previous_states[id_agent] = ""
+
+                if not id_agent in self.previous_calls:
+                    self.previous_calls[id_agent] = ""
+
+                state, current_call = self.check_state(id_agent)
+
+                if state == "4":
+                    if current_call != self.previous_calls[id_agent]:
+                        self.previous_calls[id_agent] = current_call
+                        answer = self.get_answer(state, id_agent, current_call)
+                        print("Sever: Sending ", repr(answer), "to connection")
+                        sock.send(answer)
+                elif self.previous_states[id_agent] != state:
+                    self.previous_states[id_agent] = state
+                    answer = self.get_answer(state, id_agent)
+                    print("Sever: Sending ", repr(answer), "to connection")
+                    sock.send(answer)
+
+    def accept_wrapper(self, sock):
+        try:
+            conn, addr = sock.accept()  # Should be ready to read
+            print("accepted connection from", addr)
+            conn.setblocking(False)
+            events = selectors.EVENT_READ | selectors.EVENT_WRITE
+            self.sel.register(conn, events, data=None)
+            self.connections.append(conn)
+
+        except OSError:
+            print("El socket esta cerrado accep_wrapper")
+    
     # Create a TCP/IP socket
     def start_server(self):
         """ Starts the socket server """
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         # Bind the socket to the port
         server_address = ('localhost', 16899)
         print('starting up on {} port {}'.format(*server_address))
-        sock.bind(server_address)
+        self.server.bind(server_address)
 
         # Listen for incoming connections
-        sock.listen()
-        sock.setblocking(False)
+        self.server.listen()
+        self.server.setblocking(False)
 
-        self.sel.register(sock, selectors.EVENT_READ, data=None)
+        self.sel.register(self.server, selectors.EVENT_READ, data=None)
 
         try:
             while True:
-                events = sel.select(timeout=None)
+                events = self.sel.select(timeout=None)
                 for key, mask in events:
-                    if key.data is None:
-                        accept_wrapper(key.fileobj)
+                    if not key.fileobj in self.connections:
+                        self.accept_wrapper(key.fileobj)
                     else:
-                        service_connection(key, mask)
+                        self.service_connection(key, mask)
+                time.sleep(1)
         except KeyboardInterrupt:
             print("caught keyboard interrupt, exiting")
-        finally:
-            sel.close()
+        except OSError as e:
+            print("Ocurrio un error de OS:")
+            print(e)
 
-#        while True:
-#            print('waiting for a connection')
-#            connection, client_address = self.server.accept()
-#            connection.setblocking(False)
-#            start_new_thread(self.threaded_client, (connection, client_address, ))
+        finally:
+            self.sel.close()
 
     def stop_server(self):
         """ Stops the socket server """

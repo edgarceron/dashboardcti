@@ -8,5 +8,9 @@ urlpatterns = [
     path('update/<int:user_id>', views.form_user_agent, name='update_user_agent'),
     path('set_user_agent', webservices.set_user_agent, name='set_user_agent'),
     path('get_agent/<int:user_id>', webservices.get_agent, name='get_agent'),
-    path('picker_search_agent', webservices.picker_search_agent, name='picker_search_agent')
+    path('picker_search_agent', webservices.picker_search_agent, name='picker_search_agent'),
+    path('agent_console', views.agent_console, name='agent_console'),
+    path('agent_state', webservices.agent_state, name='agent_state'),
+    path('get_crm_url', webservices.get_crm_url, name='get_crm_url'),
+
 ]

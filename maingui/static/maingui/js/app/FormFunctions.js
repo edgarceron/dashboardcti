@@ -40,8 +40,8 @@ class FormFunctions{
                         beforeSend: function(){},
                         success: function(result){
                             if(result.success){
-                                resultados = result.result;
-                                pickerName = input;
+                                var resultados = result.result;
+                                var pickerName = input;
                                 updateFunction(pickerName, resultados);
                             }
                         },

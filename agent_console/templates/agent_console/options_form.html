@@ -1,0 +1,71 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+Opciones de consola de agente
+{% endblock %}
+
+{% block topTitle %}
+Opciones de consola de agente
+{% endblock %}
+{% block content %}
+<div class="row">
+    <form action="" class="needs-validation w-100" novalidate>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="urlInput">Url de redirección</label>
+                    <input type="text" class="form-control appform" id="urlInput" required>
+                    <div class="valid-feedback" id='urlValid'>Valid.</div>
+                    <div class="invalid-feedback" id = 'urlInvalid'>Please fill out this field.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="redirectionTimeInput">Tiempo de espera de redirección</label>
+                    <input type="text" class="form-control appform" id="redirectionTimeInput" required>
+                    <div class="valid-feedback" id='redirectionTimeValid'>Valid.</div>
+                    <div class="invalid-feedback" id = 'redirectionTimeInvalid'>Please fill out this field.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class='row'>
+            <div class='col-md-6'>
+                <div class='form-group'>
+                    <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="successModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Unos segundos por favor</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success" role="alert" id="modalMessage">
+                    Guardado con exito!
+                </div>
+            </div>
+            <div class="modal-footer">
+                Redirigiendo...
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+{% block javascript %}
+<script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
+<script src="{% static 'agent_console/js/app/options_form.js' %}"></script>
+
+<script>
+    save_options_agent_console_url = "{% url 'save_options_agent_console' %}";
+    get_options_agent_console_url = "{% url 'get_options_agent_console' %}";
+    
+</script>

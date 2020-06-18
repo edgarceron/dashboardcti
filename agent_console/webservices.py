@@ -3,8 +3,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from users.permission_validation import PermissionValidation
+from .console_functions.agent_state import AgentState
 from .serializers import UserAgentSerializer, AgentSerializer
-from .models import UserAgent, Agent
+from .models import UserAgent, Agent, AgentConsoleOptions
 
 
 def get_actions():
@@ -13,6 +14,8 @@ def get_actions():
         {"name": "set_user_agent", "label": "Webservice enlazar usuario con agente de call center"},
         {"name": "picker_search_agent", "label": "Webservice para actualizar el picker de agentes"},
         {"name": "get_agent", "label": "Webservice para obteber los datos del agente"},
+        {"name": "agent_state", "label": "Webservice para obteber el estado del agente"},
+        {"name": "get_crm_url", "label": "Webservice para obteber la url de redirección al CRM"},
     ]
     return actions
 
@@ -101,6 +104,50 @@ def get_agent(request, user_id):
         )
     return PermissionValidation.error_response_webservice(validation, request)
 
+@api_view(['POST'])
+def agent_state(request):
+    """Gets the agent state"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('agent_state')
+    if validation['status']:
+        agent_state_obj = AgentState(False)
+        data = request.data
+        previous_state = data['previous_state']
+        id_agent = data['id_agent']
+        previous_call = data['previous_call']
+
+        state, current_call = agent_state_obj.check_state(id_agent)
+        if (state == 4 and current_call.uniqueid != previous_call) or state != previous_state:
+            answer = agent_state_obj.get_answer(state, id_agent, current_call)
+        else:
+            answer = {'update': False}
+
+        return Response(answer, status=status.HTTP_200_OK, content_type='application/json')
+
+    return PermissionValidation.error_response_webservice(validation, request)
+
+@api_view(['POST'])
+def get_crm_url(request):
+    """Gets the agent state"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('get_crm_url')
+    if validation['status']:
+        try:
+            option = AgentConsoleOptions.objects.get(option='CRM_URL')
+            data = {
+                'success': True,
+                'url': option.value
+            }
+        except AgentConsoleOptions.DoesNotExist:
+            data = {
+                'success': False,
+                'url': "No se ha especificado un valor para la url de redirección"
+            }
+
+        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+
+    return PermissionValidation.error_response_webservice(validation, request)
+
 def error_data(user_serializer):
     """Return a common JSON error result"""
     error_details = []
@@ -116,4 +163,3 @@ def error_data(user_serializer):
         }
     }
     return data
-    

@@ -1,10 +1,12 @@
 """ Contains the view for the agent consoole module"""
 from django.shortcuts import render
 from users.permission_validation import PermissionValidation
+from .models import UserAgent
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
     actions = [
-        {"name": "form_user_agent", "label": "Webservice enlazar usuario con agente de call center"},
+        {"name": "form_user_agent", "label": "Formulario para usuario con agente"},
+        {"name": "agent_console", "label": "Vista de la consola principal del agente"},
     ]
     return actions
 
@@ -28,4 +30,24 @@ def form_user_agent(request, user_id=0):
             }
         )
     return PermissionValidation.error_response_view(validation, request)
+
+def agent_console(request):
+    "Returns the rendered template for the given user."
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('agent_console')
+    if validation['status']:
+        id_user = permission_obj.user.id
+        user_agent = UserAgent.objects.get(user=id_user)
+        id_agent = user_agent.agent
+        data = {
+            'id_agent': id_agent,
+            'username': permission_obj.user.name
+        }
+        return render(
+            request,
+            'agent_console/agent_console.html',
+            data
+        )
+    return PermissionValidation.error_response_view(validation, request)
+
 # Create your views here.

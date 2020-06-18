@@ -336,3 +336,9 @@ class ServerLog(models.Model):
     agent = models.CharField(max_length=10)
     description = models.CharField(max_length=200)
     datetime = models.DateTimeField()
+
+class AgentConsoleOptions(models.Model):
+    """Stores the values of the options for the agent console"""
+    option = models.CharField(max_length=40)
+    value = models.CharField(max_length=255, unique=True)
+    help_text = models.CharField(max_length=255, null=True, blank=True)
