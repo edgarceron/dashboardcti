@@ -321,7 +321,7 @@ class CedulaLlamada(models.Model):
     cedula = models.CharField(max_length=15, blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'cedula_llamada'
 
 class UserAgent(models.Model):

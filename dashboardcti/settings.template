@@ -32,8 +32,16 @@ ALLOWED_HOSTS = []
 WEB_APPS = [
     'users',
     'profiles',
-    'dashboard'
+    'dashboard',
+    'agent_console'
 ]
+
+WEB_APPS_LABELS = {
+    'users' : 'Usuarios',
+    'profiles' : 'Perfiles',
+    'dashboard' : 'Dashboard',
+    'agent_console' : 'Consola de agente',
+}
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -42,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'maingui',
+    'maingui'
 ]
 
 INSTALLED_APPS += WEB_APPS
@@ -76,24 +84,55 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'dashboardcti.wsgi.application'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+WSGI_APPLICATION = 'dashboardcti.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+call_center = {
+    'NAME': 'call_center',
+    'ENGINE': 'django.db.backends.mysql',
+    'USER': 'user',
+    'PASSWORD': 'password',
+    'HOST': 'localhost',
+    'PORT':'3306'
+}
+
+caribe_dms = {
+    'ENGINE': 'sql_server.pyodbc',
+    'NAME': 'CARIBE1',
+    'HOST': "localhost",
+    'PORT': '1433',
+    'USER': 'user',
+    'PASSWORD': 'password',
+    'OPTIONS': {
+        'driver': 'ODBC Driver 17 for SQL Server',
+    }
+}
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dashboardcti',
-        'USER': 'vozip',
-        'PASSWORD': 'rVozip301',
+        'USER': 'user',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '5432',
-    }
+    },
+
+    'call_center': call_center,
+    #'caribe_dms': caribe_dms
 }
 
-
+DATABASE_ROUTERS = ['dashboard.dbrouters.router.IntegrationRouter']
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -110,6 +149,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
 ]
 
 REST_FRAMEWORK = {}
