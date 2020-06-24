@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from users.permission_validation import PermissionValidation
 from .console_functions.agent_state import AgentState
+from .console_functions.generate_users import GenerateUsers
 from .serializers import UserAgentSerializer, AgentSerializer
 from .models import UserAgent, Agent, AgentConsoleOptions
 
@@ -16,6 +17,15 @@ def get_actions():
         {"name": "get_agent", "label": "Webservice para obteber los datos del agente"},
         {"name": "agent_state", "label": "Webservice para obteber el estado del agente"},
         {"name": "get_crm_url", "label": "Webservice para obteber la url de redirección al CRM"},
+        {
+            "name": "replace_options_agent_console",
+            "label": "Webservice para guardar las opciones de la consola de agente"},
+        {
+            "name": "get_options_agent_console",
+            "label": "Webservice para obtener las opciones de la consola de agente"},
+        {
+            "name": "auto_generate_users",
+            "label": "Webservice para generar los usuario automaticamente"}
     ]
     return actions
 
@@ -28,12 +38,21 @@ def set_user_agent(request):
         data = request.data
         user_id = data['user']
         agent_id = data['agent']
+
         try:
             query = UserAgent.objects.filter(user=user_id)
             if len(query) > 0:
                 for obj in query:
                     model = obj
+                    if agent_id == "":
+                        model.delete()
+                        return Response(
+                            {"success":True, "message":"UserAgent deleted"},
+                            status=status.HTTP_200_OK,
+                            content_type='application/json')
+
                     serializer = UserAgentSerializer(instance=model, data=data)
+
             else:
                 serializer = UserAgentSerializer(data=data)
             if serializer.is_valid():
@@ -145,6 +164,98 @@ def get_crm_url(request):
             }
 
         return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+
+    return PermissionValidation.error_response_webservice(validation, request)
+
+
+@api_view(['PUT'])
+def replace_options_agent_console(request):
+    "Tries to update the agent console options"
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('replace_options_agent_console')
+    if validation['status']:
+        data = request.data.copy()
+        url = data['CRM_URL']
+        redirection_time = data['REDIRECT_TIME']
+        try:
+            option_url = AgentConsoleOptions.objects.get(option='CRM_URL')
+        except AgentConsoleOptions.DoesNotExist:
+            option_url = AgentConsoleOptions()
+            option_url.option = 'CRM_URL'
+
+        try:
+            option_redirection = AgentConsoleOptions.objects.get(option='REDIRECT_TIME')
+        except AgentConsoleOptions.DoesNotExist:
+            option_redirection = AgentConsoleOptions()
+            option_redirection.option = 'REDIRECT_TIME'
+
+        option_url.value = url
+        option_redirection.value = redirection_time
+
+        option_url.save()
+        option_redirection.save()
+
+        return Response(
+            {"success":True},
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
+    return PermissionValidation.error_response_webservice(validation, request)
+
+@api_view(['POST'])
+def get_options_agent_console(request):
+    "Return a JSON response with user data for the given id"
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('get_options_agent_console')
+    if validation['status']:
+        try:
+            option_url = AgentConsoleOptions.objects.get(option='CRM_URL')
+        except AgentConsoleOptions.DoesNotExist:
+            option_url = AgentConsoleOptions()
+            option_url.option = 'CRM_URL'
+
+        try:
+            option_redirection = AgentConsoleOptions.objects.get(option='REDIRECT_TIME')
+        except AgentConsoleOptions.DoesNotExist:
+            option_redirection = AgentConsoleOptions()
+            option_redirection.option = 'REDIRECT_TIME'
+
+        options = {
+            option_url.option: option_url.value,
+            option_redirection.option: option_redirection.value
+        }
+
+        data = {
+            "success":True,
+            "data":options
+        }
+
+        return Response(
+            data,
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
+    return PermissionValidation.error_response_webservice(validation, request)
+
+@api_view(['POST'])
+def auto_generate_users(request):
+    "Return a JSON response with user data for the given id"
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('auto_generate_users')
+    if validation['status']:
+        try:
+            GenerateUsers.bulk_create_users()
+            return Response(
+                {'success':True, 'message':'Usuarios Generados con exito'},
+                status=status.HTTP_200_OK,
+                content_type='application/json'
+            )
+        except:
+            return Response(
+                {'success':False, 'message':'Ocurrio un error al intentar generar los usuarios'},
+                status=status.HTTP_200_OK,
+                content_type='application/json'
+            )
 
     return PermissionValidation.error_response_webservice(validation, request)
 

@@ -53,33 +53,36 @@ function addData(){
 }
 
 function updateData(user_id){
-    $.ajax({
-        url: replace_url + user_id,
-        method: 'PUT',
-        async: false,
-        dataType: 'json',
-        data: {
-            "name"    : $('#nameInput').val(),
-            "lastname": $('#lastnameInput').val(),
-            "username": $('#usernameInput').val(),
-            "password": $('#passwordInput').val(),
-            "active"  : $('#activeInput').prop('checked'),
-            "profile" : $('#profileInput').val()
-        },
-        beforeSend: function(){},
-        success: function(result){
-            saveSuccess(result);
-        },
-        error: function (request, status, error, result){
-            var details = request.responseJSON.Error.details;
-            FormFunctions.resetFormErrors(errorFields);
-            errorFields = [];
-            FormFunctions.setFormErrors(details);
-        },
-        complete: function(){
-            singleOperationRestriction = false;
-        }
-    });
+    if(!singleOperationRestriction){
+        singleOperationRestriction = true;
+        $.ajax({
+            url: replace_url + user_id,
+            method: 'PUT',
+            async: false,
+            dataType: 'json',
+            data: {
+                "name"    : $('#nameInput').val(),
+                "lastname": $('#lastnameInput').val(),
+                "username": $('#usernameInput').val(),
+                "password": $('#passwordInput').val(),
+                "active"  : $('#activeInput').prop('checked'),
+                "profile" : $('#profileInput').val()
+            },
+            beforeSend: function(){},
+            success: function(result){
+                saveSuccess(result);
+            },
+            error: function (request, status, error, result){
+                var details = request.responseJSON.Error.details;
+                FormFunctions.resetFormErrors(errorFields);
+                errorFields = [];
+                FormFunctions.setFormErrors(details);
+            },
+            complete: function(){
+                singleOperationRestriction = false;
+            }
+        });
+    }
 }
 
 function getData(user_id){
@@ -99,21 +102,12 @@ function getData(user_id){
                 if(inputName == "#profileInput"){
                     getProfileData(data[keys[field]]);
                 }
-                setValue(input, data[keys[field]])
+                FormFunctions.setValue(input, data[keys[field]]);
             }
         },
         error: function (request, status, error){},
         complete: function(){},
     });
-}
-
-function setValue(input, value){
-    if(typeof(value) == 'boolean'){
-        input.prop("checked", value);
-    }
-    else{
-        input.val(value);
-    }
 }
 
 

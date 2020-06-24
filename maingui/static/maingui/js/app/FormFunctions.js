@@ -56,4 +56,13 @@ class FormFunctions{
             }
         )
     }
+
+    static setValue(input, value){
+        if(typeof(value) == 'boolean'){
+            input.prop("checked", value);
+        }
+        else{
+            input.val(value);
+        }
+    }
 }

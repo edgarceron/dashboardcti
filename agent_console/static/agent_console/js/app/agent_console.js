@@ -4,7 +4,7 @@ function getAgentState(agent, previous_state, previous_call){
         $.ajax({
             url: agent_state_url,
             method: 'POST',
-            async: false,
+            async: true,
             dataType: 'json',
             data: {
                 'id_agent': agent,
@@ -37,6 +37,10 @@ function getAgentState(agent, previous_state, previous_call){
             },
         });
     }
+    else{
+        $('#lblStatus').html("No es agente");
+        $('#lblMessage').html("No hay un agente ligado a este usuario");
+    }
 }
 
 function redirectToCrm(cedula, phone, extension, llamada_id){
@@ -47,10 +51,10 @@ function redirectToCrm(cedula, phone, extension, llamada_id){
         dataType: 'json',
         success: function(result){
             if(result.success){
-                var documento = "?documento=" + cedula;
-                var telefono = "?telfono=" + phone;
-                var ext = "?extension=" + extension;
-                var llamada = "?llamada_id=" + llamada_id;
+                var documento = "&documento=" + cedula;
+                var telefono = "&telfono=" + phone;
+                var ext = "&extension=" + extension;
+                var llamada = "&llamada_id=" + llamada_id;
                 var url = result.url + documento + telefono + ext + llamada;
                 setTimeout(function(){ 
                     $(location).attr('href', url);

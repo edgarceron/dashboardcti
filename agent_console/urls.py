@@ -12,5 +12,15 @@ urlpatterns = [
     path('agent_console', views.agent_console, name='agent_console'),
     path('agent_state', webservices.agent_state, name='agent_state'),
     path('get_crm_url', webservices.get_crm_url, name='get_crm_url'),
+    path('options_form', views.options_form, name='options_form_agent_console'),
+    path(
+        'replace_options_agent_console',
+        webservices.replace_options_agent_console,
+        name='replace_options_agent_console'),
+    path(
+        'get_options_agent_console',
+        webservices.get_options_agent_console,
+        name='get_options_agent_console'),
+    path('auto_generate_users', webservices.auto_generate_users, name='auto_generate_users'),
 
 ]

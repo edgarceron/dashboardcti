@@ -11,6 +11,7 @@ function getUserAgentValues(){
 }
 
 saveSuccess = function(result){
+    singleOperationRestriction = false;
     if(result.success){
         FormFunctions.resetFormErrors(errorFields);
         errorFields = [];
@@ -101,5 +102,4 @@ function updatePickerAgent(pickerName, resultados){
     }
 
     FormFunctions.setAjaxLoadPicker('#agentInput', pircker_search_agent_url, updatePickerAgent);
- 
 });

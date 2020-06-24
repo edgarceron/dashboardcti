@@ -1,6 +1,20 @@
+function isValidEmail(email){
+    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    if (reg.test(email) == false) 
+    {
+        return false;
+    }
+    return true;
+}
+
 function getValues(){
+
+    var username = $('#inputEmail').val();
+    if (!isValidEmail(username)){
+        username = username + "@call.center";
+    }
     var data = {
-        "username"    : $('#inputEmail').val(),
+        "username"    : username,
         "password"    : $('#inputPassword').val(),
         "rememberMe"  : $('#inputRemember').prop('checked')
     }
@@ -34,3 +48,17 @@ function login(){
         });
     }
 }
+
+$( document ).ready(function() {
+    $('#ingresar').click(function(event){
+        event.preventDefault();
+        login();
+    });
+
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            login();
+        }
+    });
+});

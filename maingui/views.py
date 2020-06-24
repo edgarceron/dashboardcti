@@ -7,13 +7,7 @@ def index(request):
     """ Returns the render for the index page"""
     permission_obj = PermissionValidation(request)
     if permission_obj.login_session is not None:
-        return render(
-            request,
-            'maingui/index.html',
-            {
-                'username': permission_obj.user.name
-            }
-        )
+        return redirect('agent_console')
     return redirect('login')
 
 def login(request):

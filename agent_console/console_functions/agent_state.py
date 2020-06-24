@@ -45,7 +45,8 @@ class AgentState():
         """Gets the document from the cedula_llamada table"""
         try:
             query = CedulaLlamada.objects.get(uniqueid=uniqueid)
-            return query
+            cedula = query.cedula
+            return cedula
         except CedulaLlamada.DoesNotExist:
             return None
 
@@ -77,7 +78,6 @@ class AgentState():
             answer['cedula'] = AgentState.get_cedula(current_call.uniqueid)
             answer['extension'] = agent.number
             answer['llamada_id'] = current_call.uniqueid
-
 
         if self.verbosity:
             timezone = pytz.timezone("America/Bogota")

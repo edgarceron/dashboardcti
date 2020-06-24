@@ -21,7 +21,7 @@
             <img class="mb-4" src="{% static 'maingui/img/letra_m.svg' %}" alt="" width="72" height="72">
             <h1 class="h3 mb-3 font-weight-normal">Por favor ingrese sus datos</h1>
             <label for="inputEmail" class="sr-only">Correo electrónico</label>
-            <input type="email" id="inputEmail" class="form-control" placeholder="Correo electrónico" required="" autofocus="">
+            <input type="text" id="inputEmail" class="form-control" placeholder="Correo electrónico" required="" autofocus="">
             <label for="inputPassword" class="sr-only">Contraseña</label>
             <input type="password" id="inputPassword" class="form-control" placeholder="Contraseña" required="">
             <div class="checkbox mb-3">
@@ -40,22 +40,12 @@
 </body>
 <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
 <script src="{% static 'maingui/js/app/login-form.js' %}"></script>
+<script src='{% static "maingui/js/app/SoftNotification.js" %}'></script>
+
 <script>
     $( document ).ready(function() {
         login_url = "{% url 'login_user' %}";
         index_url = "{% url 'index' %}";
-
-        $('#ingresar').click(function(event){
-            event.preventDefault();
-            login();
-        });
-
-        $(window).keydown(function(event){
-            if(event.keyCode == 13) {
-                event.preventDefault();
-                login();
-            }
-        });
     });
 </script>
 </html>

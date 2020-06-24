@@ -328,7 +328,6 @@ class UserAgent(models.Model):
     """Each user is related to one agent"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, unique=True)
     agent = models.IntegerField(unique=True)
-    fake = models.CharField(max_length=100, default="")
 
 class ServerLog(models.Model):
     """Saves the events in the server log, test or debug only"""

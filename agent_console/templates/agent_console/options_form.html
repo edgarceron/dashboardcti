@@ -7,6 +7,7 @@ Opciones de consola de agente
 {% block topTitle %}
 Opciones de consola de agente
 {% endblock %}
+
 {% block content %}
 <div class="row">
     <form action="" class="needs-validation w-100" novalidate>
@@ -14,18 +15,14 @@ Opciones de consola de agente
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="urlInput">Url de redirección</label>
-                    <input type="text" class="form-control appform" id="urlInput" required>
-                    <div class="valid-feedback" id='urlValid'>Valid.</div>
-                    <div class="invalid-feedback" id = 'urlInvalid'>Please fill out this field.</div>
+                    <label for="CRM_URLInput">Url de redirección</label>
+                    <input type="text" class="form-control appform" id="CRM_URLInput" required>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="redirectionTimeInput">Tiempo de espera de redirección</label>
-                    <input type="text" class="form-control appform" id="redirectionTimeInput" required>
-                    <div class="valid-feedback" id='redirectionTimeValid'>Valid.</div>
-                    <div class="invalid-feedback" id = 'redirectionTimeInvalid'>Please fill out this field.</div>
+                    <label for="REDIRECT_TIMEInput">Tiempo de espera de redirección</label>
+                    <input type="text" class="form-control appform" id="REDIRECT_TIMEInput" required>
                 </div>
             </div>
         </div>
@@ -39,6 +36,14 @@ Opciones de consola de agente
         </div>
     </div>
     </form>
+</div>
+<hr>
+<div class="row">
+    <div class='col-md-6'>
+        <div class='form-group'>
+            <button type="button" class="btn btn-primary" id="generateButton">Generar Usuarios</button>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="successModal">
@@ -60,12 +65,15 @@ Opciones de consola de agente
 </div>
 
 {% endblock content %}
+
 {% block javascript %}
 <script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
 <script src="{% static 'agent_console/js/app/options_form.js' %}"></script>
 
 <script>
-    save_options_agent_console_url = "{% url 'save_options_agent_console' %}";
+    replace_options_agent_console_url = "{% url 'replace_options_agent_console' %}";
     get_options_agent_console_url = "{% url 'get_options_agent_console' %}";
+    auto_generate_users_url = "{% url 'auto_generate_users' %}";
     
 </script>
+{% endblock %}

@@ -18,12 +18,12 @@ CREATE USER 'manticore'@'IP Server' IDENTIFIED BY 'password';
 GRANT SELECT, INSERT, UPDATE ON call_center.* TO 'manticore'@'IP Server';
 FLUSH PRIVILEGES;
 ```
-- Create a queue in the pbx server for this example we are using the number 400.
+- Create a context number in the pbx server for this example we are using the number 400.
 - Add the database credentials to the isabel/agi_cedula.php file.
 - Copy the isabel/agi_cedula.php into the folder /var/lib/asterisk/agi-bin in the Isabel server.
 - Create the next context in the folder etc/asterisk/extension-custom.conf on the Isabel server: 
 ```
-[automsg] 
+[cedula] 
 exten => 400,1,AGI(agi_cedula.php, ${UNIQUEID})  
 exten => 400,2,Hangup 
 ```
@@ -33,8 +33,9 @@ exten => 400,2,Hangup
 ....
 ....
 ....
-include => automsg
+include => cedula
 ```
+- Create a custom destination in the IVR menu in the Isabel web app (See isabel/custom_destination_example_1 and isabel/custom_destination_example_2).
 - Alter the settings for the databases (default and call_center).
 - Alter the settings for the memcache server address.
 - Run makemigrations, then migrate and then run the command appregistration.

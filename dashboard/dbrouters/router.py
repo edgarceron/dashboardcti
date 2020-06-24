@@ -3,7 +3,7 @@ class IntegrationRouter:
     A router to control all database operations on models in the
     auth and contenttypes applications.
     """
-    call_center_tables = {
+    call_center_models = {
         'agent',
         'audit',
         'break',
@@ -29,6 +29,34 @@ class IntegrationRouter:
         'queuecallentry',
         'valorconfig',
         'cedulallamada'
+    }
+
+    call_center_tables = {
+        'agent',
+        'audit',
+        'break',
+        'call_attribute',
+        'call_entry',
+        'call_progress_log',
+        'call_recording',
+        'calls',
+        'campaign',
+        'campaign_entry',
+        'campaign_external_url',
+        'campaign_form',
+        'campaign_form_entry',
+        'contact',
+        'current_call_entry',
+        'current_calls',
+        'dont_call',
+        'eccp_authorized_clients',
+        'form',
+        'form_data_recolected',
+        'form_data_recolected_entry',
+        'form_field',
+        'queue_call_entry',
+        'valor_config',
+        'cedula_llamada'
     }
 
     def db_for_read(self, model, **hints):
@@ -64,8 +92,7 @@ class IntegrationRouter:
         Make sure the call_center tables only appear in the
         'call_center' database.
         """
-        if model_name in self.call_center_tables:
+        if model_name in self.call_center_models:
             if db == 'call_center':
-                print(model_name)
                 return True
         return None
