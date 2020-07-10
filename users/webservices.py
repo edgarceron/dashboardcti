@@ -1,10 +1,10 @@
 """Contains the webservices for the users app"""
-import datetime
-import pytz
-from django.contrib.auth.hashers import PBKDF2PasswordHasher
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from core.crud.standard import Crud
+from users.business_logic import login_management
 from .serializers import UserSerializer, BasicUserSerializer
 from .models import User, LoginSession
 from .permission_validation import PermissionValidation
@@ -20,67 +20,92 @@ def get_actions():
         {"name": "picker_search_user", "label": "Webservice picker de usuarios"},
         {"name": "list_user", "label": "Webservice del listado de usuarios"},
         {"name": "toggle_user", "label": "Webservice para cambiar estado del usuario"},
+        {"name": "get_own", "label": "Webservice obtener datos del usuario logeado actualemente"},
+        {"name": "replace_own", "label": "Webservice actualizar usuario logeado actualemente"},
     ]
     return actions
+
+def users_picker_filter(value):
+    """Looks for users wich contain the given value in their data"""
+    return list(User.objects.filter(
+        Q(active=True),
+        Q(username__contains=value) | Q(name__contains=value) | Q(lastname__contains=value)
+    )[:10])
+
+def users_listing_filter(search, start, length, count=False):
+    """Filters the corresponding models given a search string"""
+    if count:
+        return User.objects.filter(
+            Q(username__contains=search) | Q(name__contains=search)
+            | Q(lastname__contains=search)
+        ).count()
+    else:
+        return User.objects.filter(
+            Q(username__contains=search) | Q(name__contains=search)
+            | Q(lastname__contains=search)
+        )[start:start + length]
 
 @api_view(['POST'])
 def add_user(request):
     """Tries to create an user and returns the result"""
-    permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('add_user')
-    if validation['status']:
-        data = request.data.copy()
-        password = data['password']
-        hasher = PBKDF2PasswordHasher()
-        data['password'] = hasher.encode(password, "Wake Up, Girls!")
-        user_serializer = UserSerializer(data=data)
-        if user_serializer.is_valid():
-            user_serializer.save()
-            return Response(
-                {"success":True, "user_id":user_serializer.data['id']},
-                status=status.HTTP_201_CREATED,
-                content_type='application/json')
-
-        data = error_data(user_serializer)
-        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
-    return PermissionValidation.error_response_webservice(validation, request)
+    crud_object = Crud(UserSerializer, User, login_management.password_encode)
+    return crud_object.add(request, 'add_user')
 
 @api_view(['PUT'])
 def replace_user(request, user_id):
     "Tries to update an user and returns the result"
-    permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('replace_user')
-    if validation['status']:
-        user_obj = User.objects.get(id=user_id)
-        data = request.data.copy()
-        password = data['password']
-        if password == "":
-            data['password'] = user_obj.password
-        else:
-            hasher = PBKDF2PasswordHasher()
-            data['password'] = hasher.encode(password, "Wake Up, Girls!")
-        
-        user_serializer = UserSerializer(user_obj, data=data)
-
-        if user_serializer.is_valid():
-            user_serializer.save()
-            return Response(
-                {"success":True, "user_id":user_id},
-                status=status.HTTP_200_OK,
-                content_type='application/json'
-            )
-
-        data = error_data(user_serializer)
-        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
-    return PermissionValidation.error_response_webservice(validation, request)
+    crud_object = Crud(UserSerializer, User, login_management.password_encode)
+    return crud_object.replace(request, user_id, 'replace_user')
 
 @api_view(['POST'])
 def get_user(request, user_id):
-    "Return a JSON response with user data for the given id"
+    """Return a JSON response with user data for the given id"""
+    crud_object = Crud(UserSerializer, User, login_management.password_hide)
+    return crud_object.get(request, user_id, 'get_user')
+
+@api_view(['DELETE'])
+def delete_user(request, user_id):
+    """Tries to delete an user and returns the result."""
+    crud_object = Crud(UserSerializer, User)
+    return crud_object.delete(request, user_id, 'delete_user', "Usuario elminado exitosamente")
+
+@api_view(['POST'])
+def toggle_user(request, user_id):
+    """Toogles the active state for a given user"""
+    crud_object = Crud(UserSerializer, User)
+    return crud_object.toggle(request, user_id, 'toggle_user', "Usuario")
+
+@api_view(['POST'])
+def picker_search_user(request):
+    """Returns a JSON response with user data for a selectpicker."""
+    crud_object = Crud(BasicUserSerializer, User, users_picker_filter)
+    return crud_object.picker_search(request, 'picker_search_user')
+
+@api_view(['POST'])
+def list_user(request):
+    """ Returns a JSON response containing registered users"""
+    crud_object = Crud(BasicUserSerializer, User, users_listing_filter)
+    return crud_object.listing(request, 'picker_search_user')
+
+@api_view(['POST'])
+def login(request):
+    """Logs in the user if given credentials are valid"""
+    data = login_management.login(request)
+    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+
+@api_view(['POST'])
+def logout(request):
+    """ Logs out the user from the system"""
+    data = login_management.logout(request)
+    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+
+@api_view(['POST'])
+def get_own(request):
+    """Gets own user info"""
     permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('get_user')
+    validation = permission_obj.validate('get_own')
     if validation['status']:
-        user_obj = User.objects.get(id=user_id)
+        user_obj = permission_obj.user
         user_serializer = UserSerializer(user_obj)
         user_data = user_serializer.data.copy()
         del user_data['password']
@@ -89,7 +114,7 @@ def get_user(request, user_id):
             "success":True,
             "data":user_data
         }
-    
+
         return Response(
             data,
             status=status.HTTP_200_OK,
@@ -97,152 +122,40 @@ def get_user(request, user_id):
         )
     return PermissionValidation.error_response_webservice(validation, request)
 
-@api_view(['DELETE'])
-def delete_user(request, user_id):
-    """Tries to delete an user and returns the result."""
+@api_view(['PUT'])
+def replace_own(request):
+    "Tries to update an user and returns the result"
     permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('get_user')
+    validation = permission_obj.validate('replace_own')
     if validation['status']:
-        user_obj = User.objects.get(id=user_id)
-        user_obj.delete()
-        data = {
-            "success": True,
-            "message": "Usuario elminado exitosamente"
-        }
-        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-    return PermissionValidation.error_response_webservice(validation, request)
-
-@api_view(['POST'])
-def toggle_user(request, user_id):
-    """Toogles the active state for a given user"""
-    permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('toggle_user')
-
-    user_obj = User.objects.get(id=user_id)
-    previous = user_obj.active
-    if validation['status']:
-        if previous:
-            message = "Usuario desactivado con exito"
+        user_obj = permission_obj.user
+        data = request.data.copy()
+        password = data['password']
+        confirm = data['confirm']
+        data['profile'] = user_obj.profile.id
+        del data['confirm']
+        if password == "" and confirm == "":
+            data['password'] = user_obj.password
         else:
-            message = "Usuario activado con exito"
+            if password == confirm:
+                data = login_management.password_encode(data)
+            else:
+                data['password'] = None
+        user_serializer = UserSerializer(user_obj, data=data)
 
-        user_obj.active = not user_obj.active
-        user_obj.save()
-        data = {
-            "success": True,
-            "message": message
-        }
-        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+        if user_serializer.is_valid():
+            user_serializer.save()
+            return Response(
+                {"success":True},
+                status=status.HTTP_200_OK,
+                content_type='application/json'
+            )
+
+        data = Crud.error_data(user_serializer)
+        for i in range(0, len(data['Error']['details'])):
+            if data['Error']['details'][i]['field'] == 'password':
+                data['Error']['details'][i]['field'] = 'passwordConfirm'
+                data['Error']['details'][i]['message'] = 'Las contraseñas no coinciden.'
+                break
+        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
     return PermissionValidation.error_response_webservice(validation, request)
-
-@api_view(['POST'])
-def picker_search_user(request):
-    "Returns a JSON response with user data for a selectpicker."
-    permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('picker_search_user')
-    if validation['status']:
-        value = request.data['value']
-        queryset = User.usersPickerFilter(value)
-        serializer = BasicUserSerializer(queryset, many=True)
-        result = serializer.data
-
-        data = {
-            "success": True,
-            "result": result
-        }
-        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-    return PermissionValidation.error_response_webservice(validation, request)
-
-@api_view(['POST'])
-def list_user(request):
-    """ Returns a JSON response containing registered users"""
-    permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('list_user')
-    if validation['status']:
-        sent_data = request.data
-        draw = int(sent_data['draw'])
-        start = int(sent_data['start'])
-        length = int(sent_data['length'])
-        search = sent_data['search[value]']
-
-        records_total = User.objects.count()
-
-        if search != '':
-            queryset = User.users_listing_filter(search, start, length)
-            records_filtered = User.users_listing_filter(search, start, length, True)
-        else:
-            queryset = User.objects.all()[start:start + length]
-            records_filtered = records_total
-
-
-        result = BasicUserSerializer(queryset, many=True)
-        data = {
-            'draw': draw,
-            'recordsTotal': records_total,
-            'recordsFiltered': records_filtered,
-            'data': result.data
-        }
-        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-    return PermissionValidation.error_response_webservice(validation, request)
-
-@api_view(['POST'])
-def login(request):
-    """Logs in the user if given credentials are valid"""
-    username = request.data['username']
-    password = request.data['password']
-    try:
-        user = User.objects.get(username=username)
-    except:
-        user = None
-    if user is not None:
-        encoded = user.password
-        hasher = PBKDF2PasswordHasher()
-        login_valid = hasher.verify(password, encoded)
-
-        if login_valid:
-            key = username + str(datetime.datetime.now())
-            key = hasher.encode(key, 'key', 10)
-            life = datetime.datetime.now() + datetime.timedelta(hours=14)
-            timezone = pytz.timezone("America/Bogota")
-            life_aware = timezone.localize(life)
-            loginsession = LoginSession(key=key, life=life_aware, user=user)
-            loginsession.save()
-            request.session['loginsession'] = key
-            data = {
-                'success': True,
-                'key': key
-            }
-            return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-        
-    data = {
-        'success': False,
-        'message':"Nombre de usuario o contraseña incorrectos"
-    }
-    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-
-@api_view(['POST'])
-def logout(request):
-    """ Logs out the user from the system"""
-    permission_obj = PermissionValidation(request)
-    permission_obj.logout(request)
-    data = {
-        'success': True
-    }
-    return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-
-def error_data(user_serializer):
-    """Return a common JSON error result"""
-    error_details = []
-    for key in user_serializer.errors.keys():
-        error_details.append({"field": key, "message": user_serializer.errors[key][0]})
-
-    data = {
-        "Error": {
-            "success": False,
-            "status": 400,
-            "message": "Los datos enviados no son validos",
-            "details": error_details
-        }
-    }
-    return data
-    

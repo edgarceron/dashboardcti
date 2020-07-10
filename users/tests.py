@@ -180,7 +180,7 @@ class UserWebserviceTest(TestCase):
 
         response = self.client.post(url_set, user_data, format='json')
         success = response.data['success']
-        user_id = response.data['user_id']
+        user_id = response.data['id']
         self.assertEqual(success, True)
 
         url_set = reverse('toggle_user', kwargs={'user_id': user_id})

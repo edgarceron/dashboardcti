@@ -49,11 +49,6 @@ class PermissionValidation():
         else:
             return {'status': False, 'error':'Not logged'}
 
-    def logout(self, request):
-        """Deletes the loginsession key to denout logout"""
-        if self.login_session is not None:
-            del request.session['loginsession']
-
     @staticmethod
     def action_possible(profile, action):
         """Fetch the profile permission and returns if it's possible"""

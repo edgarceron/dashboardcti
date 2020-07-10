@@ -146,7 +146,7 @@ def toggle_profile(request, profile_id):
 
 @api_view(['POST'])
 def picker_search_profile(request):
-    "Returns a JSON response with user data for a selectpicker."
+    "Returns a JSON response with profile data for a selectpicker."
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('picker_search_profile')
     if validation['status']:

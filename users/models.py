@@ -23,27 +23,6 @@ class User(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, null=True)
     need_password = models.BooleanField(verbose_name="Cambiar contraseña", null=False, default=True)
 
-    @staticmethod
-    def usersPickerFilter(value):
-        return list(User.objects.filter(
-            Q(active=True),
-            Q(username__contains=value) | Q(name__contains=value) | Q(lastname__contains=value)
-        )[:10])
-
-    @staticmethod
-    def users_listing_filter(search, start, length, count=False):
-        """Filters the corresponding models given a search string"""
-        if count:
-            return User.objects.filter(
-                Q(username__contains=search) | Q(name__contains=search)
-                | Q(lastname__contains=search)
-            ).count()
-        else:
-            return User.objects.filter(
-                Q(username__contains=search) | Q(name__contains=search)
-                | Q(lastname__contains=search)
-            )[start:start + length]
-
 class UserDeveloper(models.Model):
     """Model to represent a developer user"""
     username = models.ForeignKey(User, on_delete=models.CASCADE)
