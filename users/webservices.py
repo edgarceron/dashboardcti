@@ -1,12 +1,13 @@
 """Contains the webservices for the users app"""
-from django.db.models import Q
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from core.crud.standard import Crud
 from users.business_logic import login_management
+from users.business_logic import data_filters
 from .serializers import UserSerializer, BasicUserSerializer
-from .models import User, LoginSession
+from .models import User
 from .permission_validation import PermissionValidation
 
 
@@ -24,26 +25,6 @@ def get_actions():
         {"name": "replace_own", "label": "Webservice actualizar usuario logeado actualemente"},
     ]
     return actions
-
-def users_picker_filter(value):
-    """Looks for users wich contain the given value in their data"""
-    return list(User.objects.filter(
-        Q(active=True),
-        Q(username__contains=value) | Q(name__contains=value) | Q(lastname__contains=value)
-    )[:10])
-
-def users_listing_filter(search, start, length, count=False):
-    """Filters the corresponding models given a search string"""
-    if count:
-        return User.objects.filter(
-            Q(username__contains=search) | Q(name__contains=search)
-            | Q(lastname__contains=search)
-        ).count()
-    else:
-        return User.objects.filter(
-            Q(username__contains=search) | Q(name__contains=search)
-            | Q(lastname__contains=search)
-        )[start:start + length]
 
 @api_view(['POST'])
 def add_user(request):
@@ -78,14 +59,14 @@ def toggle_user(request, user_id):
 @api_view(['POST'])
 def picker_search_user(request):
     """Returns a JSON response with user data for a selectpicker."""
-    crud_object = Crud(BasicUserSerializer, User, users_picker_filter)
+    crud_object = Crud(BasicUserSerializer, User, data_filters.users_picker_filter)
     return crud_object.picker_search(request, 'picker_search_user')
 
 @api_view(['POST'])
 def list_user(request):
     """ Returns a JSON response containing registered users"""
-    crud_object = Crud(BasicUserSerializer, User, users_listing_filter)
-    return crud_object.listing(request, 'picker_search_user')
+    crud_object = Crud(BasicUserSerializer, User, data_filters.users_listing_filter)
+    return crud_object.listing(request, 'list_user')
 
 @api_view(['POST'])
 def login(request):
@@ -120,7 +101,7 @@ def get_own(request):
             status=status.HTTP_200_OK,
             content_type='application/json'
         )
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['PUT'])
 def replace_own(request):
@@ -158,4 +139,4 @@ def replace_own(request):
                 data['Error']['details'][i]['message'] = 'Las contraseñas no coinciden.'
                 break
         return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)

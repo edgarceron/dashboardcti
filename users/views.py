@@ -29,7 +29,7 @@ def form_user(request, user_id=0):
                 'username': permission_obj.user.name
             }
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)
 
 def listing_user(request):
     "Returns the rendered template for user listing."
@@ -43,7 +43,7 @@ def listing_user(request):
                 'username': permission_obj.user.name
             }
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)
 
 def view_my_profile(request):
     """Return rendered template for own user info"""

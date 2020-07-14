@@ -6,15 +6,15 @@ from users.permission_validation import PermissionValidation
 class Crud():
     """Manages the standard functions for crud in modules"""
 
-    def __init__(self, serializer_class, model_class, operation=None, after_save=None):
+    def __init__(self, serializer_class, model_class, operation=None, after=None):
         if operation is None:
             self.operation = lambda x: x
         else:
             self.operation = operation
-        if after_save is None:
-            self.after_save = lambda x: x
+        if after is None:
+            self.after = lambda x, y: y
         else:
-            self.after_save = after_save
+            self.after = after
 
         self.serializer_class = serializer_class
         self.model_class = model_class
@@ -28,7 +28,7 @@ class Crud():
             data_serializer = self.serializer_class(data=data)
             if data_serializer.is_valid():
                 data_serializer.save()
-                self.after_save(data_serializer)
+                self.after(request, data_serializer)
                 return Response(
                     {"success":True, "id":data_serializer.data['id']},
                     status=status.HTTP_201_CREATED,
@@ -40,7 +40,7 @@ class Crud():
                 status=status.HTTP_400_BAD_REQUEST,
                 content_type='application/json'
             )
-        return PermissionValidation.error_response_webservice(validation, request)
+        return permission_obj.error_response_webservice(validation, request)
 
     def replace(self, request, identifier, action_name):
         """Tries to update a row in the db and returns the result"""
@@ -53,7 +53,7 @@ class Crud():
 
             if data_serializer.is_valid():
                 data_serializer.save()
-                self.after_save(data_serializer)
+                self.after(request, data_serializer)
                 return Response(
                     {"success":True, "id":identifier},
                     status=status.HTTP_200_OK,
@@ -66,7 +66,7 @@ class Crud():
                 status=status.HTTP_400_BAD_REQUEST,
                 content_type='application/json'
             )
-        return PermissionValidation.error_response_webservice(validation, request)
+        return permission_obj.error_response_webservice(validation, request)
 
     def get(self, request, identifier, action_name):
         """Return a JSON response with data for the given id"""
@@ -82,13 +82,14 @@ class Crud():
                 "success":True,
                 "data":model_data
             }
+            data = self.after(request, data)
 
             return Response(
                 data,
                 status=status.HTTP_200_OK,
                 content_type='application/json'
             )
-        return PermissionValidation.error_response_webservice(validation, request)
+        return permission_obj.error_response_webservice(validation, request)
 
     def delete(self, request, identifier, action_name, message):
         """Tries to delete a row from db and returns the result"""
@@ -102,7 +103,7 @@ class Crud():
                 "message": message
             }
             return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-        return PermissionValidation.error_response_webservice(validation, request)
+        return permission_obj.error_response_webservice(validation, request)
 
     def toggle(self, request, identifier, action_name, data_name):
         """Toogles the active state for a given row"""
@@ -125,7 +126,7 @@ class Crud():
                 "message": message
             }
             return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-        return PermissionValidation.error_response_webservice(validation, request)
+        return permission_obj.error_response_webservice(validation, request)
 
     def picker_search(self, request, action_name):
         """Returns a JSON response with data for a selectpicker."""
@@ -134,7 +135,7 @@ class Crud():
         if validation['status']:
             value = request.data['value']
 
-            queryset = self.operation(self.model_class, value)
+            queryset = self.operation(value)
             serializer = self.serializer_class(queryset, many=True)
             result = serializer.data
 
@@ -143,7 +144,7 @@ class Crud():
                 "result": result
             }
             return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-        return PermissionValidation.error_response_webservice(validation, request)
+        return permission_obj.error_response_webservice(validation, request)
 
     def listing(self, request, action_name):
         """ Returns a JSON response containing registered users"""
@@ -177,7 +178,7 @@ class Crud():
                 'data': result.data
             }
             return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-        return PermissionValidation.error_response_webservice(validation, request)
+        return permission_obj.error_response_webservice(validation, request)
 
     @staticmethod
     def error_data(serializer):

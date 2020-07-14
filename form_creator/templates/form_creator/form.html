@@ -1,0 +1,186 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+{{ action }} formulario
+{% endblock %}
+
+{% block topTitle %}
+{{ action }} formulario
+{% endblock %}
+{% block content %}
+<div class="row">
+    <form action="" class="needs-validation w-100" novalidate>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nameInput">Nombre del formulario</label>
+                    <input type="text" class="form-control appform" id="nameInput" required>
+                    <div class="valid-feedback" id='nameValid'>Valid.</div>
+                    <div class="invalid-feedback" id = 'nameInvalid'>Please fill out this field.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class='row'>
+            <div class='col-md-6'>
+                <div class='form-group'>
+                    <button type="button" class="btn btn-primary" id="nextButton">Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="card w-100" id="questionContainer">
+                <div class="card-header">
+                    Preguntas
+                </div>
+                
+                <div class="card mt-1 mr-1 ml-1 mb-1" id="questionContainer">
+                    <div class="card-header">
+                        <span>Pregunta 1</span>
+                        <div class="row float-right">
+                            <div class="col">
+                                <input class="custom-control-input" type="checkbox" value="" id="null-pregunta1">
+                                <label class="custom-control-label" for="null-pregunta1">Obligatoria</label>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-fw fa-save" onclick="saveQuestion()"></i>
+                                </button>        
+                            </div>
+                            <div class="col">
+                                <a href="#"><i class="fas fa-fw fa-times"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pl-2 pb-2">
+                        <div class="col-md-5">
+                            <label for="text-pregunta1">Pregunta</label>
+                            <input type="text" class="form-control" id="text-pregunta1" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="type-pregunta1">Tipo</label>
+                            <select class="form-control" id="type-pregunta1">
+                            <option value="1">Falso o verdadero</option>
+                            <option value="2">Texto</option>
+                            <option value="3">Multiples opciones, una respuesta</option>
+                            <option value="4">Multiples opciones, multiples respuestas</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row pl-2 pb-2">
+                        <div class="col-12" id="respuestasPregunta1">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="textRespuesta1" value="Opcion 1" required>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="btn btn-outline-primary">
+                                                <i class="fas fa-fw fa-save" onclick="addAnswerButton()"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" id="textRespuesta1" value="Opcion 2" required>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="btn btn-outline-primary">
+                                                <i class="fas fa-fw fa-save" onclick="addAnswerButton()"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="row">
+                <div class="col-12 pt-3">
+                    <button type="button" class="btn btn-primary" id="addQuetionButton" onclick="addFieldsNewQuestion()" disabled>
+                        Agregar pregunta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="cautionModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Atención</h5>
+            </div>
+            <div class="modal-body">
+                    ¿Esta seguro de que quiere eliminar esta pregunta? 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm_button">Si</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="successModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Unos segundos por favor</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success" role="alert" id="modalMessage">
+                    Guardado con exito!
+                </div>
+            </div>
+            <div class="modal-footer">
+                Redirigiendo...
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+{% block javascript %}
+<script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
+<script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script>
+<script src="{% static 'form_creator/js/app/questions_gui.js' %}"></script>
+<script src="{% static 'form_creator/js/app/questions_form.js' %}"></script>
+<script src="{% static 'form_creator/js/app/form.js' %}"></script>
+
+<script>
+    id = {{ id }};
+    listing_url = "{% url 'listing_form' %}";
+    add_url = "{% url 'add_form' %}";
+    get_url = "{% url 'get_form' form_id=0 %}";
+    replace_url = "{% url 'replace_form' form_id=0 %}";
+    replace_url = replace_url.slice(0, -1);
+    add_question_url = "{% url 'add_question' %}";
+    replace_question_url = "{% url 'replace_question' %}";
+    delete_question_url = "{% url 'delete_question' %}";
+    change_question_position_url = "{% url 'change_question_position' %}";
+
+    get_url = get_url.slice(0, -1);
+    if(id != 0){
+        replace_url = replace_url + "" + id;
+    }
+</script>
+{% block additional_javascript %}
+
+{% endblock additional_javascript %}
+
+{% endblock javascript %}
+
+
+    

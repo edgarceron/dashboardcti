@@ -22,14 +22,14 @@ def form_form(request, form_id=0):
 
         return render(
             request,
-            'forms/form.html',
+            'form_creator/form.html',
             {
                 'id':form_id,
                 'action':action,
                 'username': permission_obj.user.name
             }
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)
 
 def listing_form(request):
     "Returns the rendered template for form listing."
@@ -38,9 +38,9 @@ def listing_form(request):
     if validation['status']:
         return render(
             request,
-            'forms/listing.html',
+            'form_creator/listing.html',
             {
                 'username': permission_obj.user.name
             }
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)

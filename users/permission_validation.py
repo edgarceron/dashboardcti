@@ -111,35 +111,38 @@ class PermissionValidation():
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content_type='application/json')
 
-    @staticmethod
-    def error_response_view(validation, request):
+    def error_response_view(self, validation, request):
         """Returns an error response depending on the validation"""
         if validation['error'] == 'Session expire':
             del request.session['loginsession']
             data = {
                 "error": 401,
-                "message": "Su sessión expiro por favor ingrese nuevamente"
+                "message": "Su sessión expiro por favor ingrese nuevamente",
+                "username": ""
             }
             return render(request, 'maingui/http_error.html', data, status=401)
 
         if validation['error'] == 'Not logged':
             data = {
                 "error": 401,
-                "message": "Debe ingresar antes de realizar esta solicitud"
+                "message": "Debe ingresar antes de realizar esta solicitud",
+                "username": ""
             }
             return render(request, 'maingui/http_error.html', data, status=401)
 
         if validation['error'] == 'Forbidden':
             data = {
                 "error": 403,
-                "message": "El usuario no tiene permisos para realizar esta acción"
+                "message": "El usuario no tiene permisos para realizar esta acción",
+                "username": self.user.name
             }
             return render(request, 'maingui/http_error.html', data, status=403)
 
         if validation['error'] == 'Database error':
             data = {
                 "error": 500,
-                "message": "El usuario, perfil o acción no se encontraron en la base de datos"
+                "message": "El usuario, perfil o acción no se encontraron en la base de datos",
+                "username": ""
             }
             return render(request, 'maingui/http_error.html', data, status=500)
 

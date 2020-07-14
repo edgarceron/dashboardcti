@@ -27,7 +27,7 @@ function login(){
         $.ajax({
             url: login_url,
             method: 'POST',
-            async: false,
+            async: true,
             dataType: 'json',
             data: getValues(),
             beforeSend: function(){},

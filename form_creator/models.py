@@ -5,26 +5,7 @@ from django.db.models import Q
 # Create your models here.
 class Form(models.Model):
     "Model for an form"
-    name = models.CharField(unique=True, max_length=50)
-
-    @staticmethod
-    def form_picker_filter(value):
-        return list(Form.objects.filter(
-            Q(active=True),
-            Q(name__contains=value)
-        )[:10])
-
-    @staticmethod
-    def form_listing_filter(search, start, length, count=False):
-        """Filters the corresponding models given a search string"""
-        if count:
-            return Form.objects.filter(
-                Q(name__contains=search)
-            ).count()
-        else:
-            return Form.objects.filter(
-                Q(name__contains=search)
-            )[start:start + length]
+    name = models.CharField(unique=True, max_length=50, error_messages={'unique':'Ya existe un formulario registrado con este nombre.'})
 
 class Question(models.Model):
     "Model for questions"
@@ -37,6 +18,8 @@ class Question(models.Model):
     """
     question_type = models.IntegerField()
     empty = models.BooleanField()
+    form = models.ForeignKey(Form, on_delete=models.CASCADE, null=False)
+    position = models.IntegerField(null=False)
 
     class Meta:
         constraints = [
@@ -48,7 +31,7 @@ class Question(models.Model):
                 name="question_type_lower"),
         ]
 
-class Asnwer(models.Model):
+class Answer(models.Model):
     "Model for answers"
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     text = models.TextField()
@@ -62,8 +45,8 @@ class QuestionAnswers(models.Model):
     "Model for question answers"
     campaing = models.ForeignKey(PollCampaing, on_delete=models.CASCADE, null=False)
     client = models.CharField(max_length=20, null=False)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=False)
-    asnwer = models.ForeignKey(Asnwer, on_delete=models.CASCADE, null=True)
+    question = models.TextField()
+    asnwer = models.TextField()
     text_answer = models.TextField(null=True)
     class Meta:
         constraints = [

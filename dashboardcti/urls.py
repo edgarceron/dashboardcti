@@ -23,6 +23,7 @@ urlpatterns = [
     path('profiles/', include('profiles.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('agent_console/', include('agent_console.urls')),
+    path('form_creator/', include('form_creator.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

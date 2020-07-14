@@ -29,7 +29,7 @@ def form_user_agent(request, user_id=0):
                 'username': permission_obj.user.name
             }
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)
 
 def agent_console(request):
     "Returns the rendered template for the given user."
@@ -52,7 +52,7 @@ def agent_console(request):
             'agent_console/agent_console.html',
             data
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)
 
 def options_form(request):
     "Returns the rendered template for the given user."
@@ -69,6 +69,6 @@ def options_form(request):
             'agent_console/options_form.html',
             data
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)
 
 # Create your views here.

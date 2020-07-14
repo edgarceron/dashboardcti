@@ -15,7 +15,7 @@ saveSuccess = function(result){
     if(result.success){
         FormFunctions.resetFormErrors(errorFields);
         errorFields = [];
-        id = result.user_id;
+        id = result.id;
         setUserAgent();
     }
 }
