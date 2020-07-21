@@ -44,3 +44,23 @@ def listing_form(request):
             }
         )
     return permission_obj.error_response_view(validation, request)
+
+def citas_form(request):
+    """Temp citas"""
+    return render(
+        request,
+        'form_creator/citas.html',
+        {
+            'username': 'Edgar'
+        }
+    )
+
+def confirmacion_form(request):
+    """Temp confirmacion"""
+    return render(
+        request,
+        'form_creator/confirmacion.html',
+        {
+            'username': 'Edgar'
+        }
+    )

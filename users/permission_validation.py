@@ -61,6 +61,7 @@ class PermissionValidation():
     @staticmethod
     def error_response_webservice(validation, request):
         """Returns an error response depending on the validation"""
+        print(validation)
         if validation['error'] == 'Session expire':
             del request.session['loginsession']
             data = {

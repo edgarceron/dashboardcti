@@ -16,7 +16,9 @@ function deleteUser(user_id){
                     location.reload();
                 }, 2000);
             },
-            error: function (result, request, status, error){},
+            error: function (result, request, status, error){
+                SoftNotification.show(result.responseJSON.message,"danger");
+            },
             complete: function(){
                 singleOperationRestriction=false
             },

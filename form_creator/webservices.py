@@ -93,19 +93,19 @@ def change_question_position(request):
     pass 
 
 @api_view(['POST'])
-def add_asnwer(request):
+def add_answer(request):
     """Tries to create a answer and returns the result"""
     crud_object = Crud(AnswerSerializer, Answer)
     return crud_object.add(request, 'add_answer')
 
 @api_view(['PUT'])
-def replace_asnwer(request, answer_id):
+def replace_answer(request, answer_id):
     """Tries to update a answer and returns the result"""
     crud_object = Crud(AnswerSerializer, Answer)
     return crud_object.replace(request, answer_id, 'replace_answer')
 
 @api_view(['POST'])
-def delete_asnwer(request, answer_id):
+def delete_answer(request, answer_id):
     """Tries to delete an answer and returns the result."""
     crud_object = Crud(AnswerSerializer, Answer)
     return crud_object.delete(request, answer_id, 'delete_answer', "Pregunta elminada exitosamente")

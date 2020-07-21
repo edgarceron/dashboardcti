@@ -44,8 +44,10 @@ def get_profile(request, profile_id):
 @api_view(['DELETE'])
 def delete_profile(request, profile_id):
     """Tries to delete an profile and returns the result."""
-    crud_object = Crud(ProfileSerializer, Profile)
-    return crud_object.delete(request, profile_id, 'delete_profile', "Perfil elminado exitosamente")
+    if profile_management.check_current_profile(request, profile_id):
+        crud_object = Crud(ProfileSerializer, Profile)
+        return crud_object.delete(request, profile_id, 'delete_profile', "Perfil elminado exitosamente")
+    return profile_management.current_profile_cannot_be_deleted_message()
 
 @api_view(['POST'])
 def toggle_profile(request, profile_id):

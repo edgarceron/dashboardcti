@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Q
+from sedes.models import Sede
 from users.models import User
 
 
@@ -341,3 +342,8 @@ class AgentConsoleOptions(models.Model):
     option = models.CharField(max_length=40)
     value = models.CharField(max_length=255, unique=True)
     help_text = models.CharField(max_length=255, null=True, blank=True)
+
+class UserSede(models.Model):
+    """Each user is related to a sede"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=True)
+    sede = models.ForeignKey(Sede, on_delete=models.CASCADE)

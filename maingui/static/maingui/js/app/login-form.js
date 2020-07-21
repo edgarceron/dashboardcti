@@ -30,7 +30,9 @@ function login(){
             async: true,
             dataType: 'json',
             data: getValues(),
-            beforeSend: function(){},
+            beforeSend: function(){
+                $('#spiner').removeClass('d-none');
+            },
             success: function(result){
                 if(result.success){
                     $(location).attr('href', index_url);
@@ -43,6 +45,7 @@ function login(){
                 SoftNotification.show("Error: No hay conexión o hubo un fallo en el servidor");
             },
             complete: function(){
+                $('#spiner').addClass('d-none');
                 singleOperationRestriction=false
             },
         });

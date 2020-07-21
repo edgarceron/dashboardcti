@@ -1,9 +1,11 @@
 var questions = 1;
+var answers = 1;
 var urls;
 var errorFields = [];
-
 var standard;
 var standard_question;
+var standard_answer;
+var linkedListQuestions = null;
 
 function getValues(){
     data = {

@@ -6,6 +6,7 @@ from rest_framework import status
 from core.crud.standard import Crud
 from users.business_logic import login_management
 from users.business_logic import data_filters
+from users.business_logic import user_management
 from .serializers import UserSerializer, BasicUserSerializer
 from .models import User
 from .permission_validation import PermissionValidation
@@ -47,8 +48,10 @@ def get_user(request, user_id):
 @api_view(['DELETE'])
 def delete_user(request, user_id):
     """Tries to delete an user and returns the result."""
-    crud_object = Crud(UserSerializer, User)
-    return crud_object.delete(request, user_id, 'delete_user', "Usuario elminado exitosamente")
+    if user_management.check_current_user(request, user_id):
+        crud_object = Crud(UserSerializer, User)
+        return crud_object.delete(request, user_id, 'delete_user', "Usuario elminado exitosamente")
+    return user_management.current_user_cannot_be_deleted_message()
 
 @api_view(['POST'])
 def toggle_user(request, user_id):

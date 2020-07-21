@@ -5,9 +5,9 @@ from rest_framework import status
 from users.permission_validation import PermissionValidation
 from .console_functions.agent_state import AgentState
 from .console_functions.generate_users import GenerateUsers
-from .serializers import UserAgentSerializer, AgentSerializer
+from .serializers import AgentSerializer
 from .models import UserAgent, Agent, AgentConsoleOptions
-
+from .business_logic import user_extra_fields
 
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
@@ -15,6 +15,7 @@ def get_actions():
         {"name": "set_user_agent", "label": "Webservice enlazar usuario con agente de call center"},
         {"name": "picker_search_agent", "label": "Webservice para actualizar el picker de agentes"},
         {"name": "get_agent", "label": "Webservice para obteber los datos del agente"},
+        {"name": "get_user_sede", "label": "Webservice para obteber los datos de la sede"},
         {"name": "agent_state", "label": "Webservice para obteber el estado del agente"},
         {"name": "get_crm_url", "label": "Webservice para obteber la url de redirección al CRM"},
         {
@@ -25,60 +26,22 @@ def get_actions():
             "label": "Webservice para obtener las opciones de la consola de agente"},
         {
             "name": "auto_generate_users",
-            "label": "Webservice para generar los usuario automaticamente"}
+            "label": "Webservice para generar los usuario automaticamente"
+        },
+        {
+            "name": "set_user_sede",
+            "label": "Webservice para enlazar un usuario con una sede"
+        }
     ]
     return actions
 
 @api_view(['POST'])
 def set_user_agent(request):
-    """Tries to create an user and returns the result"""
+    """Tries to associate an user with an agent and returns the result"""
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('set_user_agent')
     if validation['status']:
-        data = request.data
-        user_id = data['user']
-        agent_id = data['agent']
-        if agent_id == "":
-            return Response(
-                {"success":True},
-                status=status.HTTP_200_OK,
-                content_type='application/json')
-        else:
-            try:
-                query = UserAgent.objects.filter(user=user_id)
-                if len(query) > 0:
-                    for obj in query:
-                        model = obj
-                        if agent_id == "":
-                            model.delete()
-                            return Response(
-                                {"success":True, "message":"UserAgent deleted"},
-                                status=status.HTTP_200_OK,
-                                content_type='application/json')
-
-                        serializer = UserAgentSerializer(instance=model, data=data)
-
-                else:
-                    serializer = UserAgentSerializer(data=data)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(
-                        {"success":True},
-                        status=status.HTTP_201_CREATED,
-                        content_type='application/json')
-                data = error_data(serializer)
-                return Response(
-                    data,
-                    status=status.HTTP_400_BAD_REQUEST,
-                    content_type='application/json')
-
-            except Agent.DoesNotExist:
-                data = {
-                    'success': False,
-                    'message': 'El agente se borro del servidor de telefonía, intente con otro agente'
-                }
-                return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-
+        return user_extra_fields.set_unset_user_agent(request)
     return PermissionValidation.error_response_webservice(validation, request)
 
 @api_view(['POST'])
@@ -105,27 +68,16 @@ def get_agent(request, user_id):
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('get_agent')
     if validation['status']:
-        try:
-            user_agent_obj = UserAgent.objects.get(user=user_id)
-            agent_id = user_agent_obj.agent
-            agent_obj = Agent.objects.get(id=agent_id)
-            agent_serializer = AgentSerializer(agent_obj)
-            agent_data = agent_serializer.data.copy()
+        return user_extra_fields.get_agent(request, user_id)
+    return PermissionValidation.error_response_webservice(validation, request)
 
-            data = {
-                "success":True,
-                "data":agent_data
-            }
-        except:
-            data = {
-                "success":False
-            }
-    
-        return Response(
-            data,
-            status=status.HTTP_200_OK,
-            content_type='application/json'
-        )
+@api_view(['POST'])
+def get_user_sede(request, user_id):
+    "Return a JSON response with user_sede data for the given id"
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('get_user_sede')
+    if validation['status']:
+        return user_extra_fields.get_user_sede(request, user_id)
     return PermissionValidation.error_response_webservice(validation, request)
 
 @api_view(['POST'])
@@ -262,6 +214,15 @@ def auto_generate_users(request):
                 content_type='application/json'
             )
 
+    return PermissionValidation.error_response_webservice(validation, request)
+
+@api_view(['POST'])
+def set_user_sede(request):
+    """Tries to associate an user with a sede and returns the result"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('set_user_agent')
+    if validation['status']:
+        return user_extra_fields.set_unset_user_sede(request)
     return PermissionValidation.error_response_webservice(validation, request)
 
 def error_data(user_serializer):

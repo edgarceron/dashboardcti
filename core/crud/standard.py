@@ -73,22 +73,33 @@ class Crud():
         permission_obj = PermissionValidation(request)
         validation = permission_obj.validate(action_name)
         if validation['status']:
-            model_obj = self.model_class.objects.get(id=identifier)
-            data_serializer = self.serializer_class(model_obj)
-            model_data = data_serializer.data.copy()
-            model_data = self.operation(model_data)
+            try:
+                model_obj = self.model_class.objects.get(id=identifier)
+                data_serializer = self.serializer_class(model_obj)
+                model_data = data_serializer.data.copy()
+                model_data = self.operation(model_data)
 
-            data = {
-                "success":True,
-                "data":model_data
-            }
-            data = self.after(request, data)
+                data = {
+                    "success":True,
+                    "data":model_data
+                }
+                data = self.after(request, data)
 
-            return Response(
-                data,
-                status=status.HTTP_200_OK,
-                content_type='application/json'
-            )
+                return Response(
+                    data,
+                    status=status.HTTP_200_OK,
+                    content_type='application/json'
+                )
+            except self.model_class.DoesNotExist:
+                data = {
+                    "success": False,
+                    "error": "No existe el registro, quiza haya sido borrado hace poco"
+                }
+                return Response(
+                    data,
+                    status=status.HTTP_404_NOT_FOUND,
+                    content_type='application/json'
+                )
         return permission_obj.error_response_webservice(validation, request)
 
     def delete(self, request, identifier, action_name, message):

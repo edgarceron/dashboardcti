@@ -65,4 +65,22 @@ class FormFunctions{
             input.val(value);
         }
     }
+
+    static updatePicker(pickerName, resultados){
+        var input = $(pickerName);
+        input.html('');
+        var opVal;
+        var opText;
+        for(let data of resultados){
+            opVal = data.id;
+            opText = data.name;
+            FormFunctions.addOption(input, opVal, opText);
+        }
+        input.selectpicker("refresh");
+    }
+
+    static addOption(input, val, text){
+        var option = `<option value="${val}">${text}</option>`;
+        input.append(option);
+    }
 }

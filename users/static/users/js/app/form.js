@@ -120,24 +120,6 @@ function saveFunction(){
     }
 }
 
-function updatePicker(pickerName, resultados){
-    var input = $(pickerName);
-    input.html('');
-    var opVal;
-    var opText;
-    for(let data of resultados){
-        opVal = data.id;
-        opText = data.name;
-        addOption(input, opVal, opText);
-    }
-    input.selectpicker("refresh");
-}
-
-function addOption(input, val, text){
-    var option = `<option value="${val}">${text}</option>`;
-    input.append(option);
-}
-
 function getProfileData(id_profile){ 
     if(id_profile != null){
         $.ajax({
@@ -150,7 +132,7 @@ function getProfileData(id_profile){
                     profile = [result.data];
                     if(profile != null){
                         pickerName = '#profileInput';
-                        updatePicker(pickerName, profile);
+                        FormFunctions.updatePicker(pickerName, profile);
                     }
                 }
             }
@@ -175,5 +157,5 @@ $( document ).ready(function() {
         $('#passwordInput').attr("placeholder", "Ingrese aquí una nueva contraseña temporal");
     }
 
-    FormFunctions.setAjaxLoadPicker('#profileInput', picker_search_profile_url, updatePicker);
+    FormFunctions.setAjaxLoadPicker('#profileInput', picker_search_profile_url, FormFunctions.updatePicker);
 });

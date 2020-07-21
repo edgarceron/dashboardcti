@@ -32,7 +32,7 @@ def form_profile(request, profile_id=0):
                 'username': permission_obj.user.name
             }
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)
 
 def actions_by_app():
     """Return a list which contains each app with its info and actios"""
@@ -59,4 +59,4 @@ def listing_profile(request):
                 'username': permission_obj.user.name
             }
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)

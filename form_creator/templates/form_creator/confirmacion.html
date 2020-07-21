@@ -1,0 +1,94 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+Consola de agente
+{% endblock %}
+
+{% block topTitle %}
+<span class="text-light">Consola de agente</span> 
+{% endblock %}
+{% block bg_class %}
+    bg-dark
+{% endblock bg_class %}
+
+{% block content %}
+
+<div class="card text-center">
+    <div class="card-header text-dark">
+        <h3>Estado del agente: <span id="lblStatus">......</span></h3>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#successModal">Siguiente</button>
+    </div>
+    <div class="card-body bg-dark text-light">
+        <h4><span id="lblMessage">Cargando...</span></h4>
+    </div>
+  </div>
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="successModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <p>Llamada saliente: <span id="lblPhone">3176483290</span></p>
+                <p>Cliente: PRADA MOYA IVONNE ANDREA</p>
+                <p>Placa: IPZ28 6</p>
+                <p>Bodega: San Nicolas Cra. 4 #22A-29</p>
+                <p>Motivo: Cambio de aceite</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nameInput">Fecha</label>
+                            <input type="date" class="form-control appform" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nameInput">Hora</label>
+                            <input type="time" class="form-control appform" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="nameInput">Moivo</label>
+                            <input type="text" class="form-control appform"  placeholder="Escriba aquí si cambio el motivo" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#successModal">Confirmar</button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nameInput">Fecha</label>
+                            <input type="date" class="form-control appform" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#successModal">Reagendar consolidación</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+{% block javascript %}
+
+{% endblock %}
+
+
+    

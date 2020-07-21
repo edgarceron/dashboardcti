@@ -33,75 +33,14 @@
     </form>
     <div class="col-md-12">
         <div class="row">
-            <div class="card w-100" id="questionContainer">
+            <div class="card w-100">
                 <div class="card-header">
                     Preguntas
                 </div>
-                
-                <div class="card mt-1 mr-1 ml-1 mb-1" id="questionContainer">
-                    <div class="card-header">
-                        <span>Pregunta 1</span>
-                        <div class="row float-right">
-                            <div class="col">
-                                <input class="custom-control-input" type="checkbox" value="" id="null-pregunta1">
-                                <label class="custom-control-label" for="null-pregunta1">Obligatoria</label>
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-primary">
-                                    <i class="fas fa-fw fa-save" onclick="saveQuestion()"></i>
-                                </button>        
-                            </div>
-                            <div class="col">
-                                <a href="#"><i class="fas fa-fw fa-times"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row pl-2 pb-2">
-                        <div class="col-md-5">
-                            <label for="text-pregunta1">Pregunta</label>
-                            <input type="text" class="form-control" id="text-pregunta1" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="type-pregunta1">Tipo</label>
-                            <select class="form-control" id="type-pregunta1">
-                            <option value="1">Falso o verdadero</option>
-                            <option value="2">Texto</option>
-                            <option value="3">Multiples opciones, una respuesta</option>
-                            <option value="4">Multiples opciones, multiples respuestas</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row pl-2 pb-2">
-                        <div class="col-12" id="respuestasPregunta1">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" id="textRespuesta1" value="Opcion 1" required>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button class="btn btn-outline-primary">
-                                                <i class="fas fa-fw fa-save" onclick="addAnswerButton()"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" id="textRespuesta1" value="Opcion 2" required>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button class="btn btn-outline-primary">
-                                                <i class="fas fa-fw fa-save" onclick="addAnswerButton()"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                <div class="card-body" id="questionsContainer">
+
                 </div>
+
                 
             </div>
             <div class="row">
@@ -154,9 +93,11 @@
 {% block javascript %}
 <script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
 <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
-<script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script>
 <script src="{% static 'form_creator/js/app/questions_gui.js' %}"></script>
+<script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script>
+<script src="{% static 'form_creator/js/app/questions_linked_list.js' %}"></script>
 <script src="{% static 'form_creator/js/app/questions_form.js' %}"></script>
+<script src="{% static 'form_creator/js/app/answer_gui.js' %}"></script>
 <script src="{% static 'form_creator/js/app/form.js' %}"></script>
 
 <script>
@@ -170,6 +111,9 @@
     replace_question_url = "{% url 'replace_question' %}";
     delete_question_url = "{% url 'delete_question' %}";
     change_question_position_url = "{% url 'change_question_position' %}";
+    add_answer_url = "{% url 'add_answer' %}";
+    replace_answer_url = "{% url 'replace_answer' %}";
+    delete_answer_url = "{% url 'delete_answer' %}";
 
     get_url = get_url.slice(0, -1);
     if(id != 0){

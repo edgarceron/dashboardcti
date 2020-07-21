@@ -1,24 +1,34 @@
 /** Managges the gui elements for creating questions */
 function addFieldsNewQuestion(){
+    orderQuestions();
     var html = htmlPregunta(questions);
     putQuestionHtml(html);
+    linkedQuestionListAdd(questions);
     questions++;
 }
 
 function putQuestionHtml(html){
-    html = $("#questionContainer").html() + html;
-    $("#questionContainer").html(html);
+    html = $("#questionsContainer").html() + html;
+    $("#questionsContainer").html(html);
 }
 
 function htmlPregunta(count, idValue=""){
     var html = `
     <div class="card mt-1 mr-1 ml-1 mb-1" id="questionContainer${count}">
         <div class="card-header">
-            <span>Pregunta 1</span>
+            <span>Pregunta ${count}</span>
             <div class="row float-right">
                 <div class="col">
                     <input class="custom-control-input" onchange="questionAltered(${count})" type="checkbox" value="" id="nullPregunta${count}">
                     <label class="custom-control-label" for="nullPregunta${count}">Obligatoria</label>
+                </div>
+                <div class="col btn-group btn-group-toggle">
+                    <button type="button" class="btn btn-primary">
+                        <i class="fas fa-chevron-down" onclick="sortQuestionDown(${count})"></i>
+                    </button>  
+                    <button type="button" class="btn btn-primary">
+                        <i class="fas fa-chevron-up" onclick="sortQuestionUp(${count})"></i>
+                    </button>        
                 </div>
                 <div class="col">
                     <button class="btn btn-outline-primary">
@@ -45,10 +55,20 @@ function htmlPregunta(count, idValue=""){
                 </select>
                 <input type="hidden" id="idPregunta${count}" value="${idValue}">
                 <input type="hidden" id="alteredPregunta${count}" value="0">
+                <input type="hidden" id="posPregunta${count}" value="${count}">
             </div>
         </div>
         <div class="row pl-2 pb-2">
-            <div class="col-12" id="respuestasPregunta1">
+            <div class="col-12" id="respuestasPregunta${count}">
+            </div>
+        </div>
+        <div class="row pl-2 pb-2" id=>
+            <div class="col-12">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-primary" onclick="addFieldsNewAnswer(${count})">Otra respuesta</button>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
