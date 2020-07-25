@@ -181,6 +181,7 @@ class Crud():
                 queryset = self.model_class.objects.all()[start:start + length]
                 records_filtered = records_total
 
+            queryset = self.after(request, queryset)
             result = self.serializer_class(queryset, many=True)
             data = {
                 'draw': draw,

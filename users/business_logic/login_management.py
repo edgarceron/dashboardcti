@@ -35,7 +35,9 @@ def login(request):
         encoded = user.password
         hasher = PBKDF2PasswordHasher()
         login_valid = hasher.verify(password, encoded)
-
+        print(password)
+        print(encoded)
+        print(login_valid)
         if login_valid:
             key = generate_key(username)
             life = datetime.datetime.now() + datetime.timedelta(hours=14)

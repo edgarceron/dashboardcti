@@ -36,8 +36,30 @@ def add_user(request):
 @api_view(['PUT'])
 def replace_user(request, user_id):
     "Tries to update an user and returns the result"
-    crud_object = Crud(UserSerializer, User, login_management.password_encode)
-    return crud_object.replace(request, user_id, 'replace_user')
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('replace_user')
+    if validation['status']:
+        user_obj = User.objects.get(id=user_id)
+        data = request.data.copy()
+        password = data['password']
+        if password == "":
+            data['password'] = user_obj.password
+        else:
+            data = login_management.password_encode(data) 
+
+        user_serializer = UserSerializer(user_obj, data=data)
+
+        if user_serializer.is_valid():
+            user_serializer.save()
+            return Response(
+                {"success":True, "id":user_id},
+                status=status.HTTP_200_OK,
+                content_type='application/json'
+            )
+
+        data = Crud.error_data(user_serializer)
+        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+    return PermissionValidation.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def get_user(request, user_id):

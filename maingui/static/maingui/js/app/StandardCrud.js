@@ -2,6 +2,7 @@ class StandardCrud{
 
     constructor(urls){
         this.urls = urls;
+        this.async = false;
     }
 
     actionPosible(action){
@@ -32,7 +33,7 @@ class StandardCrud{
             $.ajax({
                 url: this.urls[action].url,
                 method: this.urls[action].method,
-                async: false,
+                async: this.async,
                 dataType: "json",
                 data: data,
                 beforeSend: () => {
@@ -219,7 +220,7 @@ class StandardCrud{
             $.ajax({
                 url: this.urls[url].url + model_id,
                 method: 'POST',
-                async: false,
+                async: this.async,
                 dataType: 'json',
                 success: function(result){
                     if(result.success){

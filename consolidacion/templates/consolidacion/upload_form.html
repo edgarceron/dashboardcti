@@ -1,0 +1,49 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+Citas
+{% endblock %}
+
+{% block topTitle %}
+Citas
+{% endblock %}
+{% block content %}
+<div class="row">
+    <form action="" class="needs-validation w-100" novalidate>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputConsolidacionFile" aria-describedby="inputConsolidacionFileAddon">
+                    <label class="custom-file-label" for="inputConsolidacionFile">Seleccionar archivo</label>
+                </div>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="inputConsolidacionFileAddon">Guardar</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="spinner-border d-none" role="status" id="spiner">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+
+
+{% endblock content %}
+
+{% block javascript %}
+    <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
+    <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
+    <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
+    <script>
+        $( document ).ready(function() {
+            upload_consolidacion_url = "{% url 'upload_consolidacion' %}";
+        });
+    </script>
+    <script src="{% static 'consolidacion/js/app/upload_form.js' %}"></script>
+{% endblock %}

@@ -53,7 +53,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Opciones</span>
+                    <span>Usuarios y permisos</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -61,6 +61,20 @@
                         <a class="collapse-item" href="{% url 'listing_profile' %}">Perfiles</a>
                         <a class="collapse-item" href="{% url 'options_form_agent_console' %}">Configuración</a>
                         <a class="collapse-item" href="{% url 'listing_form' %}">Formularios</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTaller" aria-expanded="true" aria-controls="collapseTaller">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Gestion de taller</span>
+                </a>
+                <div id="collapseTaller" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'listing_consolidacion' %}">Consolidaciones</a>
+                        <a class="collapse-item" href="{% url 'listing_sede' %}">Sedes</a>
+                        <a class="collapse-item" href="{% url 'listing_asesor' %}">Asesores</a>
                     </div>
                 </div>
             </li>

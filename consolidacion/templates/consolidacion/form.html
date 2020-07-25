@@ -1,0 +1,127 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+Citas
+{% endblock %}
+
+{% block topTitle %}
+Citas
+{% endblock %}
+{% block content %}
+<div class="row">
+    <form action="" class="needs-validation w-100" novalidate>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="cedulaInput">Cedula cliente</label>
+                    <input type="text" class="form-control appform" id="cedulaInput" required>
+                    <div class="valid-feedback" id='cedulaValid'>Valid.</div>
+                    <div class="invalid-feedback" id = 'cedulaInvalid'>Please fill out this field.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="placaInput">Placa vehiculo</label>
+                    <input type="text" class="form-control appform" id="placaInput" required>
+                    <div class="valid-feedback" id='placaValid'>Valid.</div>
+                    <div class="invalid-feedback" id = 'placaInvalid'>Please fill out this field.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="fechaInput">Fecha</label>
+                    <input type="date" class="form-control appform" id="fechaInput" required>
+                    <div class="valid-feedback" id='fechaValid'>Valid.</div>
+                    <div class="invalid-feedback" id = 'fechaInvalid'>Please fill out this field.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class='col-md-6'>
+                <div class='form-group'>
+                    <label for='motivoInput'>Motivo</label>
+                    <select class='form-control appform' id='motivoInput'>
+                    </select>
+                    <div class="valid-feedback" id='motivoValid'>Valid.</div>
+                    <div class="invalid-feedback" id = 'motivoInvalid'>Please fill out this field.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class='row'>
+            <div class='col-md-6'>
+                <div class='form-group'>
+                    <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="cautionModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Atención</h5>
+            </div>
+            <div class="modal-body">
+                    ¿Programar una cita para el cliente PRADA MOYA IVONNE ANDREA? 
+                    <br>
+                    Placa: IPZ286
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm_button">Si</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="successModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Unos segundos por favor</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success" role="alert" id="modalMessage">
+                    Guardado con exito!
+                </div>
+            </div>
+            <div class="modal-footer">
+                Redirigiendo...
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascript %}
+    <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
+    <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
+    <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
+    <script>
+        $( document ).ready(function() {
+            id = {{ id }};
+            listing_url = "{% url 'listing_consolidacion' %}";
+            add_url = "{% url 'add_consolidacion' %}";
+            get_url = "{% url 'get_consolidacion' consolidacion_id=0 %}";
+            replace_url = "{% url 'replace_consolidacion' consolidacion_id=0 %}";
+            picker_search_motivo_url = "{% url 'picker_search_motivo' %}";
+            get_motivo_url = "{% url 'get_motivo' motivo_id=0 %}";
+            get_motivo_url = get_motivo_url.slice(0, -1);
+            get_url = get_url.slice(0, -1);
+            replace_url = replace_url.slice(0, -1);
+
+        });
+    </script>
+    <script src="{% static 'consolidacion/js/app/form.js' %}"></script>
+{% endblock %}
