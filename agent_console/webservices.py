@@ -2,11 +2,13 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from core.crud.standard import Crud
 from users.permission_validation import PermissionValidation
+from agent_console.business_logic import data_filters
 from .console_functions.agent_state import AgentState
 from .console_functions.generate_users import GenerateUsers
-from .serializers import AgentSerializer
-from .models import UserAgent, Agent, AgentConsoleOptions
+from .serializers import AgentSerializer, CampaignSerializer
+from .models import Agent, AgentConsoleOptions, Campaign
 from .business_logic import user_extra_fields
 
 def get_actions():
@@ -31,6 +33,14 @@ def get_actions():
         {
             "name": "set_user_sede",
             "label": "Webservice para enlazar un usuario con una sede"
+        },
+        {
+            "name": "picker_search_campaign",
+            "label": "Webservice para actualizar el picker de campañas salientes"
+        },
+        {
+            "name": "get_campaign",
+            "label": "Webservice para obteber los datos de una campaña saliente"
         }
     ]
     return actions
@@ -92,9 +102,13 @@ def agent_state(request):
         id_agent = data['id_agent']
         previous_call = data['previous_call']
 
-        state, current_call = agent_state_obj.check_state(id_agent)
-        if (state == 4 and current_call.uniqueid != previous_call) or state != previous_state:
-            answer = agent_state_obj.get_answer(state, id_agent, current_call)
+        state, current_call_entry, current_call = agent_state_obj.check_state(id_agent)
+        if (
+            state != previous_state
+            or (state == 4 and current_call_entry.uniqueid != previous_call)
+            or (state == 5 and current_call.uniqueid != previous_call)
+        ):
+            answer = agent_state_obj.get_answer(state, id_agent, current_call_entry, current_call)
         else:
             answer = {'update': False}
 
@@ -124,7 +138,6 @@ def get_crm_url(request):
 
     return PermissionValidation.error_response_webservice(validation, request)
 
-
 @api_view(['PUT'])
 def replace_options_agent_console(request):
     "Tries to update the agent console options"
@@ -132,25 +145,19 @@ def replace_options_agent_console(request):
     validation = permission_obj.validate('replace_options_agent_console')
     if validation['status']:
         data = request.data.copy()
-        url = data['CRM_URL']
-        redirection_time = data['REDIRECT_TIME']
-        try:
-            option_url = AgentConsoleOptions.objects.get(option='CRM_URL')
-        except AgentConsoleOptions.DoesNotExist:
-            option_url = AgentConsoleOptions()
-            option_url.option = 'CRM_URL'
+        print(data)
+        redirection_time = data['CAMPAIGN_CONSOLIDACION']
 
         try:
-            option_redirection = AgentConsoleOptions.objects.get(option='REDIRECT_TIME')
+            option_campaign = AgentConsoleOptions.objects.get(option='CAMPAIGN_CONSOLIDACION')
         except AgentConsoleOptions.DoesNotExist:
-            option_redirection = AgentConsoleOptions()
-            option_redirection.option = 'REDIRECT_TIME'
+            option_campaign = AgentConsoleOptions()
+            option_campaign.option = 'CAMPAIGN_CONSOLIDACION'
 
-        option_url.value = url
-        option_redirection.value = redirection_time
 
-        option_url.save()
-        option_redirection.save()
+        option_campaign.value = redirection_time
+
+        option_campaign.save()
 
         return Response(
             {"success":True},
@@ -166,20 +173,13 @@ def get_options_agent_console(request):
     validation = permission_obj.validate('get_options_agent_console')
     if validation['status']:
         try:
-            option_url = AgentConsoleOptions.objects.get(option='CRM_URL')
+            option_campaign = AgentConsoleOptions.objects.get(option='CAMPAIGN_CONSOLIDACION')
         except AgentConsoleOptions.DoesNotExist:
-            option_url = AgentConsoleOptions()
-            option_url.option = 'CRM_URL'
-
-        try:
-            option_redirection = AgentConsoleOptions.objects.get(option='REDIRECT_TIME')
-        except AgentConsoleOptions.DoesNotExist:
-            option_redirection = AgentConsoleOptions()
-            option_redirection.option = 'REDIRECT_TIME'
+            option_campaign = AgentConsoleOptions()
+            option_campaign.option = 'CAMPAIGN_CONSOLIDACION'
 
         options = {
-            option_url.option: option_url.value,
-            option_redirection.option: option_redirection.value
+            option_campaign.option: option_campaign.value
         }
 
         data = {
@@ -225,18 +225,14 @@ def set_user_sede(request):
         return user_extra_fields.set_unset_user_sede(request)
     return PermissionValidation.error_response_webservice(validation, request)
 
-def error_data(user_serializer):
-    """Return a common JSON error result"""
-    error_details = []
-    for key in user_serializer.errors.keys():
-        error_details.append({"field": key, "message": user_serializer.errors[key][0]})
+@api_view(['POST'])
+def get_campaign(request, campaign_id):
+    "Return a JSON response with campaign data for the given id"
+    crud_object = Crud(CampaignSerializer, Campaign)
+    return crud_object.get(request, campaign_id, 'get_campaign')
 
-    data = {
-        "Error": {
-            "success": False,
-            "status": 400,
-            "message": "Los datos enviados no son validos",
-            "details": error_details
-        }
-    }
-    return data
+@api_view(['POST'])
+def picker_search_campaign(request):
+    "Returns a JSON response with campaign data for a selectpicker."
+    crud_object = Crud(CampaignSerializer, Campaign, data_filters.campaign_picker_filter)
+    return crud_object.picker_search(request, 'picker_search_campaign')

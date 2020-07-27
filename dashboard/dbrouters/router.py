@@ -59,12 +59,91 @@ class IntegrationRouter:
         'cedula_llamada'
     }
 
+    dms_models = {
+        'tallconceptosoperaciones',
+        'tercerosactividadeconomica',
+        'condicionespago',
+        'referencias',
+        'tallcitas',
+        'sedesdebodegas',
+        'terceros',
+        'bodegas',
+        'wtallcitasbahias',
+        'wtallcitascausascancelacion',
+        'referenciasgen',
+        'referenciascla',
+        'referenciascla',
+        'referenciascon',
+        'referenciassub3',
+        'terceros1',
+        'terceros2',
+        'terceros3',
+        'terceros4',
+        'terceros5',
+        'terceros6',
+        'terceros7',
+        'terceros8',
+        'terceros9',
+        'terceros10',
+        'tercerosica',
+        'tercerosactividadescree',
+        'wtallcitastipobahia',
+        'centros',
+        'centrosgrupos',
+        'centrossubgrupos',
+        'wtallcitastipotecnico',
+        'tallcitasauditoria',
+        'crmcitas',
+        'tallcitasoperaciones',
+        'talltempario',
+    }
+
+    dms_tables = {
+        'tall_conceptos_operaciones',
+        'Terceros_actividad_economica',
+        'condiciones_pago',
+        'referencias',
+        'tall_citas',
+        'SedesDeBodegas',
+        'terceros',
+        'bodegas',
+        'w_tall_citas_bahias',
+        'w_tall_citas_Causas_Cancelacion',
+        'referencias_gen',
+        'referencias_cla',
+        'referencias_con',
+        'referencias_sub3',
+        'terceros_1',
+        'terceros_2',
+        'terceros_3',
+        'terceros_4',
+        'terceros_5',
+        'terceros_6',
+        'terceros_7',
+        'terceros_8',
+        'terceros_9',
+        'terceros_10',
+        'terceros_ica',
+        'terceros_actividades_cree',
+        'w_tall_citas_tipoBahia',
+        'centros',
+        'centros_grupos',
+        'centros_subgrupos',
+        'w_tall_citas_tipoTecnico',
+        'tall_citas_auditoria',
+        'CRM_citas',
+        'tall_citas_operaciones',
+        'tall_tempario'
+    }
+
     def db_for_read(self, model, **hints):
         """
         Attempts to read call_center models go to call_center.
         """
         if model._meta.db_table in self.call_center_tables:
             return 'call_center'
+        if model._meta.db_table in self.dms_tables:
+            return 'caribe_dms'
         return None
 
     def db_for_write(self, model, **hints):
@@ -73,6 +152,8 @@ class IntegrationRouter:
         """
         if model._meta.db_table in self.call_center_tables:
             return 'call_center'
+        if model._meta.db_table in self.dms_tables:
+            return 'caribe_dms'
         return None
 
     def allow_relation(self, obj1, obj2, **hints):
@@ -94,5 +175,8 @@ class IntegrationRouter:
         """
         if model_name in self.call_center_models:
             if db == 'call_center':
+                return True
+        if model_name in self.dms_models:
+            if db == 'caribe_dms':
                 return True
         return None

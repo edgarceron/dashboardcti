@@ -148,8 +148,9 @@ class Crud():
 
             queryset = self.operation(value)
             serializer = self.serializer_class(queryset, many=True)
+            print(serializer)
             result = serializer.data
-
+            print(serializer.data)
             data = {
                 "success": True,
                 "result": result

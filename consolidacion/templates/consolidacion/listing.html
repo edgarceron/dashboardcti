@@ -12,7 +12,12 @@ Listado de Consolidaciones
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            <a class="btn btn-info" href="{% url 'create_consolidacion' %}"><i class="fas fa-fw fa-plus"></i>Crear consolidación</a>
+            <a class="btn btn-info" href="{% url 'create_consolidacion' %}">
+                <i class="fas fa-fw fa-plus"></i>Crear consolidación
+            </a>
+            <a class="btn btn-info" href="{% url 'upload_consolidacion_form' %}">
+                <i class="fas fa-fw fa-file-csv"></i>Subir consolidaciones
+            </a>
         </div>
     </div>
     <br>

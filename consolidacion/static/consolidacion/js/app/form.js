@@ -12,6 +12,23 @@ function getValues(){
     return data;
 }
 
+function validateCedula(){
+    var ajaxFunctions = {
+        'success': function(result){
+            if(result.success){
+                $('nombreCliente').html(result.nombre);
+                $('placaCliente').html($('#placaInput').val());
+                $('#cautionModal').modal('toggle');
+            }
+            else {
+                SoftNotification.show(result.message);
+            }
+        },
+        'error': standard.standardError
+    }
+    standard.makePetition(getValues(), 'validate_cedula_url', ajaxFunctions);
+}
+
 function saveForm(){
     var ajaxFunctions = {
         'success': function(result){
@@ -67,11 +84,16 @@ $( document ).ready(function() {
         'add_url': {'url' : add_url, 'method':'POST'},
         'get_url': {'url' : get_url, 'method':'POST'},
         'replace_url': {'url' : replace_url, 'method':'PUT'},
-        'get_motivo_url': {'url' : get_motivo_url, 'method':'PUT'}
+        'get_motivo_url': {'url' : get_motivo_url, 'method':'PUT'},
+        'validate_cedula_url': {'url' : validate_cedula_url, 'method':'POST'}
     }
     standard = new StandardCrud(urls);
 
     $('#saveButton').click(function(){
+        validateCedula()
+    });
+
+    $('#confirmButton').click(function(){
         if(id != 0){
             updateForm();
         }

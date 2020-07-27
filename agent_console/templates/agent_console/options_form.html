@@ -13,16 +13,19 @@ Opciones de consola de agente
     <form action="" class="needs-validation w-100" novalidate>
     <div class="col-md-12">
         <div class="row">
+            <!--
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="CRM_URLInput">Url de redirección</label>
                     <input type="text" class="form-control appform" id="CRM_URLInput" required>
                 </div>
-            </div>
+            </div> -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="REDIRECT_TIMEInput">Tiempo de espera de redirección</label>
-                    <input type="text" class="form-control appform" id="REDIRECT_TIMEInput" required>
+                    <label for='CAMPAIGN_CONSOLIDACIONInput'>Campaña de salida consolidación</label>
+                    <select class='form-control appform' id='CAMPAIGN_CONSOLIDACIONInput'>
+                        <option value="">Escoja una opción</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -67,13 +70,16 @@ Opciones de consola de agente
 {% endblock content %}
 
 {% block javascript %}
+<script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
 <script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
-<script src="{% static 'agent_console/js/app/options_form.js' %}"></script>
-
 <script>
     replace_options_agent_console_url = "{% url 'replace_options_agent_console' %}";
     get_options_agent_console_url = "{% url 'get_options_agent_console' %}";
     auto_generate_users_url = "{% url 'auto_generate_users' %}";
-    
+    picker_search_campaign_url = "{% url 'picker_search_campaign' %}";
+    get_campaign_url = "{% url 'get_campaign' campaign_id=0 %}";
+    get_campaign_url = get_campaign_url.slice(0, -1);
 </script>
+<script src="{% static 'agent_console/js/app/options_form.js' %}"></script>
 {% endblock %}

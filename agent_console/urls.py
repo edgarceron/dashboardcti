@@ -24,5 +24,10 @@ urlpatterns = [
         webservices.get_options_agent_console,
         name='get_options_agent_console'),
     path('auto_generate_users', webservices.auto_generate_users, name='auto_generate_users'),
-
+    path(
+        'picker_search_campaign',
+        webservices.picker_search_campaign,
+        name='picker_search_campaign'
+    ),
+    path('get_campaign/<int:campaign_id>', webservices.get_campaign, name='get_campaign'),
 ]

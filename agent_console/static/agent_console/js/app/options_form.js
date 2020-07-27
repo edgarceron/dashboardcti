@@ -1,56 +1,37 @@
+var urls;
+var errorFields = [];
+var standard;
 
 function getValues(){
     var values={
-        'REDIRECT_TIME':$('#REDIRECT_TIMEInput').val(),
-        'CRM_URL':$('#CRM_URLInput').val(),
+        'CAMPAIGN_CONSOLIDACION':$('#CAMPAIGN_CONSOLIDACIONInput').val(),
     }
     return values;
 }
 
 function updateData(){
-    if(!singleOperationRestriction){
-        singleOperationRestriction = true;
-        $.ajax({
-            url: replace_options_agent_console_url,
-            method: 'PUT',
-            async: false,
-            dataType: 'json',
-            data: getValues(),
-            beforeSend: function(){},
-            success: function(result){
-                if(result.success){
-                    SoftNotification.show("Opciones guardadas con exito");
-                }
-            },
-            error: function (request, status, error, result){
-            },
-            complete: function(){
-                singleOperationRestriction = false;
+
+    var ajaxFunctions = {
+        'success': function(result){
+            if(result.success){
+                SoftNotification.show("Opciones guardadas con exito");
             }
-        });
+        },
+        'error': standard.standardError
     }
+    standard.makePetition(getValues(), 'replace_options_agent_console_url', ajaxFunctions);
 }
 
 function getData(user_id){
-    $.ajax({
-        url: get_options_agent_console_url,
-        method: 'POST',
-        async: false,
-        dataType: 'json',
-        data: {},
-        beforeSend: function(){},
-        success: function(result){
-            var data = result.data;
-            var keys = Object.keys(data);
-            for(field in keys){
-                var inputName = "#" + keys[field] + "Input";
-                var input = $(inputName);
-                FormFunctions.setValue(input, data[keys[field]]);
-            }
+    var ajaxFunctions = {
+        'success': function(result){
+            standard.standardSetValues(result);
         },
-        error: function (request, status, error){},
-        complete: function(){},
-    });
+        'error': function(result){
+            standard.standardGetError(result);
+        }
+    }
+    standard.makePetition(null, 'get_options_agent_console_url', ajaxFunctions);
 }
 
 function autoGenerateUsers(){
@@ -76,6 +57,14 @@ function autoGenerateUsers(){
 
 
 $( document ).ready(function() {
+
+    urls = {
+        'get_options_agent_console_url': {'url' : get_options_agent_console_url, 'method':'POST'},
+        'replace_options_agent_console_url': {'url' : replace_options_agent_console_url, 'method':'PUT'},
+        'get_CAMPAIGN_CONSOLIDACION_url': {'url' : get_campaign_url, 'method':'POST'},
+    }
+    standard = new StandardCrud(urls);
+
     $('#saveButton').click(function(){
         updateData();
     });
@@ -83,6 +72,14 @@ $( document ).ready(function() {
     $('#generateButton').click(function(){
         autoGenerateUsers();
     });
+
+    $('#CAMPAIGN_CONSOLIDACIONInput').selectpicker(
+        {
+            "liveSearch": true
+        }
+    );
+
+    FormFunctions.setAjaxLoadPicker('#CAMPAIGN_CONSOLIDACIONInput', picker_search_campaign_url, FormFunctions.updatePicker);
 
     getData();
 });

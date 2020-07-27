@@ -9,10 +9,9 @@ Citas
 {% endblock %}
 {% block content %}
 <div class="row">
-    <form action="" class="needs-validation w-100" novalidate>
-    <div class="col-md-12">
-        <div class="row">
-            <div class="input-group">
+    <div class="col-md-11">
+        <div class="input-group">
+            <form action="" class="needs-validation w-100" novalidate></form>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="inputConsolidacionFile" aria-describedby="inputConsolidacionFileAddon">
                     <label class="custom-file-label" for="inputConsolidacionFile">Seleccionar archivo</label>
@@ -20,17 +19,21 @@ Citas
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="button" id="inputConsolidacionFileAddon">Guardar</button>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="spinner-border d-none" role="status" id="spiner">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
-    </form>
+    <div class="col-md-1">
+        <div class="spinner-border d-none" role="status" id="spiner">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row d-none" id="divArea">
+    <div class="col">
+        <label for="failsArea">Errores</label>
+        <textarea class="form-control" id="failsArea" rows="10"></textarea>
+    </div>
 </div>
 
 

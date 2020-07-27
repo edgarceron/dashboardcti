@@ -327,7 +327,7 @@ class CedulaLlamada(models.Model):
 
 class UserAgent(models.Model):
     """Each user is related to one agent"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     agent = models.IntegerField(unique=True)
 
 class ServerLog(models.Model):
@@ -345,5 +345,5 @@ class AgentConsoleOptions(models.Model):
 
 class UserSede(models.Model):
     """Each user is related to a sede"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     sede = models.ForeignKey(Sede, on_delete=models.CASCADE)

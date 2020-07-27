@@ -8,3 +8,4 @@ class Asesor(models.Model):
     name = models.CharField(unique=True, max_length=100, verbose_name="App")
     active = models.BooleanField(verbose_name="Activo/Inactivo", null=False, default=True)
     sede = models.ForeignKey(Sede, on_delete=models.CASCADE, null=True)
+    asesor_dms = models.IntegerField(null=True, default=0)

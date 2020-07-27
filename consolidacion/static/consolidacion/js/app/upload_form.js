@@ -9,8 +9,6 @@ function getValues(){
 
 function saveForm(){
     var data = getValues();
-    console.log(data);
-
     $.ajax({
         url: upload_consolidacion_url,
         method: 'POST',
@@ -24,7 +22,18 @@ function saveForm(){
             $('#spiner').removeClass('d-none');
         },
         success: (result) => {
-            $('#successModal').modal('toggle');
+            if(result.fails.length > 0){
+                SoftNotification.show("Subido con exito, abajo aparecen los errores");
+                var text = "";
+                for(var i = 0; i<result.fails.length;i++){
+                    text += result.fails[i] + "\n";
+                }
+                $('#failsArea').val( text );
+                $('#divArea').removeClass('d-none');
+            }
+            else{
+                SoftNotification.show("Subido con exito");
+            }
         },
         error:  (request, status, error, result) => {
             standard.standardError(request, status, error, result);
@@ -34,6 +43,10 @@ function saveForm(){
             singleOperationRestriction=false
         }
     });
+}
+
+function splitFileName(str) {
+    return str.split('\\').pop().split('/').pop();
 }
 
 $( document ).ready(function() {
@@ -47,8 +60,7 @@ $( document ).ready(function() {
     });
 
     $('#inputConsolidacionFile').on('change',function(){
-
-        var fileName = $(this).val();
+        var fileName = splitFileName($(this).val());
         $(this).next('.custom-file-label').html(fileName);
     })
 

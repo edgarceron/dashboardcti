@@ -1,0 +1,129 @@
+
+{% load static %}
+
+<div class="row">
+    <form action="" class="needs-validation w-100" novalidate>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text"><i class="fas fa-fw fa-file-csv"></i></div>
+                    </div>
+                    <input type="text" class="form-control" id="nombreInput" placeholder="Username">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text"><i class="fas fa-fw fa-file-csv"></i></div>
+                    </div>
+                    <input type="text" class="form-control" id="placaInput" placeholder="Username">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for='sedeInput'>Bodega</label>
+                    <select class='form-control appform' id='sedeInput'>
+                        <option value="">Escoja una opción</option>
+                    </select>
+                    <div class="valid-feedback" id='sedeValid'>Valid.</div>
+                    <div class="invalid-feedback" id = 'sedeInvalid'>Please fill out this field.</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="fechaInput">Fecha</label>
+                    <input type="date" class="form-control appform"  id="fechaInput"required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="timeInput">Hora</label>
+                    <select class="form-control" id="timeInput" required>
+
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for='motivoInput'>Motivo</label>
+                    <select class='form-control appform' id='motivoInput'>
+                        <option value="">Escoja una opción</option>
+                    </select>
+                    <div class="valid-feedback" id='motivoValid'>Valid.</div>
+                    <div class="invalid-feedback" id = 'motivoInvalid'>Please fill out this field.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class='row'>
+            <div class='col-md-6'>
+                <div class='form-group'>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cautionModal">Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="nameInput">Fecha</label>
+                <input type="date" class="form-control appform" required>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for='motivoReagendadoInput'>Motivo</label>
+                <select class='form-control appform' id='motivoReagendadoInput'>
+                    <option value="">Escoja una opción</option>
+                </select>
+                <div class="valid-feedback" id='motivoReagendadoValid'>Valid.</div>
+                <div class="invalid-feedback" id = 'motivoReagendadoInvalid'>Please fill out this field.</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#successModal">Reagendar consolidación</button>
+            </div>
+        </div>
+    </div>
+    </form>
+
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="emailModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Atención</h5>
+            </div>
+            <div class="modal-body">
+                    ¿Enviar un correo ahora?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="email_button">Si</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascript %}
+
+{% endblock javascript %}
+
+
+    

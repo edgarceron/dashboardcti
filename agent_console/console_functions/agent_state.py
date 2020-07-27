@@ -1,8 +1,11 @@
 """Manages the agent state logic """
-import json
 from datetime import datetime
 import pytz
-from agent_console.models import Audit, Agent, CurrentCallEntry, CedulaLlamada, ServerLog
+from dms.models import Terceros
+from consolidacion.models import CallConsolidacion
+from agent_console.models import (
+    Audit, Agent, CurrentCallEntry,
+    CedulaLlamada, ServerLog, CurrentCalls)
 
 class AgentState():
     """Class for agent state logic"""
@@ -26,18 +29,28 @@ class AgentState():
     @staticmethod
     def agent_exist(id_agent):
         """Check if the agent still exist in the call_center db"""
-        count = Agent.objects.filter(id=id_agent).count()
-        if count == 1:
-            return True
-        return False
+        try:
+            agent = Agent.objects.filter(id=id_agent)
+            return True, agent.number
+        except Agent.DoesNotExist:
+            return False, 0
 
     @staticmethod
-    def agent_current_call(id_agent):
+    def agent_current_call_entry(id_agent):
         """Get the current call of the agent, None if there is no call"""
         try:
             query = CurrentCallEntry.objects.get(id_agent=id_agent)
             return query
         except CurrentCallEntry.DoesNotExist:
+            return None
+
+    @staticmethod
+    def agent_current_call(agentnum):
+        """Get the current call of the agent, None if there is no call"""
+        try:
+            query = CurrentCalls.objects.get(agentnum=agentnum)
+            return query
+        except CurrentCalls.DoesNotExist:
             return None
 
     @staticmethod
@@ -50,7 +63,7 @@ class AgentState():
         except CedulaLlamada.DoesNotExist:
             return None
 
-    def get_answer(self, state, id_agent, current_call=None):
+    def get_answer(self, state, id_agent, current_call_entry=None, current_call=None):
         """Returns the server answer given a state"""
         answer = {}
         answer['previous'] = state
@@ -74,8 +87,27 @@ class AgentState():
             answer['message'] = "En llamada"
             answer['call'] = True
             answer['status'] = "Conectado"
-            answer['phone'] = current_call.callerid
-            answer['cedula'] = AgentState.get_cedula(current_call.uniqueid)
+            answer['phone'] = current_call_entry.callerid
+            answer['cedula'] = AgentState.get_cedula(current_call_entry.uniqueid)
+            answer['extension'] = agent.number
+            answer['llamada_id'] = current_call_entry.uniqueid
+
+        elif state == "5":
+            consolidacion = AgentState.get_consolidacion_by_call(current_call.id_call)
+            try:
+                tercero = Terceros.objects.get(nit=consolidacion.cedula)
+            except Terceros.DoesNotExist:
+                tercero = {'nombres':'Tercero eliminado de la bd'}
+            agent = Agent.objects.get(id=id_agent)
+            answer['message'] = "En llamada"
+            answer['call'] = True
+            answer['status'] = "Conectado"
+            answer['phone'] = current_call.id_call.phone
+            answer['cedula'] = consolidacion.cedula
+            answer['placa'] = consolidacion.placa
+            answer['nombre'] = tercero.nombres
+            answer['sede'] = consolidacion.sede
+            answer['motivo'] = consolidacion.motivo
             answer['extension'] = agent.number
             answer['llamada_id'] = current_call.uniqueid
 
@@ -94,17 +126,26 @@ class AgentState():
 
     @staticmethod
     def check_state(id_agent):
-        current_call=None
-        if not AgentState.agent_exist(id_agent):
+        current_call = None
+        current_call_entry = None
+        exist, agentnum = AgentState.agent_exist(id_agent)
+        if not exist:
             state = "1"
         elif not AgentState.is_loged(id_agent):
             state = "2"
         else:
-            current_call = AgentState.agent_current_call(id_agent)
-            if current_call is None:
+            current_call_entry = AgentState.agent_current_call_entry(id_agent)
+            current_call = AgentState.agent_current_call(agentnum)
+            if current_call_entry is None and current_call_entry is None:
                 state = "3"
-            else:
+            elif current_call_entry is not None:
                 state = "4"
+            else:
+                state = "5"
 
-        return state, current_call
+        return state, current_call_entry, current_call
 
+    @staticmethod
+    def get_consolidacion_by_call(id_call):
+        consolidacion = CallConsolidacion.objects.get(call=id_call).consolidacion
+        return consolidacion

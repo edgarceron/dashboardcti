@@ -18,7 +18,14 @@ def get_actions():
             "name": "toggle_consolidacion",
             "label": "Webservice para cambiar estado del consolidacion"
         },
-        {"name": "upload_consolidacion", "label": "Webservice para subir consolidaciones por archivo plano"},
+        {
+            "name": "upload_consolidacion",
+            "label": "Webservice para subir consolidaciones por archivo plano"
+        },
+        {
+            "name": "validate_cedula",
+            "label": "Webservice para validar cedula antes de crear consolidación"
+        },
     ]
     return actions
 
@@ -79,4 +86,9 @@ def list_consolidacion(request):
 @api_view(['POST'])
 def upload_consolidacion(request):
     """Uploads a file with consolidacion data"""
-    return consolidacion_operations.upload_consolidacion(request)    
+    return consolidacion_operations.upload_consolidacion(request)
+
+@api_view(['POST'])
+def validate_cedula(request):
+    """Validates that the given request contains a cedula for """
+    return consolidacion_operations.validate_cedula(request)

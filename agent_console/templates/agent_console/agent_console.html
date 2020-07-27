@@ -27,16 +27,7 @@ Consola de agente
 <div class="modal fade" tabindex="-1" role="dialog" id="successModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="modalTitle">Unos segundos por favor</h5>
-            </div>
-            <div class="modal-body">
-                <p>Llamada entrante de: <span id="lblPhone">3176483290</span></p>
-                <p>Número de cedula ingresado: <span id="lblCedula">1144166082</span></p>
-            </div>
-            <div class="modal-footer">
-                <h3>Redirigiendo...</h3>
-            </div>
+            {% include ./citas.html %}
         </div>
     </div>
 </div>

@@ -72,13 +72,13 @@ Citas
             <h5 class="modal-title" id="modalTitle">Atención</h5>
             </div>
             <div class="modal-body">
-                    ¿Programar una cita para el cliente PRADA MOYA IVONNE ANDREA? 
+                    ¿Programar una cita para el cliente <span id="nombreCliente"></span>? 
                     <br>
-                    Placa: IPZ286
+                    Placa: <span id="placaCliente"></span>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm_button">Si</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirmButton">Si</button>
             </div>
         </div>
     </div>
@@ -117,6 +117,7 @@ Citas
             replace_url = "{% url 'replace_consolidacion' consolidacion_id=0 %}";
             picker_search_motivo_url = "{% url 'picker_search_motivo' %}";
             get_motivo_url = "{% url 'get_motivo' motivo_id=0 %}";
+            validate_cedula_url = "{% url 'validate_cedula' motivo_id=0 %}";
             get_motivo_url = get_motivo_url.slice(0, -1);
             get_url = get_url.slice(0, -1);
             replace_url = replace_url.slice(0, -1);

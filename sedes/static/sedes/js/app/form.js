@@ -7,6 +7,7 @@ function getValues(){
         'name': $('#nameInput').val(),
         'address': $('#addressInput').val(),
         'active': $('#activeInput').prop("checked"),
+        'bodega_dms': $('#bodega_dmsInput').val()
     }
     return data;
 }

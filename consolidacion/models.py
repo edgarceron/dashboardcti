@@ -2,6 +2,7 @@
 import os
 from django.db import models
 from django.utils import timezone
+from users.models import User
 from sedes.models import Sede
 from motivos.models import Motivo
 # Create your models here.
@@ -21,3 +22,10 @@ def upload_to(instance, filename):
 class ConsolidacionFileUploads(models.Model):
     """Class for the consolidacion csv uploads"""
     file = models.FileField(upload_to=upload_to, null=False)
+
+class CallConsolidacion(models.Model):
+    """Class for the calls mede for consolidacion"""
+    consolidacion = models.OneToOneField(Consolidacion, null=False, on_delete=models.CASCADE)
+    call = models.IntegerField(null=False, unique=True)
+    cita_tall_id = models.IntegerField(null=True, unique=True)
+    cita_crm_id = models.IntegerField(null=True, unique=True)

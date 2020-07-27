@@ -1,10 +1,10 @@
 """Contains the serializers for the motivos module"""
 from rest_framework import serializers
 from consolidacion.business_logic.list_class import ConsolidacionList
-from .models import Consolidacion, ConsolidacionFileUploads
+from .models import Consolidacion, ConsolidacionFileUploads, CallConsolidacion
 
 class ConsolidacionSerializer(serializers.ModelSerializer):
-    """Serializer for motivos model"""
+    """Serializer for consolidacion model"""
     class Meta:
         model = Consolidacion
         fields = ['id', 'cedula', 'placa', 'fecha', 'motivo', 'sede']
@@ -19,7 +19,7 @@ class ConsolidacionSerializer(serializers.ModelSerializer):
         instance.placa = validated_data["placa"]
         instance.fecha = validated_data["fecha"]
         instance.motivo = validated_data["motivo"]
-        instance.motivo = validated_data["sede"]
+        instance.sede = validated_data["sede"]
         instance.save()
         return instance
 
@@ -43,3 +43,23 @@ class ConsolidacionFileUploadsSerializer(serializers.ModelSerializer):
         if self.instance is not None and self.instance.file is not None:
             self.instance.file.delete()
         return super().save(*args, **kwargs)
+
+class CallConsolidacionSerializer(serializers.ModelSerializer):
+    """Serializer for CallConsolidacion model"""
+    class Meta:
+        model = ConsolidacionFileUploads
+        fields = ['consolidacion', 'call', 'agent', 'cita_tall_id', 'cita_crm_id']
+
+    def create(self, validated_data):
+        obj = CallConsolidacion(**validated_data)
+        obj.save()
+        return obj
+
+    def update(self, instance, validated_data):
+        instance.consolidacion = validated_data["consolidacion"]
+        instance.call = validated_data["call"]
+        instance.agent = validated_data["agent"]
+        instance.cita_tall_id = validated_data["cita_tall_id"]
+        instance.cita_crm_id = validated_data["cita_crm_id"]
+        instance.save()
+        return instance

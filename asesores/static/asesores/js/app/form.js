@@ -6,7 +6,8 @@ function getValues(){
     data = {
         'name': $('#nameInput').val(),
         'active': $('#activeInput').prop("checked"),
-        "sede" : $('#sedeInput').val()
+        "sede" : $('#sedeInput').val(),
+        "asesorq_dms" : $('#asesorq_dmsInput').val()
     }
     return data;
 }

@@ -6,7 +6,7 @@ class AsesorSerializer(serializers.ModelSerializer):
     """Serializer for motivos model"""
     class Meta:
         model = Asesor
-        fields = ['id', 'name', 'active', 'sede']
+        fields = ['id', 'name', 'active', 'sede', 'asesor_dms']
 
     def create(self, validated_data):
         obj = Asesor(**validated_data)
@@ -17,5 +17,6 @@ class AsesorSerializer(serializers.ModelSerializer):
         instance.name = validated_data["name"]
         instance.active = validated_data["active"]
         instance.sede = validated_data["sede"]
+        instance.asesor_dms = validated_data["asesor_dms"]
         instance.save()
         return instance

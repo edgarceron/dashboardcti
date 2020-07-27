@@ -11,6 +11,7 @@ class SoftNotification{
 		iDiv.style.zIndex = "0";
 		iDiv.style.width = "50%";
 		iDiv.style.cssFloat = "none";
+		iDiv.style.zIndex = "1000";
         document.getElementsByTagName('body')[0].appendChild(iDiv);
         
         var closeButton = '<button type="button" class="close" data-dismiss="alert"'
