@@ -5,6 +5,7 @@ from rest_framework import status
 from core.crud.standard import Crud
 from users.permission_validation import PermissionValidation
 from agent_console.business_logic import data_filters
+from consolidacion.business_logic import citas
 from .console_functions.agent_state import AgentState
 from .console_functions.generate_users import GenerateUsers
 from .serializers import AgentSerializer, CampaignSerializer
@@ -41,6 +42,10 @@ def get_actions():
         {
             "name": "get_campaign",
             "label": "Webservice para obteber los datos de una campaña saliente"
+        },
+        {
+            "name": "create_cita",
+            "label": "Webservice para crear cita en dms"
         }
     ]
     return actions
@@ -104,9 +109,9 @@ def agent_state(request):
 
         state, current_call_entry, current_call = agent_state_obj.check_state(id_agent)
         if (
-            state != previous_state
-            or (state == 4 and current_call_entry.uniqueid != previous_call)
-            or (state == 5 and current_call.uniqueid != previous_call)
+                state != previous_state
+                or (state == 4 and current_call_entry.uniqueid != previous_call)
+                or (state == 5 and current_call.uniqueid != previous_call)
         ):
             answer = agent_state_obj.get_answer(state, id_agent, current_call_entry, current_call)
         else:
@@ -236,3 +241,12 @@ def picker_search_campaign(request):
     "Returns a JSON response with campaign data for a selectpicker."
     crud_object = Crud(CampaignSerializer, Campaign, data_filters.campaign_picker_filter)
     return crud_object.picker_search(request, 'picker_search_campaign')
+
+@api_view(['POST'])
+def create_cita(request):
+    "Tries to create a cita a return the result."
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('create_cita')
+    if validation['status']:
+        return citas.create_cita(request)
+    return PermissionValidation.error_response_webservice(validation, request)

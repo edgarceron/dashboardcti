@@ -96,6 +96,7 @@ class IntegrationRouter:
         'crmcitas',
         'tallcitasoperaciones',
         'talltempario',
+        'referenciasimp'
     }
 
     dms_tables = {
@@ -133,7 +134,8 @@ class IntegrationRouter:
         'tall_citas_auditoria',
         'CRM_citas',
         'tall_citas_operaciones',
-        'tall_tempario'
+        'tall_tempario',
+        'referencias_imp'
     }
 
     def db_for_read(self, model, **hints):

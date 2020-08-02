@@ -115,12 +115,14 @@ class StandardCrud{
     }
     
     standardCreatedRow(row, data, index){
-        var jqobj = $(row);
-        for(var i = 0;i < 4;i++){
+        var count = row.cells.length 
+        var data_rows = count - 2;
+        var options_row = count -1;
+        for(var i = 0;i < data_rows;i++){
             $('td', row).eq(i).addClass("row_object_id");
             $('td', row).eq(i).attr('model_id', data.id);
         }
-        $('td', row).eq(4).attr('model_id', data.id);
+        $('td', row).eq(options_row).attr('model_id', data.id);
         
         if(data.active){
             $('.fa-square', row).addClass('fa-check-square');
@@ -131,11 +133,16 @@ class StandardCrud{
     standardDatatable(columns, deleteModel, toogleModel){
         var standardCreatedRow = this.standardCreatedRow;
         var standardListingButtonsFunction = this.standardListingButtonsFunction;
-        columns.push({ "data": function(){
-            var options = '<i class="fas fa-fw fa-trash text-danger"></i>';
-            options += '<i class="far fa-fw fa-square text-primary"></i>';
-            return options;
-        }});
+        if(deleteModel != null || toogleModel != null){
+            columns.push({ "data": function(){
+                var options = "";
+                if(deleteModel != null)
+                    options += '<i class="fas fa-fw fa-trash text-danger"></i>';            
+                if(toogleModel != null)
+                    options += '<i class="far fa-fw fa-square text-primary"></i>';
+                return options;
+            }});
+        }
 
         var table = $('#listing').dataTable( {
             "processing": true,

@@ -6,47 +6,58 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-6">
+                <input type="hidden" id="cedulaInput" value="">
                 <div class="input-group mb-2 mr-sm-2">
                     <div class="input-group-prepend">
-                      <div class="input-group-text"><i class="fas fa-fw fa-file-csv"></i></div>
+                      <div class="input-group-text"><i class="fas fa-fw fa-id-card"></i></div>
                     </div>
-                    <input type="text" class="form-control" id="nombreInput" placeholder="Username">
+                    <input type="text" class="form-control" id="nombreInput" placeholder="Cedula" readonly>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="input-group mb-2 mr-sm-2">
                     <div class="input-group-prepend">
-                      <div class="input-group-text"><i class="fas fa-fw fa-file-csv"></i></div>
+                      <div class="input-group-text"><i class="fas fa-fw fa-car"></i></div>
                     </div>
-                    <input type="text" class="form-control" id="placaInput" placeholder="Username">
+                    <input type="text" class="form-control" id="placaInput" placeholder="Placa" readonly>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label for='sedeInput'>Bodega</label>
-                    <select class='form-control appform' id='sedeInput'>
-                        <option value="">Escoja una opción</option>
-                    </select>
-                    <div class="valid-feedback" id='sedeValid'>Valid.</div>
-                    <div class="invalid-feedback" id = 'sedeInvalid'>Please fill out this field.</div>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text"><i class="fas  fa-fw fa-warehouse"></i></div>
+                        </div>
+                        <select class='form-control appform' id='sedeInput'>
+                            <option value="">Escoja una sede</option>
+                        </select>
+                        <div class="valid-feedback" id='sedeValid'>Valid.</div>
+                        <div class="invalid-feedback" id = 'sedeInvalid'>Please fill out this field.</div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="form-group">
-                    <label for="fechaInput">Fecha</label>
-                    <input type="date" class="form-control appform"  id="fechaInput"required>
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text"><i class="fas fa-calendar-day"></i></div>
+                    </div>
+                    <input type="date" class="form-control appform"  id="fechaInput" required>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="timeInput">Hora</label>
-                    <select class="form-control" id="timeInput" required>
-
-                    </select>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fas fa-clock"></i></div>
+                        </div>
+                        <select class='form-control appform' id='horaInput'>
+                            <option value="10:00">10:00 A.M.</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,7 +78,7 @@
         <div class='row'>
             <div class='col-md-6'>
                 <div class='form-group'>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cautionModal">Siguiente</button>
+                    <button type="button" class="btn btn-primary" id="generarCitaButton">Siguiente</button>
                 </div>
             </div>
         </div>
@@ -96,7 +107,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#successModal">Reagendar consolidación</button>
+                <button type="button" class="btn btn-primary" id="reagendarButton">Reagendar consolidación</button>
             </div>
         </div>
     </div>
@@ -115,7 +126,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="email_button">Si</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="emailButton">Si</button>
             </div>
         </div>
     </div>

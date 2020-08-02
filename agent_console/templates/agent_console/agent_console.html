@@ -27,17 +27,29 @@ Consola de agente
 <div class="modal fade" tabindex="-1" role="dialog" id="successModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            {% include ./citas.html %}
+            <div class="modal-body">
+                {% include "./citas.html" %}
+            </div>
         </div>
     </div>
 </div>
 
 {% endblock content %}
 {% block javascript %}
+<script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
+<script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
+<script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
 <script src="{% static 'agent_console/js/app/agent_console.js' %}"></script>
 <script>
     var id_agent = {{ id_agent }};
     agent_state_url = "{% url 'agent_state' %}";
     get_crm_url_url = "{% url 'get_crm_url' %}";
+    picker_search_sede_url = "{% url 'picker_search_sede' %}";
+    get_sede_url = "{% url 'get_sede' sede_id=0 %}";
+    get_sede_url = get_sede_url.slice(0, -1);
+    picker_search_motivo_url = "{% url 'picker_search_motivo' %}";
+    get_motivo_url = "{% url 'get_motivo' motivo_id=0 %}";
+    get_motivo_url = get_motivo_url.slice(0, -1);
+    create_cita_url = "{% url 'create_cita' %}";
 </script>
 {% endblock %}

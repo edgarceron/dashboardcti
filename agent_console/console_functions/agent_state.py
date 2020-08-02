@@ -30,7 +30,7 @@ class AgentState():
     def agent_exist(id_agent):
         """Check if the agent still exist in the call_center db"""
         try:
-            agent = Agent.objects.filter(id=id_agent)
+            agent = Agent.objects.get(id=id_agent)
             return True, agent.number
         except Agent.DoesNotExist:
             return False, 0
@@ -93,7 +93,7 @@ class AgentState():
             answer['llamada_id'] = current_call_entry.uniqueid
 
         elif state == "5":
-            consolidacion = AgentState.get_consolidacion_by_call(current_call.id_call)
+            consolidacion = AgentState.get_consolidacion_by_call(current_call.id_call.id)
             try:
                 tercero = Terceros.objects.get(nit=consolidacion.cedula)
             except Terceros.DoesNotExist:
@@ -106,8 +106,8 @@ class AgentState():
             answer['cedula'] = consolidacion.cedula
             answer['placa'] = consolidacion.placa
             answer['nombre'] = tercero.nombres
-            answer['sede'] = consolidacion.sede
-            answer['motivo'] = consolidacion.motivo
+            answer['sede'] = consolidacion.sede.id
+            answer['motivo'] = consolidacion.motivo.id
             answer['extension'] = agent.number
             answer['llamada_id'] = current_call.uniqueid
 
@@ -136,7 +136,7 @@ class AgentState():
         else:
             current_call_entry = AgentState.agent_current_call_entry(id_agent)
             current_call = AgentState.agent_current_call(agentnum)
-            if current_call_entry is None and current_call_entry is None:
+            if current_call_entry is None and current_call is None:
                 state = "3"
             elif current_call_entry is not None:
                 state = "4"

@@ -1,4 +1,16 @@
 
+function getValues(){
+    data = {
+        'cedula': $('#cedulaInput').val(),
+        'placa': $('#placaInput').val(),
+        'sede': $('#sedeInput').val(),
+        'fecha': $('#fechaInput').val(),
+        'hora': $('#horaInput').val(),
+        'motivo': $('#motivoInput').val(),
+    }
+    return data;
+}
+
 function getAgentState(agent, previous_state, previous_call){ 
     if(agent != null){
         $.ajax({
@@ -15,18 +27,15 @@ function getAgentState(agent, previous_state, previous_call){
                 if(result.update){
                     $('#lblStatus').html(result.status);
                     $('#lblMessage').html(result.message);
+                    if(result.call){
+                        $('#successModal').modal('show');
+                        $('#successModal').modal({backdrop:'static', keyboard:false}); 
+                    }                    
                     previous_state = result.previous;
                     if(result.call){
                         previous_call = result.llamada_id;
-                        $('#lblPhone').html(result.phone);
-                        $('#lblCedula').html(result.cedula);
-                        $('#successModal').modal('toggle');
-                        $('#successModal').modal({backdrop:'static', keyboard:false}); 
-                        redirectToCrm(
-                            result.cedula,
-                            result.phone,
-                            result.extension,
-                            result.llamada_id);
+                        data = {'data':result}
+                        standard.standardSetValues(data);
                     }
                 }
             },
@@ -43,34 +52,54 @@ function getAgentState(agent, previous_state, previous_call){
     }
 }
 
-function redirectToCrm(cedula, phone, extension, llamada_id){
-    $.ajax({
-        url: get_crm_url_url,
-        method: 'POST',
-        async: false,
-        dataType: 'json',
-        success: function(result){
-            if(result.success){
-                var documento = "&documento=" + cedula;
-                var telefono = "&telfono=" + phone;
-                var ext = "&extension=" + extension;
-                var llamada = "&llamada_id=" + llamada_id;
-                var url = result.url + documento + telefono + ext + llamada;
-                setTimeout(function(){ 
-                    $(location).attr('href', url);
-                }, 2000);
-            }
-            else{
-                SoftNotification.show(result.message, "danger");
-            }
+function createCita(){
+    var ajaxFunctions = {
+        'success': function(result){
+            SoftNotification.show('Cita creada con exito');
         },
-        error: function (result, request, status, error){
-            SoftNotification.show("Ocurrio un error al intentar la redireccion","danger");
-        },
-    });
+        'error': function(request, status, error, result){
+            console.log(status);
+            var data = result.data;
+            SoftNotification.show('Hubo un error al crear la cita');
+            console.log(data['crm_cita_data']);
+            console.log(data['tall_cita_data']);
+        }
+    }
+    standard.makePetition(getValues(), 'create_cita_url', ajaxFunctions);
 }
 
 $( document ).ready(function() {
+
+    $('#sedeInput').selectpicker(
+        {
+            "liveSearch": true
+        }
+    );
+
+    $('#motivoInput').selectpicker(
+        {
+            "liveSearch": true
+        }
+    );
+
+    $('#generarCitaButton').click(
+        function(){
+            createCita();
+        }
+    );
+
+    urls = {
+        'get_motivo_url': {'url' : get_motivo_url, 'method':'POST'},
+        'get_sede_url': {'url' : get_sede_url, 'method':'POST'},
+        'create_cita_url': {'url' : create_cita_url, 'method':'POST'},
+    }
+    standard = new StandardCrud(urls);
+
+    FormFunctions.setAjaxLoadPicker('#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "Escoja una sede");
+    FormFunctions.setAjaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "Escoja un motivo");
+    FormFunctions.ajaxLoadPicker('#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "", "Escoja una sede");
+    FormFunctions.ajaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "", "Escoja un motivo");
+
     setTimeout(function(){ 
         getAgentState(id_agent, -1, "");
     }, 1000);

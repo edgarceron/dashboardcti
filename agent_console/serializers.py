@@ -83,7 +83,8 @@ class CallsSerializer(serializers.ModelSerializer):
     """Serializer for calls model"""
     class Meta:
         model = Calls
-        fileds = [
+        fields = [
+            'id',
             'id_campaign',
             'phone',
             'status',

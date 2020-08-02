@@ -1,24 +1,51 @@
 from django.db.models import Q
+from consolidacion.serializers import CallConsolidacionSerializer
 from consolidacion.models import Consolidacion, CallConsolidacion
 from agent_console.models import Calls, AgentConsoleOptions, Campaign
+from agent_console.serializers import CallsSerializer
 from dms.models import Terceros
 
 def create_calls_consolidacion():
     """Create the consolidación calls in the campaign"""
     to_create = Consolidacion.objects.filter(callconsolidacion=None)
-    cedulas = to_create.values_list('cedula', flat=True)
+    cedulas = list(to_create.values_list('cedula', flat=True))
     phones = get_phones(cedulas)
-    campaign = get_campaign()
-    for consolidacion in to_create:
-        cedula = consolidacion.cedula
-        call = Calls(phone=phones[cedula][0], id_campaign=campaign)
-        call.save()
-        call_consolidacion = CallConsolidacion(consolidacion, call)
-        call_consolidacion.save()
+    print(phones)
+    pk_campaign = get_campaign()
+    try:
+        campaign_obj = Campaign.objects.get(id=pk_campaign)
+        for consolidacion in to_create:
+            cedula = consolidacion.cedula
+            data = {
+                'phone': phones[cedula][0],
+                'id_campaign': pk_campaign,
+                'retries': 0,
+                'dnc': 0,
+                'scheduled': 0
+            }
+            call = CallsSerializer(data=data)
+            if call.is_valid():
+                call.save()
+                print("Llamada creada")
+                data_cc = {
+                    'consolidacion': consolidacion.id,
+                    'call': call.data['id']
+                }
+                call_consolidacion = CallConsolidacionSerializer(data=data_cc)
+                if call_consolidacion.is_valid():
+                    call_consolidacion.save()
+                else:
+                    print(call_consolidacion.errors)
+                    print('Error')
+            else:
+                print(call.errors)
+                print('Error')
 
-    campaign_obj = Campaign.objects.filter(id=campaign)
-    campaign_obj.estatus = 'A'
-    campaign_obj.save()
+        campaign_obj.estatus = 'A'
+        campaign_obj.save()
+
+    except Campaign.DoesNotExist:
+        print("La campaña no existe o fue borrada")
 
 
 def get_failed_calls():
@@ -35,9 +62,11 @@ def get_campaign():
 
 def get_phones(cedulas):
     """Get the phones for the consolidacion calls"""
+    cedulas = ['1005783261']
     numbers = Terceros.objects.filter(nit__in=cedulas)
-    numbers = numbers.values_list('nit', 'telefono_1', 'telefono_2', flat=True)
+    numbers = numbers.values_list('nit', 'telefono_1', 'telefono_2')
     phones = {}
     for x in range (0, len(numbers)):
-        phones[numbers[x][0]] = numbers[1:2]
+        #phones[numbers[x][0]] = numbers[x][1:2]
+        phones[str(numbers[x][0])] = ['3176483290']
     return phones

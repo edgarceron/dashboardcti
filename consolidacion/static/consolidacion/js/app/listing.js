@@ -15,21 +15,6 @@ function deleteConsolidacion(sede_id){
     standard.makePetition(null, 'delete_url', ajaxFunctions);
 }
 
-function toogleConsolidacionState(sede_id, square_element){
-    console.log(sede_id);
-    urls['toggle_url'] = {'url' : toggle_url + sede_id, 'method':'POST'};
-    standard = new StandardCrud(urls);
-    var ajaxFunctions = {
-        'success': function(result){
-            standard.standardToggleSuccess(result, square_element, "Consolidacion");
-        },
-        'error': function(result){
-            SoftNotification.show(result.responseJSON.message,"danger");
-        }
-    }
-    standard.makePetition(null, 'toggle_url', ajaxFunctions);
-}
-
 $(document).ready(function() {
 
     urls = {
@@ -48,5 +33,5 @@ $(document).ready(function() {
         { "data": "sede"}
     ];
     
-    standard.standardDatatable(columns, deleteConsolidacion, toogleConsolidacionState);
+    standard.standardDatatable(columns, deleteConsolidacion, null);
 } );

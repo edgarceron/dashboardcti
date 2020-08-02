@@ -30,4 +30,5 @@ urlpatterns = [
         name='picker_search_campaign'
     ),
     path('get_campaign/<int:campaign_id>', webservices.get_campaign, name='get_campaign'),
+    path('create_cita', webservices.create_cita, name='create_cita'),
 ]

@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from rest_framework.test import APITestCase
 from rest_framework import status
+from users.business_logic import data_filters
 from users.models import LoginSession, User
 from profiles.models import Profile, Action, App, ProfilePermissions
 
@@ -43,9 +44,9 @@ class UserModelTest(TestCase):
         user2.save()
         user3.save()
 
-        query = list(User.usersPickerFilter('Edgar'))
-        query2 = list(User.usersPickerFilter('Mauricio'))
-        query3 = list(User.usersPickerFilter('x'))
+        query = list(data_filters.users_picker_filter('Edgar'))
+        query2 = list(data_filters.users_picker_filter('Mauricio'))
+        query3 = list(data_filters.users_picker_filter('x'))
         self.assertEqual(query, [user1, user2])
         self.assertEqual(query2, [user3])
         self.assertEqual(query3, [])

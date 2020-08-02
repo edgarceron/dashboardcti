@@ -20,4 +20,5 @@ urlpatterns = [
     path('delete/<int:consolidacion_id>', webservices.delete_consolidacion, name='delete_consolidacion'),
     path('toggle/<int:consolidacion_id>', webservices.toggle_consolidacion, name='toggle_consolidacion'),
     path('upload_consolidacion', webservices.upload_consolidacion, name='upload_consolidacion'),
+    path('validate_cedula', webservices.validate_cedula, name='validate_cedula'),
 ]

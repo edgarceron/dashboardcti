@@ -7,12 +7,11 @@
 """
 import importlib
 from django.core.management.base import BaseCommand
-from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from django.conf import settings
 from profiles.models import Action, App, Profile, ProfilePermissions
 from profiles.serializers import ActionSerializer, AppSerializer
 from users.models import User
-
+from users.business_logic import login_management
 
 class Command(BaseCommand):
     """Deletes unused app and actions and create new apps and actions in the db"""
@@ -113,8 +112,7 @@ class Command(BaseCommand):
         except User.DoesNotExist:
             admin = User()
             admin.username = "admin@agent.console"
-            hasher = PBKDF2PasswordHasher()
-            password = hasher.encode("admin", "Wake Up, Girls!")
+            password = login_management.password_encode({'password':'admin'})
             admin.password = password
             admin.active = True
             admin.profile = profile

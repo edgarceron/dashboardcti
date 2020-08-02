@@ -38,5 +38,5 @@ class DeveloperTecnologies(models.Model):
 class LoginSession(models.Model):
     key = models.CharField(unique=True, null=False, max_length=255)
     life = models.DateTimeField(null=False)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     

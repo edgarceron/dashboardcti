@@ -42,7 +42,7 @@ class CondicionesPago(models.Model):
         db_table = 'condiciones_pago'
 
 class Referencias(models.Model):
-    codigo = models.CharField(max_length=20)
+    codigo = models.CharField(max_length=20, primary_key=True)
     descripcion = models.CharField(max_length=80, blank=True, null=True)
     codigo_oferta = models.CharField(max_length=1, blank=True, null=True)
     generico = models.ForeignKey('ReferenciasGen', models.DO_NOTHING, db_column='generico')
@@ -126,7 +126,7 @@ class Referencias(models.Model):
     fec_cambio_precio_vta = models.DateTimeField(blank=True, null=True)
     precio_pos = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
     calificacion_abc = models.CharField(max_length=1, blank=True, null=True)
-    id = models.AutoField(unique=True, primary_key=True)
+    id = models.IntegerField(unique=True)
     grupo_comision = models.CharField(max_length=10, blank=True, null=True)
     porcentaje_impoconsumo = models.FloatField(blank=True, null=True)
     no_aplica_retenciones = models.CharField(max_length=1, blank=True, null=True)
@@ -153,7 +153,6 @@ class TallCitas(models.Model):
     bodega = models.SmallIntegerField()
     fecha_hora_creacion = models.DateTimeField()
     estado_cita = models.CharField(max_length=1)
-    descripcion_estado = models.CharField(max_length=12)
     fecha_hora_ini = models.DateTimeField()
     fecha_hora_fin = models.DateTimeField()
     hora = models.SmallIntegerField()
@@ -221,7 +220,7 @@ class Sedesdebodegas(models.Model):
         db_table = 'SedesDeBodegas'
 
 class Terceros(models.Model):
-    nit = models.DecimalField(max_digits=18, decimal_places=0)
+    nit = models.DecimalField(max_digits=18, decimal_places=0, primary_key=True)
     digito = models.SmallIntegerField(blank=True, null=True)
     nombres = models.CharField(unique=True, max_length=90, blank=True, null=True)
     direccion = models.CharField(max_length=60, blank=True, null=True)
@@ -274,7 +273,7 @@ class Terceros(models.Model):
     y_dpto = models.CharField(max_length=5, blank=True, null=True)
     y_ciudad = models.CharField(max_length=5, blank=True, null=True)
     ean = models.CharField(max_length=20, blank=True, null=True)
-    id = models.AutoField(unique=True, primary_key=True)
+    id = models.IntegerField(unique=True)
     celular = models.CharField(max_length=15, blank=True, null=True)
     id_definicion_tributaria_tipo = models.IntegerField(blank=True, null=True)
     lista2 = models.SmallIntegerField(blank=True, null=True)
@@ -719,3 +718,110 @@ class TallTempario(models.Model):
         managed = False
         db_table = 'tall_tempario'
         unique_together = (('clase', 'operacion'),)
+
+class ReferenciasImp(models.Model):
+    codigo = models.OneToOneField(Referencias, models.DO_NOTHING, db_column='codigo', primary_key=True)
+    pos_arancel = models.CharField(max_length=20, blank=True, null=True)
+    costo_unitario_fob = models.DecimalField(db_column='costo_unitario_FOB', max_digits=19, decimal_places=4, blank=True, null=True)  # Field name made lowercase.
+    gravamen = models.FloatField(blank=True, null=True)
+    explicacion = models.CharField(max_length=800, blank=True, null=True)
+    serie = models.CharField(max_length=50)
+    chasis = models.CharField(max_length=50, blank=True, null=True)
+    motor = models.CharField(max_length=50, blank=True, null=True)
+    modelo_ano = models.SmallIntegerField(blank=True, null=True)
+    tipo_motor = models.CharField(max_length=50, blank=True, null=True)
+    manifiesto = models.CharField(max_length=50, blank=True, null=True)
+    nit_prenda = models.DecimalField(max_digits=18, decimal_places=0, blank=True, null=True)
+    nit_adicional_1 = models.DecimalField(max_digits=18, decimal_places=0, blank=True, null=True)
+    nit_adicional_2 = models.DecimalField(max_digits=18, decimal_places=0, blank=True, null=True)
+    nit_adicional_3 = models.DecimalField(max_digits=18, decimal_places=0, blank=True, null=True)
+    horas_uso = models.IntegerField(blank=True, null=True)
+    kilometraje = models.IntegerField(blank=True, null=True)
+    placa = models.CharField(max_length=10, blank=True, null=True)
+    fecha_fin_garantia = models.DateTimeField(blank=True, null=True)
+    nit_comprador = models.DecimalField(max_digits=18, decimal_places=0, blank=True, null=True)
+    comprado = models.SmallIntegerField(blank=True, null=True)
+    id_modano = models.ForeignKey('VhModeloAno', models.DO_NOTHING, db_column='id_modano', blank=True, null=True)
+    color = models.CharField(max_length=3, blank=True, null=True)
+    fecha_manifiesto = models.DateTimeField(blank=True, null=True)
+    garantia = models.CharField(max_length=20, blank=True, null=True)
+    tipo_venta = models.ForeignKey('VhTiposVeh', models.DO_NOTHING, db_column='tipo_venta', blank=True, null=True)
+    plan_venta = models.SmallIntegerField(blank=True, null=True)
+    usado_comprado = models.SmallIntegerField(blank=True, null=True)
+    usado_retomado = models.SmallIntegerField(blank=True, null=True)
+    usado_consignado = models.SmallIntegerField(blank=True, null=True)
+    recibido_canje = models.SmallIntegerField(blank=True, null=True)
+    entregado_canje = models.SmallIntegerField(blank=True, null=True)
+    vendido = models.SmallIntegerField(blank=True, null=True)
+    asignacion = models.IntegerField(blank=True, null=True)
+    entregado_cliente = models.BooleanField(blank=True, null=True)
+    entregado_matricula = models.BooleanField(blank=True, null=True)
+    reservado = models.DecimalField(max_digits=18, decimal_places=0, blank=True, null=True)
+    fecha_reserva = models.DateTimeField(blank=True, null=True)
+    fin_reserva = models.DateTimeField(blank=True, null=True)
+    costo_alistamiento = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
+    costo_compra = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
+    fecha_venta = models.DateTimeField(blank=True, null=True)
+    codigo_concesionario = models.CharField(max_length=10, blank=True, null=True)
+    modelo_taller = models.CharField(max_length=10, blank=True, null=True)
+    carpeta = models.CharField(max_length=30, blank=True, null=True)
+    ciudad_placa = models.CharField(max_length=30, blank=True, null=True)
+    otroservicio = models.CharField(db_column='OtroServicio', max_length=15, blank=True, null=True)  # Field name made lowercase.
+    fecha_cambio_km = models.DateTimeField(blank=True, null=True)
+    color_interno = models.CharField(db_column='Color_Interno', max_length=3, blank=True, null=True)  # Field name made lowercase.
+    codigo_radio = models.CharField(db_column='Codigo_Radio', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    tiempo_garantia = models.SmallIntegerField(db_column='Tiempo_Garantia', blank=True, null=True)  # Field name made lowercase.
+    km_garantia = models.IntegerField(db_column='Km_Garantia', blank=True, null=True)  # Field name made lowercase.
+    numsoat = models.CharField(db_column='NumSOAT', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    fin_asignacion = models.DateTimeField(blank=True, null=True)
+    levante = models.CharField(db_column='Levante', max_length=16, blank=True, null=True)  # Field name made lowercase.
+    año_fab = models.IntegerField(db_column='Año_Fab', blank=True, null=True)  # Field name made lowercase.
+    oferta = models.DecimalField(db_column='Oferta', max_digits=19, decimal_places=4, blank=True, null=True)  # Field name made lowercase.
+    razon_cambio_prop = models.IntegerField(db_column='Razon_Cambio_Prop', blank=True, null=True)  # Field name made lowercase.
+    refrendo = models.CharField(db_column='Refrendo', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    fecha_expedicion_manifiesto = models.DateTimeField(blank=True, null=True)
+    fecha_obligatorio = models.DateTimeField(blank=True, null=True)
+    fecha_gases = models.DateTimeField(blank=True, null=True)
+    fecha_tecnico_mecanica = models.DateTimeField(blank=True, null=True)
+    id_estado = models.ForeignKey('ReferenciasImpEstados', models.DO_NOTHING, db_column='id_estado', blank=True, null=True)
+    pos_arancel_internacional = models.CharField(max_length=20, blank=True, null=True)
+    nit_aseguradora = models.DecimalField(max_digits=18, decimal_places=0, blank=True, null=True)
+    fec_vencimiento_seg = models.DateTimeField(blank=True, null=True)
+    cabina = models.CharField(max_length=20, blank=True, null=True)
+    nit_usuario = models.DecimalField(max_digits=18, decimal_places=0, blank=True, null=True)
+    requiere_registro = models.CharField(max_length=1, blank=True, null=True)
+    registro_importacion = models.CharField(max_length=20, blank=True, null=True)
+    vencimiento_registro = models.DateTimeField(blank=True, null=True)
+    cantidad_registro = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    costo_registro = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
+    moneda = models.CharField(max_length=3, blank=True, null=True)
+    fecha_aprobado = models.DateTimeField(blank=True, null=True)
+    puertas = models.SmallIntegerField(blank=True, null=True)
+    sinlimitedekmengtia = models.CharField(db_column='sinLimiteDekmEnGtia', max_length=1, blank=True, null=True)  # Field name made lowercase.
+    ciudad_manifiesto = models.CharField(max_length=20, blank=True, null=True)
+    revista = models.DecimalField(db_column='Revista', max_digits=19, decimal_places=4, blank=True, null=True)  # Field name made lowercase.
+    homologacion = models.CharField(max_length=16, blank=True, null=True)
+    es_flota = models.CharField(max_length=2, blank=True, null=True)
+    tipopintura = models.CharField(db_column='tipoPintura', max_length=1, blank=True, null=True)  # Field name made lowercase.
+    fecha_cambio_horas_uso = models.DateTimeField(blank=True, null=True)
+    fecha_entrega = models.DateTimeField(blank=True, null=True)
+    consecutivo_compra = models.IntegerField(blank=True, null=True)
+    act_mdx = models.IntegerField(blank=True, null=True)
+    tipo_caja = models.CharField(max_length=1, blank=True, null=True)
+    linea_chevystar = models.CharField(max_length=20, blank=True, null=True)
+    blindado = models.CharField(max_length=1, blank=True, null=True)
+    convertido_gas = models.CharField(db_column='Convertido_gas', max_length=1, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'referencias_imp'
+        unique_together = (('codigo', 'serie'),)
+
+class VhModeloAno(models.Model):
+    pass
+
+class VhTiposVeh(models.Model):
+    pass
+
+class ReferenciasImpEstados(models.Model):
+    pass

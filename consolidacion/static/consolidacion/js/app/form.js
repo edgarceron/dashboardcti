@@ -16,8 +16,8 @@ function validateCedula(){
     var ajaxFunctions = {
         'success': function(result){
             if(result.success){
-                $('nombreCliente').html(result.nombre);
-                $('placaCliente').html($('#placaInput').val());
+                $('#nombreCliente').html(result.nombre);
+                $('#placaCliente').html($('#placaInput').val());
                 $('#cautionModal').modal('toggle');
             }
             else {
@@ -112,5 +112,6 @@ $( document ).ready(function() {
         getDataForm();
     }
 
-    FormFunctions.setAjaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker);
+    FormFunctions.setAjaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "Escoja un motivo");
+    FormFunctions.ajaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "", "Escoja un motivo");
 });
