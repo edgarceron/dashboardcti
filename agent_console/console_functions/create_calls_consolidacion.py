@@ -1,4 +1,5 @@
 from django.db.models import Q
+from datetime import datetime, timedelta
 from consolidacion.serializers import CallConsolidacionSerializer
 from consolidacion.models import Consolidacion, CallConsolidacion
 from agent_console.models import Calls, AgentConsoleOptions, Campaign
@@ -7,7 +8,10 @@ from dms.models import Terceros
 
 def create_calls_consolidacion():
     """Create the consolidación calls in the campaign"""
-    to_create = Consolidacion.objects.filter(callconsolidacion=None)
+    to_create = Consolidacion.objects.filter(
+        callconsolidacion=None,
+        fecha__lte=(datetime.today + timedelta(seconds=86399))
+    )
     cedulas = list(to_create.values_list('cedula', flat=True))
     phones = get_phones(cedulas)
     print(phones)

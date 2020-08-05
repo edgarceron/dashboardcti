@@ -13,12 +13,13 @@ Consola de agente
 
 {% block content %}
 
-<div class="card text-center">
-    <div class="card-header text-dark">
+<div class="card">
+    <div class="card-header text-dark text-center">
         <h3>Estado del agente: <span id="lblStatus">......</span></h3>
     </div>
     <div class="card-body bg-dark text-light">
         <h4><span id="lblMessage">Cargando...</span></h4>
+        {% include "./citas.html" %}
     </div>
   </div>
 
@@ -28,7 +29,6 @@ Consola de agente
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                {% include "./citas.html" %}
             </div>
         </div>
     </div>
@@ -44,6 +44,7 @@ Consola de agente
     var id_agent = {{ id_agent }};
     agent_state_url = "{% url 'agent_state' %}";
     get_crm_url_url = "{% url 'get_crm_url' %}";
+    check_horarios_url = "{% url 'check_horarios' %}";
     picker_search_sede_url = "{% url 'picker_search_sede' %}";
     get_sede_url = "{% url 'get_sede' sede_id=0 %}";
     get_sede_url = get_sede_url.slice(0, -1);

@@ -1,11 +1,13 @@
 from rest_framework import status
 from rest_framework.response import Response
 from datetime import datetime, timedelta
+from core.mailing import mailing
 from core.crud.standard import Crud
 from users.permission_validation import PermissionValidation
-from dms.models import Terceros, ReferenciasImp
+from dms.models import Terceros, ReferenciasImp, TallCitas
 from dms.serializers import CrmCitasSerializer, TallCitasSerializer
 from consolidacion.models import CallConsolidacion
+from motivos.models import Motivo
 from sedes.models import Sede
 
 # from consolidacion.business_logic import citas
@@ -83,7 +85,6 @@ def create_tall_cita(data):
     bodega = sede.bodega_dms
     fecha_hora_creacion = datetime.now()
     estado_cita = 'P'
-    descripcion_estado = 'Programada'
     fecha_hora_ini, fecha_hora_fin = get_fecha_hora_cita(data['fecha'] + " " + data['hora'])
     hora = fecha_hora_ini.hour
     minutos = fecha_hora_ini.minute
@@ -95,7 +96,8 @@ def create_tall_cita(data):
     nit_nuevo = 0
     nombre_encargado = sede.asesor.name
     telefonos = format_telefonos(tercero.telefono_1, tercero.telefono_2)
-    notas = data['motivo']
+    motivo = Motivo.objects.get(id=data['motivo'])
+    notas = motivo.name
     ano_veh = 0
     usuario = 'VOZIP'
     pc = 'DMSSERVER'
@@ -110,7 +112,6 @@ def create_tall_cita(data):
         'bodega': bodega,
         'fecha_hora_creacion': fecha_hora_creacion,
         'estado_cita': estado_cita,
-        #'descripcion_estado': descripcion_estado,
         'fecha_hora_ini': fecha_hora_ini,
         'fecha_hora_fin': fecha_hora_fin,
         'hora': hora,
@@ -168,3 +169,93 @@ def format_telefonos(tel1, tel2):
         return tel2
     else:
         return tel1 + "    " + tel2
+
+def verificar_horarios(sede, fecha):
+    """Verifies avaible time for a date given a sede and a date"""
+    try: 
+        sede = Sede.objects.get(pk=sede)
+        bodega = sede.bodega_dms
+        fecha = datetime.strptime(fecha, '%Y-%m-%d')
+        criteria = {
+            'estado_cita': 'P',
+            'fecha_hora_ini__range': (fecha, (fecha + timedelta(seconds=86399))),
+            'bodega': bodega
+        }
+
+        datetime_ocupados = list(
+            TallCitas.objects.filter(**criteria).values_list('fecha_hora_ini', flat=True)
+        )
+        horarios_ocupados = []
+        for x in datetime_ocupados:
+            horarios_ocupados.append(x.strftime('%H:%M'))
+        horarios_ocupados = set(horarios_ocupados)
+        start = fecha.replace(hour = 7, minute=0)
+        horarios = set({})
+        while not (start.hour == 16 and start.minute == 00):
+            horarios.add(start.strftime('%H:%M'))
+            start += timedelta(minutes=15)
+
+        print(horarios_ocupados)
+        horarios = horarios.difference(horarios_ocupados)
+        horarios = list(horarios)
+        horarios.sort()
+        data = {
+            'horarios':horarios
+        }
+        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+    except Sede.DoesNotExist:
+        data = {
+            'message':"La sede solicitada no existe o fue borrada"
+        }
+        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+    except ValueError:
+        data = {
+            'message':"Proporcine una fecha y una sede adecuados para mostrar horarios dispibles"
+        }
+        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+
+def create_mail_and_send(data):
+    """Creates the mail template and sends it"""
+    tercero = get_tercero(data['cedula'])
+    sede = get_sede(data['sede'])
+    fecha_hora_creacion = datetime.now()
+    placa = data['placa']
+    telefonos = format_telefonos(tercero.telefono_1, tercero.telefono_2)
+    motivo = Motivo.objects.get(id=data['motivo'])
+    mail = tercero.mail
+    asesor = sede.asesor.name
+
+    template = 'agent_console_mail/confirmacion'
+    to = mail
+    context = {
+        'placa': placa,
+        'asesor': asesor,
+        'fecha': data['fecha'],
+        'hora': data['hora'],
+        'sede': sede.name,
+        'direccion': sede.direccion,
+        'motivo': motivo.name,
+        'fecha_solicitud': fecha_hora_creacion,
+        'nombre': tercero.nombres,
+        'direccion_cliente': tercero.direccion,
+        'correo': mail,
+        'telefonos': telefonos
+    }
+    mailing.send_confirmacion(to, template, context)
+
+def datacita():
+    context = {
+        'placa': "ABC123",
+        'asesor': "MAuro",
+        'fecha': "2020-08-04",
+        'hora': "10:00",
+        'sede': "San Nicolas",
+        'direccion': "Calle 62B",
+        'motivo': "Mantenimi",
+        'fecha_solicitud': datetime.now,
+        'nombre': "Edgar",
+        'direccion_cliente': "Calle 29",
+        'correo': "maurinin@yahoo.com",
+        'telefonos': "3176483290"
+    }
+    return context

@@ -11,6 +11,34 @@ function getValues(){
     return data;
 }
 
+function getHorariosDisponibles(){
+    data = {
+        'sede': $('#sedeInput').val(),
+        'fecha': $('#fechaInput').val()
+    }
+    $('#horaInput').prop('disabled', 'disabled');
+    standard.async = true;
+    var ajaxFunctions = {
+        'success': function(result){
+            var horarios = result.horarios
+            $('#horaInput').empty();
+            horarios.forEach(element => {
+                $('#horaInput').append($('<option>').val(element).text(element));
+            });
+            $('#horaInput').prop('disabled', false);
+        },
+        'error': function(request, status, error){
+            var result = request.responseJSON
+            if($('#fechaInput').val() != ""){
+                SoftNotification.show(result.message, 'danger');
+            }
+            $('#horaInput').empty();
+        }
+    }
+    standard.makePetition(getValues(), 'check_horarios', ajaxFunctions);
+    standard.async = false;
+}
+
 function getAgentState(agent, previous_state, previous_call){ 
     if(agent != null){
         $.ajax({
@@ -70,6 +98,7 @@ function createCita(){
 
 $( document ).ready(function() {
 
+    $('#horaInput').prop('disabled', 'disabled');
     $('#sedeInput').selectpicker(
         {
             "liveSearch": true
@@ -88,10 +117,25 @@ $( document ).ready(function() {
         }
     );
 
+    $('#sedeInput').change(
+        function(){
+            console.log("YEAH");
+            getHorariosDisponibles();
+        }
+    );
+
+    $('#fechaInput').change(
+        function(){
+            console.log("YEAH");
+            getHorariosDisponibles();
+        }
+    );
+
     urls = {
         'get_motivo_url': {'url' : get_motivo_url, 'method':'POST'},
         'get_sede_url': {'url' : get_sede_url, 'method':'POST'},
         'create_cita_url': {'url' : create_cita_url, 'method':'POST'},
+        'check_horarios': {'url' : check_horarios_url, 'method':'POST'},
     }
     standard = new StandardCrud(urls);
 

@@ -34,10 +34,20 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
+            
+            <!-- Nav Item - Agent console -->
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'index' %}">
+                    <i class="fas fa-fw fa-tty"></i>
+                    <span>Consola de agente</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'index' %}">
+                <a class="nav-link" href="{% url 'dashboard_dashboard' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>

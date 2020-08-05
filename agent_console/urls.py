@@ -31,4 +31,5 @@ urlpatterns = [
     ),
     path('get_campaign/<int:campaign_id>', webservices.get_campaign, name='get_campaign'),
     path('create_cita', webservices.create_cita, name='create_cita'),
+    path('check_horarios', webservices.check_horarios, name='check_horarios'),
 ]

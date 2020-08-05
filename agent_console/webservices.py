@@ -46,7 +46,15 @@ def get_actions():
         {
             "name": "create_cita",
             "label": "Webservice para crear cita en dms"
-        }
+        },
+        {
+            "name": "check_horarios",
+            "label": "Webservice para verificar horarios disponibles"
+        },
+        {
+            "name": "send_confirmation_mail",
+            "label": "Webservice para enviar correo de confirmación"
+        },
     ]
     return actions
 
@@ -249,4 +257,25 @@ def create_cita(request):
     validation = permission_obj.validate('create_cita')
     if validation['status']:
         return citas.create_cita(request)
+    return PermissionValidation.error_response_webservice(validation, request)
+
+@api_view(['POST'])
+def check_horarios(request):
+    """Validates that the given request contains a cedula for """
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('create_cita')
+    if validation['status']:
+        data = request.data
+        sede = data['sede']
+        fecha = data['fecha']
+        return citas.verificar_horarios(sede, fecha)
+    return PermissionValidation.error_response_webservice(validation, request)
+
+@api_view(['POST'])
+def send_confirmation_mail(request):
+    """Validates that the given request contains a cedula for """
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('create_cita')
+    if validation['status']:
+        citas.create_mail_and_send(request.data)
     return PermissionValidation.error_response_webservice(validation, request)
