@@ -33,7 +33,12 @@ WEB_APPS = [
     'users',
     'profiles',
     'dashboard',
-    'agent_console'
+    'agent_console',
+    'form_creator',
+    'motivos',
+    'sedes',
+    'asesores',
+    'consolidacion',
 ]
 
 WEB_APPS_LABELS = {
@@ -41,6 +46,11 @@ WEB_APPS_LABELS = {
     'profiles' : 'Perfiles',
     'dashboard' : 'Dashboard',
     'agent_console' : 'Consola de agente',
+    'form_creator' : 'Creador de formularios',
+    'motivos': 'Motivos de entrada a taller',
+    'sedes': 'Sedes',
+    'asesores': 'Asesores de taller',
+    'consolidacion': 'Consolidación de citas futuras',
 }
 
 INSTALLED_APPS = [
@@ -50,7 +60,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'maingui'
+    'maingui',
+    'core',
+    'dms'
 ]
 
 INSTALLED_APPS += WEB_APPS
@@ -129,7 +141,7 @@ DATABASES = {
     },
 
     'call_center': call_center,
-    #'caribe_dms': caribe_dms
+    'caribe_dms': caribe_dms
 }
 
 DATABASE_ROUTERS = ['dashboard.dbrouters.router.IntegrationRouter']
@@ -176,3 +188,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'mail@gmail.com'
+EMAIL_HOST_PASSWORD = 'password'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
