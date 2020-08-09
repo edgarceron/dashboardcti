@@ -113,7 +113,7 @@ class Command(BaseCommand):
             admin = User()
             admin.username = "admin@agent.console"
             password = login_management.password_encode({'password':'admin'})
-            admin.password = password
+            admin.password = password['password']
             admin.active = True
             admin.profile = profile
             admin.name = "ADMINISTRADOR"
