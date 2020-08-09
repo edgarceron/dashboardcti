@@ -41,7 +41,7 @@ def create_cita(request):
             update_call_consolidacion(request, tall_cita['id_cita'], crm_cita['seq'])
             return Response(data, status=status.HTTP_200_OK, content_type='application/json')
         return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 def update_call_consolidacion(request, tall_cita, crm_cita):
     id_cc = request.data['call_consolidacion_id']

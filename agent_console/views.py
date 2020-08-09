@@ -7,6 +7,7 @@ def get_actions():
     actions = [
         {"name": "form_user_agent", "label": "Formulario para usuario con agente"},
         {"name": "agent_console", "label": "Vista de la consola principal del agente"},
+        {"name": "options_form", "label": "Vista de las opciones de la consola de agente"},
     ]
     return actions
 
@@ -57,7 +58,7 @@ def agent_console(request):
 def options_form(request):
     "Returns the rendered template for the given user."
     permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('agent_console')
+    validation = permission_obj.validate('options_form')
     if validation['status']:
         data = {
             "success": "True",

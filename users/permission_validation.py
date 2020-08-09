@@ -4,7 +4,7 @@ from datetime import datetime
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import render
-from profiles.models import Profile, Action, ProfilePermissions
+from profiles.models import Action, ProfilePermissions
 from .models import User, LoginSession
 
 class PermissionValidation():
@@ -31,7 +31,7 @@ class PermissionValidation():
 
         timezone = pytz.timezone("America/Bogota")
         date_aware = timezone.localize(datetime.now())
-  
+
         if self.login_session.life > date_aware:
             try:
                 action = Action.objects.get(name=action_name)
@@ -41,7 +41,7 @@ class PermissionValidation():
                     'status': False,
                     'error': 'Forbidden'
                 }
-            except:
+            except Action.DoesNotExist:
                 return {
                     'status': False,
                     'error': "Database error"
@@ -55,11 +55,10 @@ class PermissionValidation():
         try:
             permission = ProfilePermissions.objects.get(profile=profile, action=action)
             return permission.permission
-        except:    
+        except ProfilePermissions.DoesNotExist:
             return False
 
-    @staticmethod
-    def error_response_webservice(validation, request):
+    def error_response_webservice(self, validation, request):
         """Returns an error response depending on the validation"""
         print(validation)
         if validation['error'] == 'Session expire':
@@ -86,7 +85,8 @@ class PermissionValidation():
         if validation['error'] == 'Forbidden':
             data = {
                 "success": False,
-                "message": "El usuario no tiene permisos para realizar esta acción"
+                "message": "El usuario no tiene permisos para realizar esta acción",
+                "username": self.user.name
             }
             return Response(
                 data,
@@ -140,15 +140,24 @@ class PermissionValidation():
             return render(request, 'maingui/http_error.html', data, status=403)
 
         if validation['error'] == 'Database error':
+            if self.user != None:
+                username = self.user.name
+            else:
+                username = ""
             data = {
                 "error": 500,
                 "message": "El usuario, perfil o acción no se encontraron en la base de datos",
-                "username": ""
+                "username": username
             }
             return render(request, 'maingui/http_error.html', data, status=500)
 
+        if self.user != None:
+            username = self.user.name
+        else:
+            username = ""
         data = {
             "error": 500,
-            "message": "No hay un mensaje para este error (" + validation['error'] + ")"
+            "message": "No hay un mensaje para este error (" + validation['error'] + ")",
+            "username": username
         }
         return render(request, 'maingui/http_error.html', data, status=500)

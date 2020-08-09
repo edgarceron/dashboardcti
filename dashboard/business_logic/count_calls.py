@@ -1,20 +1,23 @@
 """Functions for calls by status counting"""
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.db.models import Count 
 from agent_console.models import Calls, CallEntry, CurrentCallEntry, CurrentCalls
 
-def count_calls(start_date, end_date, agent):
+def count_calls(start_date, end_date, agent, campaign):
     """Counts row from Calls by status"""
     conditions = {}
     if (start_date != "" and end_date != ""):
-        conditions['fecha_llamada__range'] = (start_date, end_date  + timedelta(seconds=86399))
+        conditions['start_time__range'] = (start_date, end_date  + timedelta(seconds=86399))
     elif start_date != "":
-        conditions['fecha_llamada__gte'] = start_date
+        conditions['start_time__gte'] = start_date
     elif end_date != "":
-        conditions['fecha_llamada__lte'] = start_date
+        conditions['start_time__lte'] = start_date
 
     if agent != "":
         conditions['id_agent'] = agent
+
+    if campaign != "":
+        conditions['id_campaign'] = campaign
 
     query_calls_by_status = list(
         Calls.objects.filter(
@@ -29,20 +32,22 @@ def count_calls(start_date, end_date, agent):
 
     calls_by_status['total'] = total
 
-    if not 'Abandoned' in calls_by_status:
+    if 'Abandoned' not in calls_by_status:
         calls_by_status['Abandoned'] = 0
-    if not 'Failure' in calls_by_status:
+    if 'Failure' not in calls_by_status:
         calls_by_status['Failure'] = 0
-    if not 'Placing' in calls_by_status:
+    if 'Placing' not in calls_by_status:
         calls_by_status['Placing'] = 0
-    if not 'ShortCall' in calls_by_status:
+    if 'ShortCall' not in calls_by_status:
         calls_by_status['ShortCall'] = 0
-    if not 'Success' in calls_by_status:
+    if 'Success' not in calls_by_status:
         calls_by_status['Success'] = 0
+    if None not in calls_by_status:
+        calls_by_status[None] = 0
 
     return calls_by_status
 
-def count_call_entry(start_date, end_date, agent, queue):
+def count_call_entry(start_date, end_date, agent, campaign):
     """Counts row from CallEntry by status"""
     conditions = {}
     if (start_date != "" and end_date != ""):
@@ -55,8 +60,8 @@ def count_call_entry(start_date, end_date, agent, queue):
     if agent != "":
         conditions['agent'] = agent
 
-    if queue != "":
-        conditions['queue'] = queue
+    if campaign != "":
+        conditions['id_campaign'] = campaign
 
     query_call_entry_by_status = list(
         CallEntry.objects.filter(

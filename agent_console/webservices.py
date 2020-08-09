@@ -65,7 +65,7 @@ def set_user_agent(request):
     validation = permission_obj.validate('set_user_agent')
     if validation['status']:
         return user_extra_fields.set_unset_user_agent(request)
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def picker_search_agent(request):
@@ -83,7 +83,7 @@ def picker_search_agent(request):
             "result": result
         }
         return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def get_agent(request, user_id):
@@ -92,7 +92,7 @@ def get_agent(request, user_id):
     validation = permission_obj.validate('get_agent')
     if validation['status']:
         return user_extra_fields.get_agent(request, user_id)
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def get_user_sede(request, user_id):
@@ -101,7 +101,7 @@ def get_user_sede(request, user_id):
     validation = permission_obj.validate('get_user_sede')
     if validation['status']:
         return user_extra_fields.get_user_sede(request, user_id)
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def agent_state(request):
@@ -127,7 +127,7 @@ def agent_state(request):
 
         return Response(answer, status=status.HTTP_200_OK, content_type='application/json')
 
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def get_crm_url(request):
@@ -149,7 +149,7 @@ def get_crm_url(request):
 
         return Response(data, status=status.HTTP_200_OK, content_type='application/json')
 
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['PUT'])
 def replace_options_agent_console(request):
@@ -177,7 +177,7 @@ def replace_options_agent_console(request):
             status=status.HTTP_200_OK,
             content_type='application/json'
         )
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def get_options_agent_console(request):
@@ -205,7 +205,7 @@ def get_options_agent_console(request):
             status=status.HTTP_200_OK,
             content_type='application/json'
         )
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def auto_generate_users(request):
@@ -227,7 +227,7 @@ def auto_generate_users(request):
                 content_type='application/json'
             )
 
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def set_user_sede(request):
@@ -236,7 +236,7 @@ def set_user_sede(request):
     validation = permission_obj.validate('set_user_agent')
     if validation['status']:
         return user_extra_fields.set_unset_user_sede(request)
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def get_campaign(request, campaign_id):
@@ -257,7 +257,7 @@ def create_cita(request):
     validation = permission_obj.validate('create_cita')
     if validation['status']:
         return citas.create_cita(request)
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def check_horarios(request):
@@ -269,7 +269,7 @@ def check_horarios(request):
         sede = data['sede']
         fecha = data['fecha']
         return citas.verificar_horarios(sede, fecha)
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def send_confirmation_mail(request):
@@ -278,4 +278,4 @@ def send_confirmation_mail(request):
     validation = permission_obj.validate('create_cita')
     if validation['status']:
         citas.create_mail_and_send(request.data)
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
