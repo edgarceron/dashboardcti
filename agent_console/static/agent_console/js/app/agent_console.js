@@ -114,6 +114,16 @@ function updatePickerSede(pickerName, resultados, null_value=""){
     input.selectpicker("refresh");
 }
 
+function goToCitasTaller(){
+    var url = "https://www.renaultcali.com/citas-taller/";
+    var win = window.open(url, '_blank');
+    if (win) {
+        win.focus();
+    } else {
+        alert('Por favor permita las ventanas emergentes para esta pagina');
+    }
+}
+
 $( document ).ready(function() {
 
     $('#horaInput').prop('disabled', 'disabled');
@@ -132,6 +142,12 @@ $( document ).ready(function() {
     $('#generarCitaButton').click(
         function(){
             createCita();
+        }
+    );
+
+    $('#gotoCitasTallerButton').click(
+        function(){
+            goToCitasTaller();
         }
     );
 
