@@ -38,7 +38,7 @@ def listing_form(request):
     if validation['status']:
         return render(
             request,
-            'form_creator/listing.html',
+            'maingui/under_construction.html',
             {
                 'username': permission_obj.user.name
             }

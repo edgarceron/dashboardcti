@@ -4,7 +4,7 @@ var standard;
 
 function getValues(){
     var values={
-        'CAMPAIGN_CONSOLIDACION':$('#CAMPAIGN_CONSOLIDACIONInput').val(),
+        'TMOTIME':$('#TMOTIMEInput').val(),
     }
     return values;
 }

@@ -16,4 +16,9 @@ urlpatterns = [
         webservices.replace_options_dashboard,
         name='replace_options_dashboard'
     ),
+    path(
+        'get_data_dashboard',
+        webservices.get_data_dashboard,
+        name='get_data_dashboard'
+    ),
 ]

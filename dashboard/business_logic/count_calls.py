@@ -1,27 +1,18 @@
 """Functions for calls by status counting"""
 from datetime import timedelta
-from django.db.models import Count 
+from django.db.models import Count
 from agent_console.models import Calls, CallEntry, CurrentCallEntry, CurrentCalls
+from dashboard.business_logic import criteria_conditions
 
 def count_calls(start_date, end_date, agent, campaign):
     """Counts row from Calls by status"""
-    conditions = {}
-    if (start_date != "" and end_date != ""):
-        conditions['start_time__range'] = (start_date, end_date  + timedelta(seconds=86399))
-    elif start_date != "":
-        conditions['start_time__gte'] = start_date
-    elif end_date != "":
-        conditions['start_time__lte'] = start_date
-
-    if agent != "":
-        conditions['id_agent'] = agent
-
-    if campaign != "":
-        conditions['id_campaign'] = campaign
+    conditions = criteria_conditions.get_call_criteria(
+        start_date, end_date, agent, campaign
+    )
 
     query_calls_by_status = list(
         Calls.objects.filter(
-            conditions
+            **conditions
         ).values('status').annotate(total=Count('status'))
     )
     calls_by_status = {}
@@ -49,23 +40,13 @@ def count_calls(start_date, end_date, agent, campaign):
 
 def count_call_entry(start_date, end_date, agent, campaign):
     """Counts row from CallEntry by status"""
-    conditions = {}
-    if (start_date != "" and end_date != ""):
-        conditions['datetime_entry_queue__range'] = (start_date, end_date  + timedelta(seconds=86399))
-    elif start_date != "":
-        conditions['datetime_entry_queue__gte'] = start_date
-    elif end_date != "":
-        conditions['datetime_entry_queue__lte'] = start_date
-
-    if agent != "":
-        conditions['agent'] = agent
-
-    if campaign != "":
-        conditions['id_campaign'] = campaign
+    conditions = criteria_conditions.get_call_criteria(
+        start_date, end_date, agent, campaign
+    )
 
     query_call_entry_by_status = list(
         CallEntry.objects.filter(
-            conditions
+            **conditions
         ).values('status').annotate(total=Count('status'))
     )
     call_entry_by_status = {}

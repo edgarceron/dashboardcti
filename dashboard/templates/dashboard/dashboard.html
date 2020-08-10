@@ -9,13 +9,31 @@
 {% block content %}
 
 <div class="row">
-    <div class="col">
-        <h2><i class="fas fa-fw fa-tools"></i>Sitio en construcción</h2>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="fechaInput">Fecha inicio</label>
+            <input type="date" class="form-control appform" id="start_dateInput" required>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="fechaInput">Fecha fin</label>
+            <input type="date" class="form-control appform" id="end_dateInput" required>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <canvas id="canvasBarras"></canvas>
     </div>
 </div>
 
 {% endblock %}
 {% block javascript %}
-
+<script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
+<script>
+    get_data_dashboard_url = "{% url 'get_data_dashboard' %}";
+</script>
+<script src="{% static 'dashboard/js/app/dashboard.js' %}"></script>
+<script src="{% static 'dashboard/js/app/hours_chart.js' %}"></script>
 {% endblock %}
-

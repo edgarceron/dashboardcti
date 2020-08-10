@@ -62,7 +62,7 @@
             {% block sidebar %}
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-fw fa-users"></i>
                     <span>Usuarios y permisos</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -70,14 +70,13 @@
                         <a class="collapse-item" href="{% url 'listing_user' %}">Usuarios</a>
                         <a class="collapse-item" href="{% url 'listing_profile' %}">Perfiles</a>
                         <a class="collapse-item" href="{% url 'options_form_agent_console' %}">Configuración</a>
-                        <a class="collapse-item" href="{% url 'listing_form' %}">Formularios</a>
                     </div>
                 </div>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTaller" aria-expanded="true" aria-controls="collapseTaller">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-fw fa-industry"></i>
                     <span>Gestion de taller</span>
                 </a>
                 <div id="collapseTaller" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -92,13 +91,12 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Paginas</span>
+                    <i class="fab fa-fw fa-wpforms"></i>
+                    <span>Formularios</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Otras paginas:</h6>
-                        <a class="collapse-item" href="{% url 'agent_console' %}">Consola</a>
+                        <a class="collapse-item" href="{% url 'listing_form' %}">Formularios</a>
                     </div>
                 </div>
             </li>

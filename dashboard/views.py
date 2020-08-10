@@ -18,7 +18,7 @@ def dashboard(request, user_id=0):
     if validation['status']:
         return render(
             request,
-            'dashboard/dashboard.html',
+            'maingui/under_construction.html',
             {
                 'id':user_id,
                 'username': permission_obj.user.name

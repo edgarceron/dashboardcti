@@ -96,6 +96,24 @@ function createCita(){
     standard.makePetition(getValues(), 'create_cita_url', ajaxFunctions);
 }
 
+function updatePickerSede(pickerName, resultados, null_value=""){
+    var input = $(pickerName);
+    input.html('');
+    var opVal;
+    var opText;
+
+    if(null_value != ""){
+        FormFunctions.addOption(input, "", null_value);
+    }
+
+    for(let data of resultados){
+        opVal = data.id;
+        opText = data.name + " " + data.address;
+        FormFunctions.addOption(input, opVal, opText);
+    }
+    input.selectpicker("refresh");
+}
+
 $( document ).ready(function() {
 
     $('#horaInput').prop('disabled', 'disabled');
@@ -139,9 +157,9 @@ $( document ).ready(function() {
     }
     standard = new StandardCrud(urls);
 
-    FormFunctions.setAjaxLoadPicker('#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "Escoja una sede");
+    FormFunctions.setAjaxLoadPicker('#sedeInput', picker_search_sede_url, updatePickerSede, "Escoja una sede");
     FormFunctions.setAjaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "Escoja un motivo");
-    FormFunctions.ajaxLoadPicker('#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "", "Escoja una sede");
+    FormFunctions.ajaxLoadPicker('#sedeInput', picker_search_sede_url, updatePickerSede, "", "Escoja una sede");
     FormFunctions.ajaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "", "Escoja un motivo");
 
     setTimeout(function(){ 

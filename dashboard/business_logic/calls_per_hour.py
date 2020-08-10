@@ -41,7 +41,7 @@ def get_call_entry_per_hour(start_date, end_date, agent, campaign):
     calls_per_hour = {}
     calls_abandonadas = {}
     call_terminadas = {}
-    for hour in range(0, 23):
+    for hour in range(0, 24):
         calls_per_hour[hour] = 0
         calls_abandonadas[hour] = 0
         call_terminadas[hour] = 0
@@ -50,7 +50,11 @@ def get_call_entry_per_hour(start_date, end_date, agent, campaign):
     calls_abandonadas = hour_replace(result_abandonadas, calls_abandonadas)
     call_terminadas = hour_replace(result_terminadas, call_terminadas)
 
-    return calls_per_hour, calls_abandonadas, call_terminadas
+    return {
+        'calls_per_hour': calls_per_hour,
+        'calls_abandonadas': calls_abandonadas,
+        'call_terminadas': call_terminadas,
+    }
 
 def get_calls_per_hour(start_date, end_date, agent, campaign):
     """Counts the calls per hour in a date range with the given agent and/or campaign"""
@@ -98,7 +102,7 @@ def get_calls_per_hour(start_date, end_date, agent, campaign):
     calls_abandonadas = {}
     calls_terminadas = {}
     calls_pendientes = {}
-    for hour in range(0, 23):
+    for hour in range(0, 24):
         calls_per_hour[hour] = 0
         calls_abandonadas[hour] = 0
         calls_terminadas[hour] = 0
@@ -115,4 +119,9 @@ def hour_replace(result, hours):
     """Fills hours with the result rows"""
     for row in result:
         hours[row[0]] = row[1]
-    return hours
+
+    hours_list = []
+    for x in range(0,24):
+        hours_list.append(hours[x])
+
+    return hours_list

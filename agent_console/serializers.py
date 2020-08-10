@@ -1,6 +1,6 @@
 """Contains the serializers for the users module"""
 from rest_framework import serializers
-from .models import UserAgent, Agent, UserSede, Campaign, Calls
+from .models import UserAgent, Agent, UserSede, Campaign, Calls, CallEntry, CurrentCallEntry
 
 class AgentSerializer(serializers.ModelSerializer):
     """Serializer for Agent model"""
@@ -143,3 +143,24 @@ class CallsSerializer(serializers.ModelSerializer):
         instance.scheduled = validated_data['scheduled']
         instance.save()
         return instance
+
+class CallEntrySerializer(serializers.ModelSerializer):
+    """Serializer for CrmCitas model"""
+    class Meta:
+        model = CallEntry
+        fields = '__all__'
+
+class CurrentCallEntrySerializer(serializers.ModelSerializer):
+    """Serializer for CrmCitas model"""
+    class Meta:
+        model = CurrentCallEntry
+        fields = [
+            'id_agent',
+            'id_queue_call_entry',
+            'id_call_entry',
+            'callerid',
+            'datetime_init',
+            'uniqueid',
+            'channelclient',
+            'hold',
+        ]

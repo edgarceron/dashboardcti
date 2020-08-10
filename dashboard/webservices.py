@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from users.permission_validation import PermissionValidation
 from agent_console.models import AgentConsoleOptions
+from dashboard.business_logic import data_process
 
 # Create your views here.
 def get_actions():
@@ -15,6 +16,10 @@ def get_actions():
         {
             "name": "get_options_dashboard",
             "label": "Webservice para obtener valores de las opciones del dashboard"
+        },
+        {
+            "name": "get_data_dashboard",
+            "label": "Webservice para obtener valores del dashboard"
         },
     ]
     return actions
@@ -66,6 +71,21 @@ def get_options_dashboard(request):
             "success":True,
             "data":options
         }
+
+        return Response(
+            data,
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
+    return permission_obj.error_response_webservice(validation, request)
+
+@api_view(['POST'])
+def get_data_dashboard(request):
+    "Return a JSON response with user data for the given id"
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('get_data_dashboard')
+    if validation['status']:
+        data = data_process.data_process(request)
 
         return Response(
             data,
