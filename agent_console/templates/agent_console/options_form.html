@@ -42,9 +42,14 @@ Opciones de consola de agente
 </div>
 <hr>
 <div class="row">
-    <div class='col-md-6'>
+    <div class='col-md-3'>
         <div class='form-group'>
             <button type="button" class="btn btn-primary" id="generateButton">Generar Usuarios</button>
+        </div>
+    </div>
+    <div class='col-md-3'>
+        <div class='form-group'>
+            <button type="button" class="btn btn-primary" id="callsConsolidacionButton">Generar llamadas</button>
         </div>
     </div>
 </div>
@@ -77,6 +82,7 @@ Opciones de consola de agente
     replace_options_agent_console_url = "{% url 'replace_options_agent_console' %}";
     get_options_agent_console_url = "{% url 'get_options_agent_console' %}";
     auto_generate_users_url = "{% url 'auto_generate_users' %}";
+    create_calls_asterisk_url = "{% url 'create_calls_asterisk' %}";
     picker_search_campaign_url = "{% url 'picker_search_campaign' %}";
     get_campaign_url = "{% url 'get_campaign' campaign_id=0 %}";
     get_campaign_url = get_campaign_url.slice(0, -1);

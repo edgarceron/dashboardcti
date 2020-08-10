@@ -10,7 +10,7 @@ def create_calls_consolidacion():
     """Create the consolidación calls in the campaign"""
     to_create = Consolidacion.objects.filter(
         callconsolidacion=None,
-        fecha__lte=(datetime.today + timedelta(seconds=86399))
+        fecha__lte=(datetime.today() + timedelta(seconds=86399))
     )
     cedulas = list(to_create.values_list('cedula', flat=True))
     phones = get_phones(cedulas)

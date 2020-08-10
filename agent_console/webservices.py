@@ -8,6 +8,7 @@ from agent_console.business_logic import data_filters
 from consolidacion.business_logic import citas
 from .console_functions.agent_state import AgentState
 from .console_functions.generate_users import GenerateUsers
+from .console_functions import create_calls_consolidacion
 from .serializers import AgentSerializer, CampaignSerializer
 from .models import Agent, AgentConsoleOptions, Campaign
 from .business_logic import user_extra_fields
@@ -54,6 +55,10 @@ def get_actions():
         {
             "name": "send_confirmation_mail",
             "label": "Webservice para enviar correo de confirmación"
+        },
+        {
+            "name": "create_calls_asterisk",
+            "label": "Webservice para generar llamadas de consolidación en el asterisk"
         },
     ]
     return actions
@@ -278,4 +283,18 @@ def send_confirmation_mail(request):
     validation = permission_obj.validate('create_cita')
     if validation['status']:
         citas.create_mail_and_send(request.data)
+    return permission_obj.error_response_webservice(validation, request)
+
+@api_view(['POST'])
+def create_calls_asterisk(request):
+    """Validates that the given request contains a cedula for """
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('create_calls_asterisk')
+    if validation['status']:
+        create_calls_consolidacion.create_calls_consolidacion()
+        return Response(
+            {'success':True, 'message':'Llamadas generadas con exito'},
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
     return permission_obj.error_response_webservice(validation, request)

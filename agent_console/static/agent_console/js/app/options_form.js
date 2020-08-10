@@ -55,6 +55,27 @@ function autoGenerateUsers(){
     });
 }
 
+function generateCallsConsolidacion(){
+    $.ajax({
+        url: create_calls_asterisk_url,
+        method: 'POST',
+        async: false,
+        dataType: 'json',
+        data: {},
+        beforeSend: function(){},
+        success: function(result){
+            if(result.success){
+                SoftNotification.show(result.message);
+            }
+            else{
+                SoftNotification.show(result.message, "danger");
+            }
+        },
+        error: function (request, status, error){},
+        complete: function(){},
+    });
+}
+
 
 $( document ).ready(function() {
 
@@ -71,6 +92,10 @@ $( document ).ready(function() {
 
     $('#generateButton').click(function(){
         autoGenerateUsers();
+    });
+
+    $('#callsConsolidacionButton').click(function(){
+        generateCallsConsolidacion();
     });
 
     $('#CAMPAIGN_CONSOLIDACIONInput').selectpicker(
