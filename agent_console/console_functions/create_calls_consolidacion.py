@@ -14,7 +14,6 @@ def create_calls_consolidacion():
     )
     cedulas = list(to_create.values_list('cedula', flat=True))
     phones = get_phones(cedulas)
-    print(phones)
     pk_campaign = get_campaign()
     try:
         campaign_obj = Campaign.objects.get(id=pk_campaign)
@@ -66,7 +65,6 @@ def get_campaign():
 
 def get_phones(cedulas):
     """Get the phones for the consolidacion calls"""
-    cedulas = ['1005783261']
     numbers = Terceros.objects.filter(nit__in=cedulas)
     numbers = numbers.values_list('nit', 'telefono_1', 'telefono_2')
     phones = {}
