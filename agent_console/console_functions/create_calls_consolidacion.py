@@ -71,6 +71,6 @@ def get_phones(cedulas):
     numbers = numbers.values_list('nit', 'telefono_1', 'telefono_2')
     phones = {}
     for x in range (0, len(numbers)):
-        phones[str(numbers[x][0]).strip()] = str(numbers[x][1:2]).strip()
+        phones[str(numbers[x][0]).strip()] = [str(numbers[x][1]).strip(), str(numbers[x][2]).strip()]
         #phones[str(numbers[x][0])] = ['3176483290']
     return phones

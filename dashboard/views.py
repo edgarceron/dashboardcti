@@ -14,10 +14,11 @@ def get_actions():
 def dashboard(request, user_id=0):
     "Returns the rendered for the dashboard."
     permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('form_motivo')
+    validation = permission_obj.validate('dashboard')
     if validation['status']:
         return render(
             request,
+            #'dashboard/dashboard.html',
             'maingui/under_construction.html',
             {
                 'id':user_id,
@@ -29,7 +30,7 @@ def dashboard(request, user_id=0):
 def dashboard_options_form(request):
     "Returns the rendered template for the given user."
     permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('agent_console')
+    validation = permission_obj.validate('dashboard_options_form')
     if validation['status']:
         data = {
             'username': permission_obj.user.name
@@ -37,7 +38,7 @@ def dashboard_options_form(request):
 
         return render(
             request,
-            'agent_console/options_form.html',
+            'dashboard/options_form.html',
             data
         )
     return permission_obj.error_response_view(validation, request)

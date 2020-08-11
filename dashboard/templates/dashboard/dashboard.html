@@ -28,6 +28,28 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="chart-pie pt-4 pb-2">
+                    <canvas id="canvasTmo"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="chart-pie pt-4 pb-2">
+                    <canvas id="canvasEffectiveness"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="chart-pie pt-4 pb-2">
+                    <canvas id="canvasServiceLevel"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
@@ -36,4 +58,5 @@
 </script>
 <script src="{% static 'dashboard/js/app/dashboard.js' %}"></script>
 <script src="{% static 'dashboard/js/app/hours_chart.js' %}"></script>
+<script src="{% static 'dashboard/js/app/percent_charts.js' %}"></script>
 {% endblock %}

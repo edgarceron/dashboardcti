@@ -85,7 +85,7 @@ def get_data_dashboard(request):
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('get_data_dashboard')
     if validation['status']:
-        data = data_process.data_process(request)
+        data = data_process.data_entry(request)
 
         return Response(
             data,

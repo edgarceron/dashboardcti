@@ -13,6 +13,9 @@ function getData(){
     var ajaxFunctions = {
         'success': function(result){
             drawHoursChart(result.call_entry_per_hour);
+            drawTmoChart(result.tmo, result.seconds);
+            drawEffectivenessChart(result.effectiveness);
+            drawServiceLevelChart(result.service_level, result.seconds);
         },
         'error': standard.standardError,
         'complete': function(){

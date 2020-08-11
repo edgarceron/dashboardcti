@@ -60,20 +60,7 @@
                 Interface
             </div>
             {% block sidebar %}
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Usuarios y permisos</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'listing_user' %}">Usuarios</a>
-                        <a class="collapse-item" href="{% url 'listing_profile' %}">Perfiles</a>
-                        <a class="collapse-item" href="{% url 'options_form_agent_console' %}">Configuración</a>
-                    </div>
-                </div>
-            </li>
-
+            
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTaller" aria-expanded="true" aria-controls="collapseTaller">
                     <i class="fas fa-fw fa-industry"></i>
@@ -97,6 +84,33 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{% url 'listing_form' %}">Formularios</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Usuarios y permisos</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'listing_user' %}">Usuarios</a>
+                        <a class="collapse-item" href="{% url 'listing_profile' %}">Perfiles</a>
+                        <a class="collapse-item" href="{% url 'options_form_agent_console' %}">Configuración</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cogs"></i>
+                    <span>Configuración</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'options_form_agent_console' %}">Opciones Consola</a>
+                        <a class="collapse-item" href="{% url 'dashboard_options_form' %}">Opciones dashboard</a>
                     </div>
                 </div>
             </li>

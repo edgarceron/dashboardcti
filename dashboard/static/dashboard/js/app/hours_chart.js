@@ -1,9 +1,9 @@
 var hoursChart = {};
 var hoursChartCreated = false;
-function createDataSet(strlabel, color, data){
+function createDataSet(strlabel, colorrgba, data){
     var set = {
         label: strlabel,
-        borderColor: color,
+        borderColor: colorrgba,
         borderWidth: 4,
         data: data,
         fill:false
@@ -45,22 +45,6 @@ function createHoursChart(data){
                 text: 'Resumen de llamadas',
                 fontSize: 16
             },
-            /*
-            scales: {
-                xAxes: [{
-                    gridLines: {
-                        color: "rgba(0, 0, 0, 0)",
-                    }
-                }],
-                yAxes: [{
-                    gridLines: {
-                        color: "rgba(0, 0, 0, 0)",
-                    }   
-                }]
-            },*/
-            animation: {
-                duration: 0
-            },
             onAnimationComplete: function () {
                 var ctx = this.chart.ctx;
                 ctx.font = this.scale.font;
@@ -76,11 +60,17 @@ function createHoursChart(data){
             }
         }
     });
+
+    hoursChartCreated = true;
 }
 
 function updateHoursChart(data){
     hoursChart.data = data;
-    hoursChart.update();
+    hoursChart.update(
+        {
+            duration: 0,
+        }
+    );
 }
 
 function drawHoursChart(call_entry_per_hour){
@@ -93,7 +83,7 @@ function drawHoursChart(call_entry_per_hour){
             '12','13','14','15','16','17','18','19','20','21','22','23'],
         datasets: datasets
     }
-
+    console.log (hoursChartCreated);
     if(hoursChartCreated){
         updateHoursChart(data);
     }
