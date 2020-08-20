@@ -222,7 +222,7 @@ def create_mail_and_send(data):
     placa = data['placa']
     telefonos = format_telefonos(tercero.telefono_1, tercero.telefono_2)
     motivo = Motivo.objects.get(id=data['motivo'])
-    mail = "maurinin@yahoo.com"
+    #mail = "maurinin@yahoo.com"
     asesor = sede.asesor.name
     print(mail)
 
