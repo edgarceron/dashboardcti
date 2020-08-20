@@ -109,6 +109,10 @@ class AgentState():
             answer['placa'] = consolidacion.placa
             answer['nombre'] = tercero.nombres
             answer['sede'] = consolidacion.sede.id
+            try:
+                answer['asesor'] = consolidacion.sede.asesor.name
+            except:
+                answer['asesor'] = ""
             answer['motivo'] = consolidacion.motivo.id
             answer['extension'] = agent.number
             answer['llamada_id'] = current_call.uniqueid
