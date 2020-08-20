@@ -6,7 +6,7 @@ from dashboard.business_logic import criteria_conditions
 
 def count_calls(start_date, end_date, agent, campaign):
     """Counts row from Calls by status"""
-    conditions = criteria_conditions.get_call_criteria(
+    conditions = criteria_conditions.get_call_out_criteria(
         start_date, end_date, agent, campaign
     )
 
@@ -31,6 +31,8 @@ def count_calls(start_date, end_date, agent, campaign):
         calls_by_status['Placing'] = 0
     if 'ShortCall' not in calls_by_status:
         calls_by_status['ShortCall'] = 0
+    if 'NoAsnwer' not in calls_by_status:
+        calls_by_status['NoAsnwer'] = 0
     if 'Success' not in calls_by_status:
         calls_by_status['Success'] = 0
     if None not in calls_by_status:

@@ -14,4 +14,6 @@ urlpatterns = [
     path('get/<int:sede_id>', webservices.get_sede, name='get_sede'),
     path('delete/<int:sede_id>', webservices.delete_sede, name='delete_sede'),
     path('toggle/<int:sede_id>', webservices.toggle_sede, name='toggle_sede'),
+    path('picker_search_bodega', webservices.picker_search_bodega, name='picker_search_bodega'),
+    path('get_bodega/<int:bodega_id>', webservices.get_bodega, name='get_bodega'),
 ]

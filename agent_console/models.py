@@ -13,12 +13,6 @@ class Agent(models.Model):
     estatus = models.CharField(max_length=1, blank=True, null=True)
     eccp_password = models.CharField(max_length=128, blank=True, null=True)
 
-    @staticmethod
-    def agent_picker_filter(value):
-        return list(Agent.objects.filter(
-            Q(name__contains=value)
-        )[:10])
-
     class Meta:
         managed = False
         db_table = 'agent'

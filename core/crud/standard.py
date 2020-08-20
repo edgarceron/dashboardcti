@@ -74,7 +74,7 @@ class Crud():
         validation = permission_obj.validate(action_name)
         if validation['status']:
             try:
-                model_obj = self.model_class.objects.get(id=identifier)
+                model_obj = self.model_class.objects.get(pk=identifier)
                 data_serializer = self.serializer_class(model_obj)
                 model_data = data_serializer.data.copy()
                 model_data = self.operation(model_data)

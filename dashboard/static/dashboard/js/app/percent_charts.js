@@ -32,7 +32,7 @@ function createDataDoughnut(percent, labels){
             ],
             backgroundColor: [
                 colorrgba,
-                '#FF4444',
+                '#f8f9fc',
             ],
         }]
     };
@@ -53,9 +53,11 @@ function createDoughnutSemaphoreChart(data, canvas, title_text){
                 display : false,
             },
             title: {
-                display: true,
+                display: false,
                 text: title_text,
-                fontSize: 16
+                fontSize: 16,
+                padding: 10,
+                lineHeight: 1.2
             },
             tooltips: {
                 callbacks: {
@@ -84,8 +86,9 @@ function updateDoughnutSemaphoreChart(data, chart){
 }
 
 function drawTmoChart(tmo, segundos){
-    var labels = [`Antes de ${segundos} segundos`, 'Atendidas'];
+    var labels = [`TMO`, 'TMO Fallidas'];
     var data = createDataDoughnut(tmo, labels);
+    $("#tmoLabel").html(`${Math.floor(tmo)}%`);
     if(tmoChartCreated){
         updateDoughnutSemaphoreChart(data, tmoChart);
     }
@@ -97,8 +100,9 @@ function drawTmoChart(tmo, segundos){
 }
 
 function drawEffectivenessChart(effectiveness){
-    var labels = [`Atendidas`, 'Total de llamadas'];
+    var labels = [`Efectividad`, 'No efectivas'];
     var data = createDataDoughnut(effectiveness, labels);
+    $("#efectivenessLabel").html(`${Math.floor(effectiveness)}%`);
     if(effectivenessChartCreated){
         updateDoughnutSemaphoreChart(data, effectivenessChart);
     }
@@ -110,8 +114,9 @@ function drawEffectivenessChart(effectiveness){
 }
 
 function drawServiceLevelChart(serviceLevel, segundos){
-    var labels = [`Antes de ${segundos} segundos`, 'Total de llamadas'];
+    var labels = [`Nivel de servicio`, 'Perdidas'];
     var data = createDataDoughnut(serviceLevel, labels);
+    $("#serviceLabel").html(`${Math.floor(serviceLevel)}%`);
     if(serviceLevelChartCreated){
         updateDoughnutSemaphoreChart(data, serviceLevelChart);
     }

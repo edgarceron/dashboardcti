@@ -4,59 +4,382 @@
     Dashboard
 {% endblock %}
 {% block topTitle %}
-    Dashboard
 {% endblock %}
+
+{% block topnavbar %}
+<li class="d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 w-100">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="startDateInput" class="mb-0 mt-1">Fecha inicio</label>
+                        <input type="date" class="form-control" id="startDateInput" required>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="endDateInput" class="mb-0 mt-1">Fecha fin</label>
+                        <input type="date" class="form-control" id="endDateInput" required>
+                    </div>
+                </div>
+        
+                <div class='col-md-3'>
+                    <div class='form-group'>
+                        <label for='agentInput' class="mb-0 mt-1">Agente</label>
+                        <select class='form-control appform' id='agentInput'>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for='campaignInput' class="mb-0 mt-1">Campaña</label>
+                        <select class='form-control appform' id='campaignInput'>
+                        </select>
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="informe" class="mb-0 mt-1">Llamadas</label>
+                <select class="form-control" id="informe">
+                    <option value="1">Entrantes</option>
+                    <option value="2">Salientes</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</li>
+
+{% endblock topnavbar %}
+
 {% block content %}
 
-<div class="row">
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="fechaInput">Fecha inicio</label>
-            <input type="date" class="form-control appform" id="start_dateInput" required>
+<div class="row collapse multi-collapse" id="dashboardEntry">
+    <div class="col-md-12 col-lg-7">
+        <div class="col-12 col-lg-12 ">
+            <canvas id="canvasBarras"></canvas>
+        </div>
+    
+        <div class="col-12 col-lg-12">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="position-absolute row h-100 w-100 justify-content-center align-items-center px-2">
+                                <div><span class="font-weight-bold text-dark">
+                                    <h2 id="tmoLabel"></h2>
+                                </span></div>
+                            </div>
+                            <div class="position-absolute row h-100 w-100 justify-content-center px-2">
+                                <div><span class="font-weight-bold text-dark d-sm-none d-md-block">
+                                    TMO
+                                </span></div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div><span class="font-weight-bold text-dark d-none d-sm-block d-md-none my-2">
+                                    TMO
+                                </span></div>
+                            </div>
+                            <div class="chart-pie">
+                                <canvas id="canvasTmo"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="position-absolute row h-100 w-100 justify-content-center align-items-center px-2">
+                                <div><span class="font-weight-bold text-dark">
+                                    <h2 id="efectivenessLabel"></h2>
+                                </span></div>
+                            </div>
+                            <div class="position-absolute row h-100 w-100 justify-content-center px-2">
+                                <div><span class="font-weight-bold text-dark d-sm-none d-md-block">
+                                    Efectividad
+                                </span></div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div><span class="font-weight-bold text-dark d-none d-sm-block d-md-none my-2">
+                                    Efectividad
+                                </span></div>
+                            </div>
+                            <div class="chart-pie">
+                                <canvas id="canvasEffectiveness"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="position-absolute row h-100 w-100 justify-content-center align-items-center px-2">
+                                <div><span class="font-weight-bold text-dark">
+                                    <h2 id="serviceLabel"></h2>
+                                </span></div>
+                            </div>
+                            <div class="position-absolute row h-100 w-100 justify-content-center px-2">
+                                <div><span class="font-weight-bold text-dark d-sm-none d-md-block">
+                                    Nivel de servicio
+                                </span></div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div><span class="font-weight-bold text-dark d-none d-sm-block d-md-none my-2">
+                                    Nivel de servicio
+                                </span></div>
+                            </div>
+                            <div class="chart-pie">
+                                <canvas id="canvasServiceLevel"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="fechaInput">Fecha fin</label>
-            <input type="date" class="form-control appform" id="end_dateInput" required>
+
+    <div class="col-md-12 col-lg-5">
+        <div class="row">
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-secondary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Total</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblTotal">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-globe-americas text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Terminadas</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblTerminadas">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-flag text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Abandonadas</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblAbandonadas">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-phone-slash text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">En cola</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblCola">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clock text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">&lt;30 segundos</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblBefore">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-stopwatch-20 text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Agentes conectados</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblLogged">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-plug text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Agentes en descanso</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblBreak">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-bed text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-secondary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Agentes en llamada</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblIncall">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-headset text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-        <canvas id="canvasBarras"></canvas>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-8">
+<div class="row collapse multi-collapse" id="dashboardOut">
+    <div class="col-md-12 col-lg-7">
+        <div class="col-12 col-lg-12">
+            <canvas id="canvasBarrasSalientes"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-lg-5">
         <div class="row">
-            <div class="col-md-4">
-                <div class="chart-pie pt-4 pb-2">
-                    <canvas id="canvasTmo"></canvas>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-secondary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Total</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblTotalOut">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-globe-americas text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="chart-pie pt-4 pb-2">
-                    <canvas id="canvasEffectiveness"></canvas>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Terminadas</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblTerminadasOut">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-flag text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="chart-pie pt-4 pb-2">
-                    <canvas id="canvasServiceLevel"></canvas>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Fallidas</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblFallidas">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-phone-slash text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-2">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Pendientes</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="lblPending">0</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clock text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 {% endblock %}
 {% block javascript %}
+<script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
 <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
+<script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
 <script>
     get_data_dashboard_url = "{% url 'get_data_dashboard' %}";
+    get_data_dashboard_out_url = "{% url 'get_data_dashboard_out' %}";
+    picker_search_campaign_url = "{% url 'picker_search_campaign' %}";
+    picker_search_agent_url = "{% url 'picker_search_agent' %}";
 </script>
 <script src="{% static 'dashboard/js/app/dashboard.js' %}"></script>
 <script src="{% static 'dashboard/js/app/hours_chart.js' %}"></script>
 <script src="{% static 'dashboard/js/app/percent_charts.js' %}"></script>
+<script src="{% static 'dashboard/js/app/label_stats.js' %}"></script>
 {% endblock %}

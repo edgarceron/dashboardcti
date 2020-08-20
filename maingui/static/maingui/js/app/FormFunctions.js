@@ -1,4 +1,7 @@
 class FormFunctions{
+
+    static pastValues = {};
+
     static resetFormErrors(errorFields){
         for (const key in errorFields) {
             if (errorFields.hasOwnProperty(key)) {
@@ -37,6 +40,7 @@ class FormFunctions{
                 if(result.success){
                     var resultados = result.result;
                     var pickerName = input;
+                    if(text != "") null_value = "";
                     updateFunction(pickerName, resultados, null_value);
                 }
             },
@@ -50,11 +54,18 @@ class FormFunctions{
     }
 
     static setAjaxLoadPicker(input, url, updateFunction, null_value=""){
+        $(input).siblings().find("input[type='text']").keydown(
+            function(event){
+                var target = $(event.target);
+                FormFunctions.pastValues[input] = target.val();
+            }
+        )
+
         $(input).siblings().find("input[type='text']").keyup(
             function(event){
                 var target = $(event.target);
                 var text = target.val();
-                if(text.length > 0){
+                if(text != FormFunctions.pastValues[input]){
                     FormFunctions.ajaxLoadPicker(input, url, updateFunction, text, null_value);
                 }
             }

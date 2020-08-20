@@ -1,7 +1,7 @@
 """Contains functions to calculate stadistics about queue calls"""
 from django.db.models import Avg
 from agent_console.models import CallEntry, CampaignEntry, Agent
-from agent_console.serializers import CurrentCallEntrySerializer
+from agent_console.serializers import CallEntrySerializer
 from dashboard.business_logic import criteria_conditions
 
 def get_longest_wait_queue_call(campaign):
@@ -25,7 +25,7 @@ def get_longest_wait_queue_call(campaign):
     else:
         longest_wait_queue_call = None
 
-    return CurrentCallEntrySerializer(longest_wait_queue_call).data
+    return CallEntrySerializer(longest_wait_queue_call).data
 
 def get_average_wait(start_date, end_date, agent, campaign):
     """Gets the average wait-in-queue time"""

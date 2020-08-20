@@ -19,7 +19,7 @@ def get_actions():
         {"name": "set_user_agent", "label": "Webservice enlazar usuario con agente de call center"},
         {"name": "picker_search_agent", "label": "Webservice para actualizar el picker de agentes"},
         {"name": "get_agent", "label": "Webservice para obteber los datos del agente"},
-        {"name": "get_user_sede", "label": "Webservice para obteber los datos de la sede"},
+        {"name": "get_user_sede", "label": "Webservice para obteber los datos de la sede del usuario"},
         {"name": "agent_state", "label": "Webservice para obteber el estado del agente"},
         {"name": "get_crm_url", "label": "Webservice para obteber la url de redirección al CRM"},
         {
@@ -75,20 +75,8 @@ def set_user_agent(request):
 @api_view(['POST'])
 def picker_search_agent(request):
     "Returns a JSON response with user data for a selectpicker."
-    permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('picker_search_agent')
-    if validation['status']:
-        value = request.data['value']
-        queryset = Agent.agent_picker_filter(value)
-        serializer = AgentSerializer(queryset, many=True)
-        result = serializer.data
-
-        data = {
-            "success": True,
-            "result": result
-        }
-        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-    return permission_obj.error_response_webservice(validation, request)
+    crud_object = Crud(AgentSerializer, Agent, data_filters.agent_picker_filter)
+    return crud_object.picker_search(request, 'picker_search_agent')
 
 @api_view(['POST'])
 def get_agent(request, user_id):
@@ -280,9 +268,18 @@ def check_horarios(request):
 def send_confirmation_mail(request):
     """Validates that the given request contains a cedula for """
     permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('create_cita')
+    validation = permission_obj.validate('send_confirmation_mail')
     if validation['status']:
-        citas.create_mail_and_send(request.data)
+        send = citas.create_mail_and_send(request.data)
+        if send:
+            success = True
+        else:
+            success = False
+        return Response(
+            {'success':success},
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
     return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])

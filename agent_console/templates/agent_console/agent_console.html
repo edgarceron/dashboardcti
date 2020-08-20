@@ -22,11 +22,28 @@ Consola de agente
     </div>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="successModal">
+<div class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" id="successModal">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content" id="contentCita">
+            <div class="modal-header">
+                <div class="row text-right">
+                    <button class="btn btn-danger" id="cancelButton">Cancelar</button>
+                </div>
+            </div>
             <div class="modal-body">
                 {% include "./citas.html" %}
+            </div>
+        </div>
+        <div class="modal-content d-none" id="contentEmail">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Atención</h5>
+            </div>
+            <div class="modal-body">
+                    ¿Enviar un correo ahora?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="noEmailButton">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="emailButton">Si</button>
             </div>
         </div>
     </div>
@@ -50,5 +67,6 @@ Consola de agente
     get_motivo_url = "{% url 'get_motivo' motivo_id=0 %}";
     get_motivo_url = get_motivo_url.slice(0, -1);
     create_cita_url = "{% url 'create_cita' %}";
+    send_confirmation_mail_url = "{% url 'send_confirmation_mail' %}";
 </script>
 {% endblock %}

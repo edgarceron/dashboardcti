@@ -332,14 +332,14 @@ class Terceros(models.Model):
         db_table = 'terceros'
 
 class Bodegas(models.Model):
-    bodega = models.SmallIntegerField()
+    bodega = models.SmallIntegerField(primary_key=True)
     descripcion = models.CharField(max_length=40)
     centro = models.ForeignKey('Centros', models.DO_NOTHING, db_column='centro')
     direccion = models.CharField(max_length=80, blank=True, null=True)
     telefono = models.CharField(max_length=40, blank=True, null=True)
     texto = models.CharField(max_length=250, blank=True, null=True)
     codigo_cliente = models.CharField(max_length=20, blank=True, null=True)
-    id = models.AutoField(unique=True, primary_key=True)
+    id = models.IntegerField(unique=True)
     es_punto_venta = models.BooleanField(blank=True, null=True)
     impresora = models.CharField(max_length=80, blank=True, null=True)
     id_clasificacion = models.IntegerField(blank=True, null=True)

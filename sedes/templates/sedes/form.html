@@ -30,16 +30,18 @@
             <div class="row">
                 <div class='col-md-6'>
                     <div class='form-group'>
-                        <label for='bodega_dmsInput'>Bodega dms</label>
-                        <input type='text' class='form-control appform' id='bodega_dmsInput'>
-                        <div class='valid-feedback' id='bodega_dmsValid'>Correcto.</div>
-                        <div class='invalid-feedback' id = 'bodega_dmsInvalid'>Debe ingresar un numero entero.</div>
+                        <label for='bodega_dmsInput'>Bodega</label>
+                        <select class='form-control appform' id='bodega_dmsInput'>
+                            <option value="">Sin asignar</option>
+                        </select>
+                        <div class="valid-feedback" id='bodega_dmsValid'>Valid.</div>
+                        <div class="invalid-feedback" id = 'bodega_dmsInvalid'>Please fill out this field.</div>
                     </div>
                 </div> 
                 <div class="col-md-6">
                     <label for="checkboxgroup">Estado</label>
                     <div class="custom-control custom-checkbox" id="checkboxgroup">
-                        <input class="custom-control-input" type="checkbox" value="" id="activeInput">
+                        <input class="custom-control-input" type="checkbox" id="activeInput" checked>
                         <label class="custom-control-label" for="activeInput">Activo</label>
                         <div class="valid-feedback" id='activeValid'>Valid.</div>
                         <div class="invalid-feedback" id = 'activeInvalid'>Please fill out this field.</div>
@@ -80,14 +82,18 @@
 {% block javascript %}
     <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
     <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
+    <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
     <script>
         $( document ).ready(function() {
             id = {{ id }};
             listing_url = "{% url 'listing_sede' %}";
             add_url = "{% url 'add_sede' %}";
             get_url = "{% url 'get_sede' sede_id=0 %}";
+            get_bodega_url = "{% url 'get_bodega' bodega_id=0 %}";
             replace_url = "{% url 'replace_sede' sede_id=0 %}";
+            picker_search_bodega_url = "{% url 'picker_search_bodega' %}";
             get_url = get_url.slice(0, -1);
+            get_bodega_url = get_bodega_url.slice(0, -1);
             replace_url = replace_url.slice(0, -1);
         });
     </script>

@@ -21,4 +21,9 @@ urlpatterns = [
         webservices.get_data_dashboard,
         name='get_data_dashboard'
     ),
+    path(
+        'get_data_dashboard_out',
+        webservices.get_data_dashboard_out,
+        name='get_data_dashboard_out'
+    ),
 ]

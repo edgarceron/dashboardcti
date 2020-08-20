@@ -33,4 +33,5 @@ urlpatterns = [
     path('create_cita', webservices.create_cita, name='create_cita'),
     path('check_horarios', webservices.check_horarios, name='check_horarios'),
     path('create_calls_asterisk', webservices.create_calls_asterisk, name='create_calls_asterisk'),
+    path('send_confirmation_mail', webservices.send_confirmation_mail, name='send_confirmation_mail'),
 ]

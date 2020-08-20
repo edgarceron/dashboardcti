@@ -90,5 +90,12 @@ $( document ).ready(function() {
         getDataForm();
     }
 
-    FormFunctions.setAjaxLoadPicker('#sedeInput', picker_search_sede_url, FormFunctions.updatePicker);
+    FormFunctions.setAjaxLoadPicker(
+        '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "Escoja una sede"
+    );
+
+    FormFunctions.ajaxLoadPicker(
+        '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "", "Escoja una sede"
+    );
+
 });

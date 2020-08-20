@@ -1,57 +1,44 @@
 """Manages the extra info for a user"""
 from rest_framework.response import Response
 from rest_framework import status
-from sedes.models import Sede
 from sedes.serializers import SedeSerializer
 from agent_console.models import UserAgent, Agent, UserSede
-from users.models import User
-from agent_console.serializers import UserAgentSerializer, UserSedeSerializer
-from core.crud.standard import Crud
+from agent_console.serializers import UserAgentSerializer, UserSedeSerializer, AgentSerializer
 
 def set_unset_user_agent(request):
     """Sets or unsent the agent id for an agent"""
-    data = request.data
-    user_id = data['user']
-    agent_id = data['agent']
-    if agent_id == "":
+
+    data = request.data.copy()
+    try:
+        user_id = data['user']
+        user_agent_obj = UserAgent.objects.get(user=user_id)
+        user_agent_serializer = UserAgentSerializer(user_agent_obj, data=data)
+    except UserAgent.DoesNotExist:
+        user_agent_serializer = UserAgentSerializer(data=data)
+
+    if user_agent_serializer.is_valid():
+        user_agent_serializer.save()
         return Response(
-            {"success":True},
+            {"success":True, "id":user_agent_serializer.data['id']},
             status=status.HTTP_200_OK,
-            content_type='application/json')
+            content_type='application/json'
+        )
+    elif data['agent'] is None:
+        user_agent_obj.delete()
+        return Response(
+            {"success": True, "message":"Usuario se guarda sin agente"},
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
     else:
-        try:
-            query = UserAgent.objects.filter(user=user_id)
-            if len(query) > 0:
-                for obj in query:
-                    model = obj
-                    if agent_id == "":
-                        model.delete()
-                        return Response(
-                            {"success":True, "message":"UserAgent deleted"},
-                            status=status.HTTP_200_OK,
-                            content_type='application/json')
-
-                    serializer = UserAgentSerializer(instance=model, data=data)
-
-            else:
-                serializer = UserAgentSerializer(data=data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(
-                    {"success":True},
-                    status=status.HTTP_201_CREATED,
-                    content_type='application/json')
-            data = Crud.error_data(serializer)
-            return Response(
-                data,
-                status=status.HTTP_400_BAD_REQUEST,
-                content_type='application/json')
-        except Agent.DoesNotExist:
-            data = {
-                'success': False,
-                'message': 'El agente se borro del servidor de telefonía, intente con otro agente'
-            }
-            return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+        return Response(
+            {
+                "success": False, 
+                "message":"Ocurrio un error al intentar guardar la agente del usuario"
+            },
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
 
 def set_unset_user_sede(request):
     data = request.data.copy()
@@ -69,7 +56,7 @@ def set_unset_user_sede(request):
             status=status.HTTP_200_OK,
             content_type='application/json'
         )
-    elif data['sede'] == None:
+    elif data['sede'] is None:
         user_sede_obj.delete()
         return Response(
             {"success": True, "message":"Usuario se guarda sin sede"},
@@ -99,7 +86,7 @@ def get_agent(request, user_id):
             "success":True,
             "data":agent_data
         }
-    except:
+    except UserAgent.DoesNotExist:
         data = {
             "success":False
         }

@@ -17,6 +17,28 @@ saveSuccess = function(result){
     }
 }
 
+function getValues(){
+    data = {
+        "name"    : $('#nameInput').val(),
+        "lastname": $('#lastnameInput').val(),
+        "username": $('#usernameInput').val(),
+        "password": $('#passwordInput').val(),
+        "active"  : $('#activeInput').prop('checked'),
+        "profile" : $('#profileInput').val()
+    }
+    return data;
+}
+
+function addData(){
+    var ajaxFunctions = {
+        'success': function(result){
+            saveSuccess(result);
+        },
+        'error': standard.standardError
+    }
+    standard.makePetition(getValues(), 'add_url', ajaxFunctions);
+}
+/*
 function addData(){
     if(!singleOperationRestriction){
         singleOperationRestriction = true;
@@ -51,97 +73,54 @@ function addData(){
         });
     }
 }
+*/
 
-function updateData(user_id){
-    if(!singleOperationRestriction){
-        singleOperationRestriction = true;
-        $.ajax({
-            url: replace_url + user_id,
-            method: 'PUT',
-            async: false,
-            dataType: 'json',
-            data: {
-                "name"    : $('#nameInput').val(),
-                "lastname": $('#lastnameInput').val(),
-                "username": $('#usernameInput').val(),
-                "password": $('#passwordInput').val(),
-                "active"  : $('#activeInput').prop('checked'),
-                "profile" : $('#profileInput').val()
-            },
-            beforeSend: function(){},
-            success: function(result){
-                saveSuccess(result);
-            },
-            error: function (request, status, error, result){
-                var details = request.responseJSON.Error.details;
-                FormFunctions.resetFormErrors(errorFields);
-                errorFields = [];
-                FormFunctions.setFormErrors(details);
-            },
-            complete: function(){
-                singleOperationRestriction = false;
-            }
-        });
-    }
-}
-
-function getData(user_id){
-    $.ajax({
-        url: get_url + user_id,
-        method: 'POST',
-        async: false,
-        dataType: 'json',
-        data: {},
-        beforeSend: function(){},
-        success: function(result){
-            var data = result.data;
-            var keys = Object.keys(data);
-            for(field in keys){
-                var inputName = "#" + keys[field] + "Input";
-                var input = $(inputName);
-                if(inputName == "#profileInput"){
-                    getProfileData(data[keys[field]]);
-                }
-                FormFunctions.setValue(input, data[keys[field]]);
-            }
+function updateData(){
+    var ajaxFunctions = {
+        'success': function(result){
+            saveSuccess(result);
         },
-        error: function (request, status, error){},
-        complete: function(){},
-    });
+        'error': standard.standardError
+    }
+    standard.makePetition(getValues(), 'replace_url', ajaxFunctions);
 }
 
+function getData(){
+    var ajaxFunctions = {
+        'success': function(result){
+            standard.standardSetValues(result);
+        },
+        'error': function(result){
+            standard.standardGetError(result);
+        }
+    }
+    standard.makePetition(null, 'get_url', ajaxFunctions);
+}
 
 function saveFunction(){
     if(id == 0){
-        addData();
+        saveForm();
     }
     else{
         updateData(id);
     }
 }
 
-function getProfileData(id_profile){ 
-    if(id_profile != null){
-        $.ajax({
-            url: get_profile_url + id_profile,
-            method: 'POST',
-            async: false,
-            dataType: 'json',
-            success: function(result){
-                if(result.success){
-                    profile = [result.data];
-                    if(profile != null){
-                        pickerName = '#profileInput';
-                        FormFunctions.updatePicker(pickerName, profile);
-                    }
-                }
-            }
-        });
-    }
-}
-
 $( document ).ready(function() {
-    
+    if(id != 0){
+        get_url = get_url + id;
+        replace_url = replace_url + id;
+    }
+
+    urls = {
+        'listing_url': {'url': listing_url},
+        'add_url': {'url' : add_url, 'method':'POST'},
+        'get_url': {'url' : get_url, 'method':'POST'},
+        'replace_url': {'url' : replace_url, 'method':'PUT'},
+        'get_profile_url': {'url' : get_profile_url, 'method':'POST'},
+    }
+    standard = new StandardCrud(urls);
+
     $('#saveButton').click(function(){
         saveFunction();
     });
@@ -152,10 +131,16 @@ $( document ).ready(function() {
         }
     );
 
+    FormFunctions.setAjaxLoadPicker(
+        '#profileInput', picker_search_profile_url, FormFunctions.updatePicker, "Ningún perfil"
+    );
+    FormFunctions.ajaxLoadPicker(
+        '#profileInput', picker_search_profile_url, FormFunctions.updatePicker, "", "Ningún perfil"
+    );
+
     if(id != 0){
         getData(id);
         $('#passwordInput').attr("placeholder", "Ingrese aquí una nueva contraseña temporal");
     }
 
-    FormFunctions.setAjaxLoadPicker('#profileInput', picker_search_profile_url, FormFunctions.updatePicker);
 });

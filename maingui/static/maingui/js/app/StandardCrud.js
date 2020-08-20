@@ -43,7 +43,17 @@ class StandardCrud{
                     this.executeAjaxInsideFunction(ajaxFunctions, 'success', result);
                 },
                 error:  (request, status, error, result) => {
-                    this.executeAjaxInsideFunction(ajaxFunctions, 'error', request, status, error, result);
+                    if(error == "Forbidden"){
+                        SoftNotification.show(
+                            "Usted no tiene pemisos para realizar esta acción",
+                            "danger"
+                        );
+                    }
+                    else{
+                        this.executeAjaxInsideFunction(
+                            ajaxFunctions, 'error', request, status, error, result
+                        );
+                    }
                 },
                 complete: () => {
                     this.executeAjaxInsideFunction(ajaxFunctions, 'complete');
@@ -234,7 +244,13 @@ class StandardCrud{
                         var data = [result.data];
                         if(data != null){
                             var pickerName = '#' + field + 'Input';
-                            FormFunctions.updatePicker(pickerName, data);
+                            $(pickerName).val(data[0].id);
+                            if($(pickerName).val() == null){
+                                FormFunctions.updatePicker(pickerName, data);
+                            }
+                            else{
+                                $(pickerName).selectpicker('val', data[0].id);
+                            }
                         }
                     }
                 }

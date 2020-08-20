@@ -6,7 +6,7 @@ def send_confirmacion(to, template, context):
     subject = "Reserva para " + context["motivo"]
     html_message = render_to_string(template, context)
     plain_message = strip_tags(html_message)
-    send_mail(
+    return send_mail(
         subject='That’s your subject',
         message=plain_message,
         html_message=html_message,

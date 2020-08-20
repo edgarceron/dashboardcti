@@ -103,7 +103,7 @@ $(document).ready(function() {
             }}
         ], 
 
-        "lengthMenu": [[3, 10, 25, 50], [3, 10, 25, 50]],
+        "lengthMenu": [[10, 25, 50], [10, 25, 50]],
 
         "drawCallback": function( settings ) {
             $('.row_object_id').dblclick(function(event){

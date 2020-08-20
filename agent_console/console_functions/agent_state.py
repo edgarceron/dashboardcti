@@ -93,7 +93,9 @@ class AgentState():
             answer['llamada_id'] = current_call_entry.uniqueid
 
         elif state == "5":
-            consolidacion = AgentState.get_consolidacion_by_call(current_call.id_call.id)
+            consolidacion, call_consolidacion_id = AgentState.get_consolidacion_by_call(
+                current_call.id_call.id
+            )
             try:
                 tercero = Terceros.objects.get(nit=consolidacion.cedula)
             except Terceros.DoesNotExist:
@@ -110,6 +112,7 @@ class AgentState():
             answer['motivo'] = consolidacion.motivo.id
             answer['extension'] = agent.number
             answer['llamada_id'] = current_call.uniqueid
+            answer['call_consolidacion_id'] = call_consolidacion_id
 
         if self.verbosity:
             timezone = pytz.timezone("America/Bogota")
@@ -147,5 +150,5 @@ class AgentState():
 
     @staticmethod
     def get_consolidacion_by_call(id_call):
-        consolidacion = CallConsolidacion.objects.get(call=id_call).consolidacion
-        return consolidacion
+        consolidacion = CallConsolidacion.objects.get(call=id_call)
+        return consolidacion.consolidacion, consolidacion.id

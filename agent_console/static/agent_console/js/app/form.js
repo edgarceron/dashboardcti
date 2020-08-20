@@ -68,37 +68,11 @@ function setUserSede(){
 }
 
 function getAgentData(id_user){ 
-    urls_additional['get_agent_url'].url = get_agent_url + id_user;
-    var ajaxFunctions = {
-        'success': function(result){
-            if(result.success){
-                profile = [result.data];
-                if(profile != null){
-                    pickerName = '#agentInput';
-                    FormFunctions.updatePicker(pickerName, profile);
-                }
-            }
-        },
-        'error': standard_additional.standardError
-    }
-    standard_additional.makePetition(getUserSedeValues(), 'get_agent_url', ajaxFunctions);
+    standard_additional.loadPicker('agent', id_user);
 }
 
 function getSedeData(id_user){ 
-    urls_additional['get_user_sede_url'].url = get_user_sede_url + id_user;
-    var ajaxFunctions = {
-        'success': function(result){
-            if(result.success){
-                profile = [result.data];
-                if(profile != null){
-                    pickerName = '#sedeInput';
-                    FormFunctions.updatePicker(pickerName, profile);
-                }
-            }
-        },
-        'error': standard_additional.standardError
-    }
-    standard_additional.makePetition(getUserSedeValues(), 'get_user_sede_url', ajaxFunctions);
+    standard_additional.loadPicker('sede', id_user);
 }
 
 $( document ).ready(function() {
@@ -121,16 +95,30 @@ $( document ).ready(function() {
         'pircker_search_agent_url': {'url': pircker_search_agent_url, 'method':'POST'},
         'pircker_search_sede_url': {'url': pircker_search_sede_url, 'method':'POST'},
         'get_agent_url': {'url': get_agent_url, 'method':'POST'},
-        'get_user_sede_url': {'url': get_user_sede_url, 'method':'POST'},
+        'get_sede_url': {'url': get_user_sede_url, 'method':'POST'},
     }
 
     standard_additional = new StandardCrud(urls_additional); 
+
+    FormFunctions.setAjaxLoadPicker(
+        '#agentInput', pircker_search_agent_url, FormFunctions.updatePicker, "Ningun agente"
+    );
+
+    FormFunctions.setAjaxLoadPicker(
+        '#sedeInput', pircker_search_sede_url, FormFunctions.updatePicker, 'Ninguna sede'
+    );
+
+    FormFunctions.ajaxLoadPicker(
+        '#agentInput', pircker_search_agent_url, FormFunctions.updatePicker, "", "Ningun agente"
+    );
+    
+    FormFunctions.ajaxLoadPicker(
+        '#sedeInput', pircker_search_sede_url, FormFunctions.updatePicker, "", "Ninguna sede"
+    );
 
     if(id != 0){
         getAgentData(id);
         getSedeData(id);
     }
 
-    FormFunctions.setAjaxLoadPicker('#agentInput', pircker_search_agent_url, FormFunctions.updatePicker);
-    FormFunctions.setAjaxLoadPicker('#sedeInput', pircker_search_sede_url, FormFunctions.updatePicker);
 });

@@ -61,7 +61,7 @@
             <div class="col-md-6">
                 <label for="checkboxgroup">Estado</label>
                 <div class="custom-control custom-checkbox" id="checkboxgroup">
-                    <input class="custom-control-input" type="checkbox" value="" id="activeInput">
+                    <input class="custom-control-input" type="checkbox" id="activeInput" checked>
                     <label class="custom-control-label" for="activeInput">Activo</label>
                     <div class="valid-feedback" id='activeValid'>Valid.</div>
                     <div class="invalid-feedback" id = 'activeInvalid'>Please fill out this field.</div>
@@ -105,7 +105,6 @@
 {% block javascript %}
 <script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
 <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
-<script src="{% static 'users/js/app/form.js' %}"></script>
 
 <script>
     id = {{ id }};
@@ -119,6 +118,7 @@
     get_url = get_url.slice(0, -1);
     get_profile_url = get_profile_url.slice(0, -1);
 </script>
+<script src="{% static 'users/js/app/form.js' %}"></script>
 {% block additional_javascript %}
 
 {% endblock additional_javascript %}

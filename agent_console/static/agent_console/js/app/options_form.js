@@ -104,7 +104,15 @@ $( document ).ready(function() {
         }
     );
 
-    FormFunctions.setAjaxLoadPicker('#CAMPAIGN_CONSOLIDACIONInput', picker_search_campaign_url, FormFunctions.updatePicker);
-
+    FormFunctions.setAjaxLoadPicker(
+        '#CAMPAIGN_CONSOLIDACIONInput', picker_search_campaign_url, 
+        FormFunctions.updatePicker, "Seleccione una campaña"
+    );
+    FormFunctions.ajaxLoadPicker(
+        '#CAMPAIGN_CONSOLIDACIONInput', picker_search_campaign_url, 
+        FormFunctions.updatePicker, "Seleccione una campaña"
+    );
+    
+    
     getData();
 });

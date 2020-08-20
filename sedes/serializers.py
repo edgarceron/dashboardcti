@@ -1,5 +1,6 @@
 """Contains the serializers for the sedes module"""
 from rest_framework import serializers
+from dms.models import Bodegas
 from .models import Sede
 
 class SedeSerializer(serializers.ModelSerializer):
@@ -20,3 +21,12 @@ class SedeSerializer(serializers.ModelSerializer):
         instance.active = validated_data["active"]
         instance.save()
         return instance
+
+class BodegasSerializer(serializers.ModelSerializer):
+    """Serializer for Bodegas model"""
+    id = serializers.IntegerField(source='bodega')
+    name = serializers.CharField(source='descripcion')
+
+    class Meta:
+        model = Bodegas
+        fields = ['id', 'name']

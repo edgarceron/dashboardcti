@@ -19,7 +19,11 @@ def get_actions():
         },
         {
             "name": "get_data_dashboard",
-            "label": "Webservice para obtener valores del dashboard"
+            "label": "Webservice para obtener valores del dashboard para llamadas entrantes"
+        },
+        {
+            "name": "get_data_dashboard_out",
+            "label": "Webservice para obtener valores del dashboard para llamadas salientes"
         },
     ]
     return actions
@@ -86,6 +90,21 @@ def get_data_dashboard(request):
     validation = permission_obj.validate('get_data_dashboard')
     if validation['status']:
         data = data_process.data_entry(request)
+
+        return Response(
+            data,
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
+    return permission_obj.error_response_webservice(validation, request)
+
+@api_view(['POST'])
+def get_data_dashboard_out(request):
+    "Return a JSON response with user data for the given id"
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('get_data_dashboard_out')
+    if validation['status']:
+        data = data_process.data_outgoing(request)
 
         return Response(
             data,

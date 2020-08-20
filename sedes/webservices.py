@@ -1,9 +1,10 @@
 """Contains the webservices for the sedes app"""
 from rest_framework.decorators import api_view
 from core.crud.standard import Crud
+from dms.models import Bodegas
 from sedes.business_logic import data_filters
 from .models import Sede
-from .serializers import SedeSerializer
+from .serializers import SedeSerializer, BodegasSerializer
 
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
@@ -15,6 +16,8 @@ def get_actions():
         {"name": "picker_search_sede", "label": "Webservice picker de sedes"},
         {"name": "list_sede", "label": "Webservice del listado de sedes"},
         {"name": "toggle_sede", "label": "Webservice para cambiar estado del sede"},
+        {"name": "picker_search_bodega", "label": "Webservice picker de bodegas dms"},
+        {"name": "get_bodega", "label": "Webservice para obtener bodega dms"},
     ]
     return actions
 
@@ -55,7 +58,19 @@ def picker_search_sede(request):
     return crud_object.picker_search(request, 'picker_search_user')
 
 @api_view(['POST'])
+def picker_search_bodega(request):
+    "Returns a JSON response with sede data for a selectpicker."
+    crud_object = Crud(BodegasSerializer, Bodegas, data_filters.bodegas_picker_filter)
+    return crud_object.picker_search(request, 'picker_search_bodega')
+
+@api_view(['POST'])
 def list_sede(request):
     """Returns a JSON response containing registered sede for a datatable"""
     crud_object = Crud(SedeSerializer, Sede, data_filters.sede_listing_filter)
     return crud_object.listing(request, 'list_sede')
+
+@api_view(['POST'])
+def get_bodega(request, bodega_id):
+    "Return a JSON response with bodega data for the given id"
+    crud_object = Crud(BodegasSerializer, Bodegas)
+    return crud_object.get(request, bodega_id, 'get_bodega')

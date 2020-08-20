@@ -22,23 +22,20 @@ def create_cita(request):
         data = {}
         tall_cita = create_tall_cita(request.data)
 
-        if tall_cita.is_valid():
-            data['tall_cita_data'] = tall_cita.data
-        else:
-            print(tall_cita.errors)
+        if not tall_cita.is_valid():
             data['tall_cita_data'] = tall_cita.errors
 
-        crm_cita = create_crm_cita(tall_cita.data)
+        crm_cita = create_crm_cita(tall_cita.initial_data)
 
-        if crm_cita.is_valid():
-            data['crm_cita_data'] = crm_cita.data
-        else:
+        if not crm_cita.is_valid():
             data['crm_cita_data'] = crm_cita.data
 
         if crm_cita.is_valid() and tall_cita.is_valid():
-            crm_cita.save()
-            tall_cita.save()
-            update_call_consolidacion(request, tall_cita['id_cita'], crm_cita['seq'])
+            model_crm = crm_cita.save()
+            model_tall = tall_cita.save()
+            data["tall_cita_id"] = model_tall.id_cita
+            data["crm_cita_id"] = model_crm.seq
+            update_call_consolidacion(request, model_tall.id_cita, model_crm.seq)
             return Response(data, status=status.HTTP_200_OK, content_type='application/json')
         return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
     return permission_obj.error_response_webservice(validation, request)
@@ -217,15 +214,19 @@ def verificar_horarios(sede, fecha):
 def create_mail_and_send(data):
     """Creates the mail template and sends it"""
     tercero = get_tercero(data['cedula'])
+    mail = tercero.mail
+    if mail == "":
+        return 0
     sede = get_sede(data['sede'])
     fecha_hora_creacion = datetime.now()
     placa = data['placa']
     telefonos = format_telefonos(tercero.telefono_1, tercero.telefono_2)
     motivo = Motivo.objects.get(id=data['motivo'])
-    mail = tercero.mail
+    mail = "maurinin@yahoo.com"
     asesor = sede.asesor.name
+    print(mail)
 
-    template = 'agent_console_mail/confirmacion'
+    template = 'agent_console_mail/confirmacion.html'
     to = mail
     context = {
         'placa': placa,
@@ -233,7 +234,7 @@ def create_mail_and_send(data):
         'fecha': data['fecha'],
         'hora': data['hora'],
         'sede': sede.name,
-        'direccion': sede.direccion,
+        'direccion': sede.address,
         'motivo': motivo.name,
         'fecha_solicitud': fecha_hora_creacion,
         'nombre': tercero.nombres,
@@ -241,7 +242,7 @@ def create_mail_and_send(data):
         'correo': mail,
         'telefonos': telefonos
     }
-    mailing.send_confirmacion(to, template, context)
+    return mailing.send_confirmacion(to, template, context)
 
 def datacita():
     context = {

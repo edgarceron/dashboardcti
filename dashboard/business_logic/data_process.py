@@ -1,5 +1,5 @@
 """Data procesing for dashboard requests"""
-from dashboard.business_logic import queue_stadistics, tmo_calls
+from dashboard.business_logic import queue_stadistics, tmo_calls, agent_state_count
 from dashboard.business_logic import calls_per_hour, count_calls, outgoing_stadistics
 def data_outgoing(request):
     """Calls functions to get dashboard data"""
@@ -63,9 +63,17 @@ def data_entry(request):
         start_date, end_date, id_agent, id_campaign
     )
 
+    call_entry_count['before'] = answered_befrore
+
     service_level = tmo_calls.get_service_level(answered_befrore, call_entry_count['total'])
     tmo = tmo_calls.get_tmo(answered_befrore, call_entry_count['terminada'])
-    effectiveness = tmo_calls.get_effectiveness(answered_befrore, call_entry_count['terminada'])
+    effectiveness = tmo_calls.get_effectiveness(
+        call_entry_count['terminada'], call_entry_count['total']
+    )
+
+    agents_logged, agent_list = agent_state_count.get_agents_logged()
+    agents_in_break = agent_state_count.get_agents_in_break(agent_list)
+    agents_in_call = agent_state_count.get_agents_in_call()
 
     response = {
         'call_entry_per_hour': call_entry_per_hour,
@@ -76,6 +84,9 @@ def data_entry(request):
         'tmo': tmo,
         'effectiveness': effectiveness,
         'seconds': seconds,
+        'agents_logged': agents_logged,
+        'agents_in_break': agents_in_break,
+        'agents_in_call': agents_in_call
     }
 
     return response
