@@ -7,7 +7,7 @@ function getValues(){
         'name': $('#nameInput').val(),
         'active': $('#activeInput').prop("checked"),
         "sede" : $('#sedeInput').val(),
-        "asesorq_dms" : $('#asesorq_dmsInput').val()
+        "asesor_dms" : $('#asesor_dmsInput').val()
     }
     return data;
 }
@@ -86,10 +86,6 @@ $( document ).ready(function() {
         }
     );
 
-    if(id!=0){
-        getDataForm();
-    }
-
     FormFunctions.setAjaxLoadPicker(
         '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "Escoja una sede"
     );
@@ -97,5 +93,9 @@ $( document ).ready(function() {
     FormFunctions.ajaxLoadPicker(
         '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "", "Escoja una sede"
     );
+
+    if(id!=0){
+        getDataForm();
+    }
 
 });
