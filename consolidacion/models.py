@@ -29,3 +29,4 @@ class CallConsolidacion(models.Model):
     call = models.IntegerField(null=False, unique=True)
     cita_tall_id = models.IntegerField(null=True, unique=True)
     cita_crm_id = models.IntegerField(null=True, unique=True)
+    call_made = models.BooleanField(null=False, default=False)

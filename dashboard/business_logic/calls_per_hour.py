@@ -81,7 +81,7 @@ def get_calls_per_hour(start_date, end_date, agent, campaign):
     query_base += condition_fecha + conditions_agent + conditions_campaign
     query_all = query_base + ' GROUP BY hr'
     query_abandonadas = query_base + """ AND ((status="Abandoned")
-    OR (status="Failure") OR (status="ShortCall")) GROUP BY hr"""
+    OR (status="Failure") OR (status="ShortCall") OR (status="NoAnswer")) GROUP BY hr"""
     query_terminadas = query_base + ' AND (status="Success") GROUP BY hr'
     query_pendientes = query_base + ' AND ((status is NULL) OR (status="Placing")) GROUP BY hr'
 

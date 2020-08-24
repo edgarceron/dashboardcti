@@ -14,6 +14,7 @@ def set_unset_user_agent(request):
         user_agent_obj = UserAgent.objects.get(user=user_id)
         user_agent_serializer = UserAgentSerializer(user_agent_obj, data=data)
     except UserAgent.DoesNotExist:
+        user_agent_obj = None
         user_agent_serializer = UserAgentSerializer(data=data)
 
     if user_agent_serializer.is_valid():
@@ -23,8 +24,9 @@ def set_unset_user_agent(request):
             status=status.HTTP_200_OK,
             content_type='application/json'
         )
-    elif data['agent'] is None:
-        user_agent_obj.delete()
+    elif data['agent'] is None or data['agent'] == "":
+        if user_agent_obj is not None:
+            user_agent_obj.delete()
         return Response(
             {"success": True, "message":"Usuario se guarda sin agente"},
             status=status.HTTP_200_OK,
@@ -47,6 +49,7 @@ def set_unset_user_sede(request):
         user_sede_obj = UserSede.objects.get(user=user_id)
         user_sede_serializer = UserSedeSerializer(user_sede_obj, data=data)
     except UserSede.DoesNotExist:
+        user_sede_obj = None
         user_sede_serializer = UserSedeSerializer(data=data)
 
     if user_sede_serializer.is_valid():
@@ -56,8 +59,9 @@ def set_unset_user_sede(request):
             status=status.HTTP_200_OK,
             content_type='application/json'
         )
-    elif data['sede'] is None:
-        user_sede_obj.delete()
+    elif data['sede'] is None or data['sede'] == "":
+        if user_sede_obj is not None:
+            user_sede_obj.delete()
         return Response(
             {"success": True, "message":"Usuario se guarda sin sede"},
             status=status.HTTP_200_OK,

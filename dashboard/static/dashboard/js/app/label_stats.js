@@ -14,7 +14,7 @@ function setStatsAgents(agents_logged, agents_in_break, agents_in_call){
 
 function setStatsLabelsOut(callsCount){
     var pendientes = callsCount["Placing"] + callsCount[null];
-    var fallidas = callsCount["Abandoned"] + callsCount["Failure"] + callsCount["ShortCall"];
+    var fallidas = callsCount["Abandoned"] + callsCount["Failure"] + callsCount["ShortCall"] + callsCount["NoAnswer"];
     $("#lblTotalOut").html(callsCount["total"]);
     $("#lblTerminadasOut").html(callsCount["Success"]);
     $("#lblFallidas").html(fallidas);

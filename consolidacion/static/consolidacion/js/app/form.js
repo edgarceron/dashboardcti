@@ -32,13 +32,18 @@ function validateCedula(){
 function saveForm(){
     var ajaxFunctions = {
         'success': function(result){
-            FormFunctions.resetFormErrors(errorFields);
-            errorFields = [];
-            $('#successModal').modal('toggle');
-            $('#successModal').modal({backdrop:'static', keyboard:false}); 
-            setTimeout(function(){ 
-                $(location).attr('href', listing_url);
-            }, 2000);
+            if(result.success){
+                FormFunctions.resetFormErrors(errorFields);
+                errorFields = [];
+                $('#successModal').modal('toggle');
+                $('#successModal').modal({backdrop:'static', keyboard:false}); 
+                setTimeout(function(){
+                    $(location).attr('href', listing_url);
+                }, 2000);
+            }
+            else{
+                SoftNotification.show(result.message, "danger");
+            }
         },
         'error': standard.standardError
     }
@@ -48,13 +53,18 @@ function saveForm(){
 function updateForm(){
     var ajaxFunctions = {
         'success': function(result){
-            FormFunctions.resetFormErrors(this.errorFields);
-            this.errorFields = [];
-            $('#successModal').modal('toggle');
-            $('#successModal').modal({backdrop:'static', keyboard:false}); 
-            setTimeout(function(){ 
-                $(location).attr('href', listing_url);
-            }, 2000);
+            if(result.success){
+                FormFunctions.resetFormErrors(this.errorFields);
+                this.errorFields = [];
+                $('#successModal').modal('toggle');
+                $('#successModal').modal({backdrop:'static', keyboard:false}); 
+                setTimeout(function(){ 
+                    $(location).attr('href', listing_url);
+                }, 2000);
+            }
+            else{
+                SoftNotification.show(result.message, "danger");
+            }
         },
         'error': standard.standardError
     }

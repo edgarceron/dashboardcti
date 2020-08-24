@@ -45,7 +45,7 @@ def replace_user(request, user_id):
         if password == "":
             data['password'] = user_obj.password
         else:
-            data = login_management.password_encode(data) 
+            data = login_management.password_encode(data)
 
         user_serializer = UserSerializer(user_obj, data=data)
 
@@ -59,7 +59,7 @@ def replace_user(request, user_id):
 
         data = Crud.error_data(user_serializer)
         return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
-    return PermissionValidation.error_response_webservice(validation, request)
+    return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])
 def get_user(request, user_id):

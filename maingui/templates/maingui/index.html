@@ -11,7 +11,9 @@
     <title>{% block title %}Pagína Principal{% endblock %}</title>
     {% load static %}
     {% include "./cssload.html" %}
+    {% block css %}{% endblock %}
     {% include "./jscriptload.html" %}
+    
     <!-- Bootstrap core JavaScript-->
 
 </head>

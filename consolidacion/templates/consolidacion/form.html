@@ -3,65 +3,64 @@
 {% block title %}
 Citas
 {% endblock %}
+{% block css %}
 
+{% endblock %}
 {% block topTitle %}
 Citas
 {% endblock %}
 {% block content %}
 <div class="row">
-    <form action="" class="needs-validation w-100" novalidate>
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="cedulaInput">Cedula cliente</label>
-                    <input type="text" class="form-control appform" id="cedulaInput" required>
-                    <div class="valid-feedback" id='cedulaValid'>Valid.</div>
-                    <div class="invalid-feedback" id = 'cedulaInvalid'>Please fill out this field.</div>
+    <div class="col-md-6">
+        <form action="" class="needs-validation w-100" novalidate> 
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="cedulaInput">Cedula cliente</label>
+                        <input type="text" class="form-control appform" id="cedulaInput" required>
+                        <div class="valid-feedback" id='cedulaValid'>Valid.</div>
+                        <div class="invalid-feedback" id = 'cedulaInvalid'>Please fill out this field.</div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="placaInput">Placa vehiculo</label>
-                    <input type="text" class="form-control appform" id="placaInput" required>
-                    <div class="valid-feedback" id='placaValid'>Valid.</div>
-                    <div class="invalid-feedback" id = 'placaInvalid'>Please fill out this field.</div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="placaInput">Placa vehiculo</label>
+                        <input type="text" class="form-control appform" id="placaInput" required>
+                        <div class="valid-feedback" id='placaValid'>Valid.</div>
+                        <div class="invalid-feedback" id = 'placaInvalid'>Please fill out this field.</div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="fechaInput">Fecha</label>
-                    <input type="date" class="form-control appform" id="fechaInput" required>
-                    <div class="valid-feedback" id='fechaValid'>Valid.</div>
-                    <div class="invalid-feedback" id = 'fechaInvalid'>Please fill out this field.</div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="fechaInput">Fecha</label>
+                        <input type="date" class="form-control appform" id="fechaInput" required>
+                        <div class="valid-feedback" id='fechaValid'>Valid.</div>
+                        <div class="invalid-feedback" id = 'fechaInvalid'>Please fill out this field.</div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class='col-md-6'>
-                <div class='form-group'>
-                    <label for='motivoInput'>Motivo</label>
-                    <select class='form-control appform' id='motivoInput'>
-                    </select>
-                    <div class="valid-feedback" id='motivoValid'>Valid.</div>
-                    <div class="invalid-feedback" id = 'motivoInvalid'>Please fill out this field.</div>
+                <div class='col-md-12'>
+                    <div class='form-group'>
+                        <label for='motivoInput'>Motivo</label>
+                        <select class='form-control appform' id='motivoInput'>
+                        </select>
+                        <div class="valid-feedback" id='motivoValid'>Valid.</div>
+                        <div class="invalid-feedback" id = 'motivoInvalid'>Please fill out this field.</div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class='row'>
-            <div class='col-md-6'>
-                <div class='form-group'>
-                    <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-    </form>
+    <div class="col-md-6 d-none d-sm-none d-md-block">
+        <img src="{% static 'consolidacion/img/undraw_calendar_dutt.svg' %}" class="w-100">
+    </div>
 
 </div>
 

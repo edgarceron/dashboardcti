@@ -1,9 +1,14 @@
 var tmoChart = {};
 var effectivenessChart = {};
 var serviceLevelChart = {};
+var completionChart = {};
+var successChart = {};
+
 var tmoChartCreated = false;
 var effectivenessChartCreated = false;
 var serviceLevelChartCreated = false;
+var completionChartCreated = false;
+var successChartCreated = false;
 
 function createDataDoughnut(percent, labels){
     let other = Math.ceil(100 - percent);
@@ -124,6 +129,34 @@ function drawServiceLevelChart(serviceLevel, segundos){
         var canvas = document.getElementById('canvasServiceLevel');
         serviceLevelChart = createDoughnutSemaphoreChart(data, canvas, 'Nivel de servicio');
         serviceLevelChartCreated = true;
+    }
+}
+
+function drawCompletionChart(completion){
+    var labels = [`Realizadas`, 'Pendientes'];
+    var data = createDataDoughnut(completion, labels);
+    $("#completionLabel").html(`${Math.floor(completion)}%`);
+    if(completionChartCreated){
+        updateDoughnutSemaphoreChart(data, completionChart);
+    }
+    else{
+        var canvas = document.getElementById('canvasCompletion');
+        completionChart = createDoughnutSemaphoreChart(data, canvas, 'Consolidaciones realizadas');
+        completionChartCreated = true;
+    }
+}
+
+function drawSuccessChart(success){
+    var labels = [`Completadas`, 'Intentos fallidos'];
+    var data = createDataDoughnut(success, labels);
+    $("#successLabel").html(`${Math.floor(success)}%`);
+    if(successChartCreated){
+        updateDoughnutSemaphoreChart(data, successChart);
+    }
+    else{
+        var canvas = document.getElementById('canvasSuccess');
+        successChart = createDoughnutSemaphoreChart(data, canvas, 'Efectividad consolidaciones');
+        successChartCreated = true;
     }
 }
 

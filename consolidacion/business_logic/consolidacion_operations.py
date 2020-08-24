@@ -60,13 +60,7 @@ def validate_cedula(request):
 
 def add_sede_operation(request):
     """Return the data alter operation for add or replace crud standard"""
-    permission_obj = PermissionValidation(request)
-    user = permission_obj.user
-    try:
-        user_sede = UserSede.objects.get(user=user.id)
-        sede = user_sede.sede
-    except UserSede.DoesNotExist:
-        sede = None
+    sede = get_user_sede(request)
     def operation(data):
         if sede is not None:
             data['sede'] = sede.id
@@ -74,6 +68,26 @@ def add_sede_operation(request):
             data['sede'] = None
         return data
     return operation
+
+def get_user_sede(request):
+    """Gets the sede of the current logged user"""
+    permission_obj = PermissionValidation(request)
+    user = permission_obj.user
+    try:
+        user_sede = UserSede.objects.get(user=user.id)
+        sede = user_sede.sede
+    except UserSede.DoesNotExist:
+        sede = None
+    return sede
+
+def answer_not_user_sede():
+    """Return an answer when user does not have a sede"""
+    return Response({
+        'success': False,
+        'message':"""Error: Su usuario no esta asociado a una sede.
+        Utilice la opción para subir datos por csv o contactese con
+        el administrador"""
+    }, status.HTTP_200_OK, content_type='application/json')
 
 def put_sede_motivo(request, queryset):
     """Puts the sede and motivo name to each object of the queryset"""
@@ -96,9 +110,11 @@ def put_sede_motivo(request, queryset):
         else:
             motivo = consolidacion.motivo.name
             motivo_id = consolidacion.motivo.id
-        
+
         consolidaciones.append(
-            ConsolidacionList(id_consolidacion, cedula, placa, fecha, motivo, sede, motivo_id, sede_id)
+            ConsolidacionList(
+                id_consolidacion, cedula, placa, fecha, motivo, sede, motivo_id, sede_id
+            )
         )
     return consolidaciones
 

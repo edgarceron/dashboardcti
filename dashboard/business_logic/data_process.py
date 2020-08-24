@@ -1,6 +1,8 @@
 """Data procesing for dashboard requests"""
 from dashboard.business_logic import queue_stadistics, tmo_calls, agent_state_count
 from dashboard.business_logic import calls_per_hour, count_calls, outgoing_stadistics
+from dashboard.business_logic import conversion_rate
+
 def data_outgoing(request):
     """Calls functions to get dashboard data"""
     data = request.data
@@ -26,11 +28,26 @@ def data_outgoing(request):
         start_date, end_date, id_agent, id_campaign
     )
 
+    today_consolidacion = conversion_rate.get_today_consolidacion()
+    pending_consolidacion = conversion_rate.get_today_pending_consolidacion()
+    success_consolidacion = conversion_rate.get_success_consolidacion()
+    dialed_consolidacion = conversion_rate.get_dialed_consolidacion()
+
+    completion_rate = conversion_rate.get_completion_rate(
+        pending_consolidacion, today_consolidacion
+    )
+
+    success_rate = conversion_rate.get_success_rate(
+        success_consolidacion, dialed_consolidacion
+    )
+
     response = {
         'calls_out_per_hour': calls_out_per_hour,
         'calls_count': calls_count,
         'average_outgoing_duration': average_outgoing_duration,
-        'longets_outgoing_call': longets_outgoing_call
+        'longets_outgoing_call': longets_outgoing_call,
+        'completion_rate': completion_rate,
+        'success_rate': success_rate,
     }
 
     return response

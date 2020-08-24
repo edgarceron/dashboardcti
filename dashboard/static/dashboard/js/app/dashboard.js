@@ -25,6 +25,8 @@ function getDataOut(){
         'success': function(result){
             drawHoursChartOut(result.calls_out_per_hour);
             setStatsLabelsOut(result.calls_count);
+            drawCompletionChart(result.completion_rate);
+            drawSuccessChart(result.success_rate);
         },
         'error': standard.standardError,
         'complete': function(){

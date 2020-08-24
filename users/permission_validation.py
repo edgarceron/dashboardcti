@@ -46,6 +46,11 @@ class PermissionValidation():
                     'status': False,
                     'error': "Database error"
                 }
+            except AttributeError:
+                return {
+                    'status': False,
+                    'error': "Forbidden"
+                }
         else:
             return {'status': False, 'error':'Not logged'}
 
