@@ -22,7 +22,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     """Serializer for Question model"""
     class Meta:
         model = Question
-        fields = ['id', 'text', 'question_type', 'empty']
+        fields = ['id', 'text', 'question_type', 'empty', 'form', 'position']
 
     def create(self, validated_data):
         question_obj = Question(**validated_data)
@@ -30,9 +30,11 @@ class QuestionSerializer(serializers.ModelSerializer):
         return question_obj
 
     def update(self, instance, validated_data):
-        instance.name = validated_data["text"]
-        instance.name = validated_data["question_type"]
-        instance.name = validated_data["empty"]
+        instance.text = validated_data["text"]
+        instance.question_type = validated_data["question_type"]
+        instance.empty = validated_data["empty"]
+        instance.form = validated_data["form"]
+        instance.position = validated_data["position"]
         instance.save()
         return instance
 
@@ -48,7 +50,7 @@ class AnswerSerializer(serializers.ModelSerializer):
         return question_obj
 
     def update(self, instance, validated_data):
-        instance.name = validated_data["question"]
-        instance.name = validated_data["text"]
+        instance.question = validated_data["question"]
+        instance.text = validated_data["text"]
         instance.save()
         return instance

@@ -38,29 +38,9 @@ def listing_form(request):
     if validation['status']:
         return render(
             request,
-            'maingui/under_construction.html',
+            'form_creator/listing.html',
             {
                 'username': permission_obj.user.name
             }
         )
     return permission_obj.error_response_view(validation, request)
-
-def citas_form(request):
-    """Temp citas"""
-    return render(
-        request,
-        'form_creator/citas.html',
-        {
-            'username': 'Edgar'
-        }
-    )
-
-def confirmacion_form(request):
-    """Temp confirmacion"""
-    return render(
-        request,
-        'form_creator/confirmacion.html',
-        {
-            'username': 'Edgar'
-        }
-    )

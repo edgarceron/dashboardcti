@@ -24,30 +24,19 @@ function linkedListQuestionsDelete(guiIdentifier){
     var before = null;
     var actual = linkedListQuestions;
     do {
+        console.log(actual);
         if(actual.guiIdentifier != guiIdentifier){
             before = actual;
             actual = actual.next;
         }
-    }while (actual.guiIdentifier != guiIdentifier && actual != null);
-
-    if(before != null){
-        before.next = recursivePosChange(actual.next);
-    }
-    else{
-        linkedListQuestions = null;
-    }
-    console.log(linkedListQuestions);
+        else{
+            before.next = actual.next;
+            break;
+        }
+    }while (actual != null);
+    reCalculatePositions();
 }
 
-function recursivePosChange(linked){
-    if(linked == null){
-        return null;
-    }
-    guiIdentifier == linked.guiIdentifier;
-    moveToRelativePosition(guiIdentifier, -1);
-    linked.next = recursivePosChange(linked.next);
-    return linked;
-}
 
 function linkedListQuestionsMoveUp(guiIdentifier){
     actual = linkedListQuestions;
@@ -64,10 +53,8 @@ function linkedListQuestionsMoveUp(guiIdentifier){
         var aux = before.guiIdentifier;
         before.guiIdentifier = actual.guiIdentifier;
         actual.guiIdentifier = aux; 
-        moveToRelativePosition(actual.guiIdentifier, -1);
-        moveToRelativePosition(before.guiIdentifier, 1);     
+        reCalculatePositions();   
     }
-    console.log(linkedListQuestions);
 }
 
 function linkedListQuestionsMoveDown(guiIdentifier){
@@ -83,14 +70,18 @@ function linkedListQuestionsMoveDown(guiIdentifier){
         var aux = next.guiIdentifier;
         next.guiIdentifier = actual.guiIdentifier;
         actual.guiIdentifier = aux;
-        moveToRelativePosition(actual.guiIdentifier, 1);
-        moveToRelativePosition(next.guiIdentifier, -1);        
+        reCalculatePositions();
     }
-    console.log(linkedListQuestions);
 }
 
-function moveToRelativePosition(guiIdentifier, distance){
-    namePosPregunta = "#posPregunta" + guiIdentifier;
-    posPreguntaInput = $(namePosPregunta);
-    posPreguntaInput.val( parseInt(posPreguntaInput.val()) + distance);
+function reCalculatePositions(){
+    var actual = linkedListQuestions;
+    var pos = 1;
+    var namePosPregunta = "";
+    while(actual != null){
+        namePosPregunta = "#posPregunta" + actual.guiIdentifier;
+        $(namePosPregunta).val(pos);
+        pos++;
+        actual = actual.next;
+    }
 }

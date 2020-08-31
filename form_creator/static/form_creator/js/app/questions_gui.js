@@ -1,10 +1,27 @@
 /** Managges the gui elements for creating questions */
-function addFieldsNewQuestion(){
+function addFieldsNewQuestion(idValue=""){
     orderQuestions();
-    var html = htmlPregunta(questions);
+    var html = htmlPregunta(questions, idValue);
     putQuestionHtml(html);
     linkedQuestionListAdd(questions);
+    guiIdentifier = questions;
     questions++;
+    return guiIdentifier;
+}
+
+function setDataQuestion(question, guiIdentifier){
+    var nameTextPregunta = '#textPregunta' + guiIdentifier;
+    var nameTypePregunta = '#typePregunta' + guiIdentifier;
+    var nameNullPregunta = '#nullPregunta' + guiIdentifier;
+    var namePosPregunta = '#posPregunta' + guiIdentifier;
+    
+    $(nameTextPregunta).val(question.text);
+    $(nameTypePregunta).val(question.question_type);
+    $(nameTypePregunta).val(question.question_type);
+    $(nameNullPregunta).prop('checked', questions.empty);
+    $(namePosPregunta).val(question.position);
+
+    changeQuestionBehavior(guiIdentifier);
 }
 
 function putQuestionHtml(html){
@@ -31,12 +48,14 @@ function htmlPregunta(count, idValue=""){
                     </button>        
                 </div>
                 <div class="col">
-                    <button class="btn btn-outline-primary">
-                        <i class="fas fa-fw fa-save" onclick="saveQuestion(${count})"></i>
+                    <button class="btn btn-outline-primary" onclick="saveQuestion(${count})">
+                        <i class="fas fa-fw fa-save"></i>
                     </button>        
                 </div>
                 <div class="col">
-                    <a href="#" onclick="tryDeleteQuestion(${count})"><i class="fas fa-fw fa-times"></i></a>
+                    <button class="btn btn-outline-primary" onclick="tryDeleteQuestion(${count})">
+                        <i class="fas fa-fw fa-times"></i>
+                    </button>   
                 </div>
             </div>
         </div>
@@ -66,7 +85,7 @@ function htmlPregunta(count, idValue=""){
             <div class="col-12">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <button type="button" class="btn btn-primary" onclick="addFieldsNewAnswer(${count})">Otra respuesta</button>
+                        <button type="button" class="btn btn-primary" onclick="addFieldsNewAnswer(${count})" disabled="disabled" id="buttonAnother${count}">Otra respuesta</button>
                     </li>
                 </ul>
             </div>

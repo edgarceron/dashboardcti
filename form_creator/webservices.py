@@ -1,10 +1,7 @@
 """Contains the webservices for the form_creator app"""
-from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
 from core.crud.standard import Crud
-from users.permission_validation import PermissionValidation
-from form_creator.business_logic import data_filters
+from form_creator.business_logic import data_filters, form_data_management
 from .models import Form, Question, Answer
 from .serializers import FormSerializer, QuestionSerializer, AnswerSerializer
 
@@ -24,7 +21,11 @@ def get_actions():
         {"name": "change_question_position", "label": "Webservice cambiar posición de la pregunta"},
         {"name": "add_answer", "label": "Webservice crear respuesta"},
         {"name": "replace_answer", "label": "Webservice actualizar respuesta"},
-        {"name": "delete_answer", "label": "Webservice borrar respuesta"}
+        {"name": "delete_answer", "label": "Webservice borrar respuesta"},
+        {
+            "name": "get_questions_form",
+            "label": "Webservice cargar preguntas en el generador de formularios"
+        },
     ]
     return actions
 
@@ -109,3 +110,8 @@ def delete_answer(request, answer_id):
     """Tries to delete an answer and returns the result."""
     crud_object = Crud(AnswerSerializer, Answer)
     return crud_object.delete(request, answer_id, 'delete_answer', "Pregunta elminada exitosamente")
+
+@api_view(['POST'])
+def get_questions_form(request, form_id):
+    """Returns a json rensponse with the questions for the given form"""
+    return form_data_management.get_questions_form(request, form_id)

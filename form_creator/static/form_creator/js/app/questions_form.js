@@ -5,17 +5,19 @@ function saveQuestion(guiIdentifier){
     var nameNullPregunta = '#nullPregunta' + guiIdentifier;
     var nameIdPregunta = '#idPregunta' + guiIdentifier;
     var nameAlteredPregunta = '#alteredPregunta' + guiIdentifier;
+    var namePosPregunta = '#posPregunta' + guiIdentifier;
 
     var idPregunta = $(nameIdPregunta).val();
     data = {
         'text': $(nameTextPregunta).val(),
         'question_type': $(nameTypePregunta).val(),
-        'empty': $(nameNullPregunta).val(),
+        'empty': $(nameNullPregunta).is(':checked'),
+        'position': $(namePosPregunta).val(),
         'form': id
     };
 
     if(idPregunta == ""){
-        addQuestion(data);
+        addQuestion(data, nameIdPregunta);
     }
     else{
         updateQuestion(idPregunta, data);
@@ -25,7 +27,9 @@ function saveQuestion(guiIdentifier){
 
 var toBeDeleted;
 function deleteQuestion(idQuestion){
-    urls['delete_url'].url = urls['delete_url'].url + idQuestion;
+    raw_delete_url = standard_question.urls['delete_url'].url
+
+    standard_question.urls['delete_url'].url = raw_delete_url + idQuestion;
     var ajaxFunctions = {
         'success': function(result){
             SoftNotification.show('Pregunta eliminada con exito');
@@ -33,6 +37,7 @@ function deleteQuestion(idQuestion){
         }
     }
     standard_question.makePetition(null, 'delete_url', ajaxFunctions);
+    standard_question.urls['delete_url'].url = raw_delete_url;
 }
 
 function tryDeleteQuestion(guiIdentifier){
@@ -43,7 +48,7 @@ function tryDeleteQuestion(guiIdentifier){
         guiDeleteQuestion();
     }
     else{
-        standard_question.standardDeleteConfirmation(idPregunta, deleteQuestion);
+        deleteQuestion(idPregunta);
     }
 }
 
@@ -54,23 +59,58 @@ function guiDeleteQuestion(){
 }
 
 
-function addQuestion(data){
+function addQuestion(data, nameIdPregunta){
     var ajaxFunctions = {
         'success': function(result){
             SoftNotification.show('Pregunta guardada con exito');
-            question_type = ['question_type'] 
-            if(question_type == 3 || question_type == 4){
-                
-            }
+            $(nameIdPregunta).val(result.id);
         }
     }
 
     standard_question.makePetition(data, 'add_url', ajaxFunctions);
 }
 
+function updateQuestion(idPregunta, data){
+    raw_replace_url = standard_question.urls['replace_url'].url
+    standard_question.urls['replace_url'].url = raw_replace_url + idPregunta;
+    var ajaxFunctions = {
+        'success': function(result){
+            SoftNotification.show('Pregunta actualizada con exito');
+        }
+    }
+
+    standard_question.makePetition(data, 'replace_url', ajaxFunctions);
+    standard_question.urls['replace_url'].url = raw_replace_url;
+}
+
 function questionAltered(guiIdentifier){
     var nameAlteredPregunta = '#alteredPregunta' + guiIdentifier;
     $(nameAlteredPregunta).val("1");
+    changeQuestionBehavior(guiIdentifier);
+    changes = true;
+}
+
+function changeQuestionBehavior(guiIdentifier){
+    var nameTypePregunta = '#typePregunta' + guiIdentifier;
+    var question_type = $(nameTypePregunta).val();
+    var botonOtraPregunta = '#buttonAnother' + guiIdentifier;
+    if(question_type == 3 || question_type == 4){
+        $(botonOtraPregunta).removeAttr("disabled");
+    }
+    else{
+        deleteAllAnswers();
+        $(botonOtraPregunta).attr("disabled","disabled");
+
+    }
+}
+
+function deleteAllAnswers(guiIdentifier){
+    var nameRespuestasPregunta = '#respuestasPregunta' + guiIdentifier;
+    var html = `
+        <div class="col-12" id="respuestasPregunta${guiIdentifier}">
+        </div>
+    `;
+    $(nameRespuestasPregunta).html(html);
 }
 
 function sortQuestionUp(guiIdentifier){
@@ -88,16 +128,19 @@ function orderQuestions(){
         var actual = linkedListQuestions;
         var container = $("#questionsContainer");
         var html  = '';
-        var namePosPregunta;
+        var nameQuestionContainer;
+        var nameTextPregunta;
+        var nameTypePregunta;
+        var nameNullPregunta;
 
         do {
-            var nameQuestionContainer = "#questionContainer" + actual.guiIdentifier;
-            var nameTextPregunta = '#textPregunta' + actual.guiIdentifier;
-            var nameTypePregunta = '#typePregunta' + actual.guiIdentifier;
-            var nameNullPregunta = '#nullPregunta' + actual.guiIdentifier;
+            nameQuestionContainer = "#questionContainer" + actual.guiIdentifier;
+            nameTextPregunta = '#textPregunta' + actual.guiIdentifier;
+            nameTypePregunta = '#typePregunta' + actual.guiIdentifier;
+            nameNullPregunta = '#nullPregunta' + actual.guiIdentifier;
             $(nameTextPregunta).attr('value', $(nameTextPregunta).val());
             nameTypePregunta = nameTypePregunta + " option[value='" + $(nameTypePregunta).val() + "']";
-            console.log(nameTypePregunta);
+
             $(nameTypePregunta).attr('selected', 'selected');
             if ($(nameNullPregunta).is(":checked")){
                 $(nameNullPregunta).attr('checked', 'Yes');

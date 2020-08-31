@@ -145,12 +145,9 @@ class Crud():
         validation = permission_obj.validate(action_name)
         if validation['status']:
             value = request.data['value']
-
             queryset = self.operation(value)
             serializer = self.serializer_class(queryset, many=True)
-            print(serializer)
             result = serializer.data
-            print(serializer.data)
             data = {
                 "success": True,
                 "result": result

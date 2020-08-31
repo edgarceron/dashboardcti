@@ -98,6 +98,7 @@
 <script src="{% static 'form_creator/js/app/questions_linked_list.js' %}"></script>
 <script src="{% static 'form_creator/js/app/questions_form.js' %}"></script>
 <script src="{% static 'form_creator/js/app/answer_gui.js' %}"></script>
+<script src="{% static 'form_creator/js/app/answers_form.js' %}"></script>
 <script src="{% static 'form_creator/js/app/form.js' %}"></script>
 
 <script>
@@ -105,20 +106,22 @@
     listing_url = "{% url 'listing_form' %}";
     add_url = "{% url 'add_form' %}";
     get_url = "{% url 'get_form' form_id=0 %}";
+    get_questions_form_url = "{% url 'get_questions_form' form_id=0 %}";
     replace_url = "{% url 'replace_form' form_id=0 %}";
-    replace_url = replace_url.slice(0, -1);
     add_question_url = "{% url 'add_question' %}";
-    replace_question_url = "{% url 'replace_question' %}";
-    delete_question_url = "{% url 'delete_question' %}";
+    replace_question_url = "{% url 'replace_question'  question_id=0 %}";
+    delete_question_url = "{% url 'delete_question' question_id=0 %}";
     change_question_position_url = "{% url 'change_question_position' %}";
     add_answer_url = "{% url 'add_answer' %}";
-    replace_answer_url = "{% url 'replace_answer' %}";
-    delete_answer_url = "{% url 'delete_answer' %}";
+    replace_answer_url = "{% url 'replace_answer' answer_id=0 %}";
+    delete_answer_url = "{% url 'delete_answer' answer_id=0 %}";
 
     get_url = get_url.slice(0, -1);
-    if(id != 0){
-        replace_url = replace_url + "" + id;
-    }
+    replace_url = replace_url.slice(0, -1);
+    get_questions_form_url = get_questions_form_url.slice(0, -1);
+    replace_question_url = replace_question_url.slice(0, -1);
+    delete_answer_url = delete_answer_url.slice(0, -1);
+    delete_question_url = delete_question_url.slice(0, -1);
 </script>
 {% block additional_javascript %}
 
