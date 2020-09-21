@@ -1,0 +1,11 @@
+.save-all {
+    position: fixed;
+    right: 4.75rem;
+    bottom: 1rem;
+    width: 10rem;
+    height: 2.75rem;
+    text-align: center;
+    color: #fff;
+    background: rgba(90, 92, 105, 0.5);
+    line-height: 46px;
+}

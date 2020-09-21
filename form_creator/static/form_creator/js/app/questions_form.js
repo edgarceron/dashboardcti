@@ -1,13 +1,13 @@
+//TODO Tranform into a class with static method for better recognition
 
-function saveQuestion(guiIdentifier){
+function getFormDataQuestion(guiIdentifier, returnIdentifier=false){
     var nameTextPregunta = '#textPregunta' + guiIdentifier;
     var nameTypePregunta = '#typePregunta' + guiIdentifier;
     var nameNullPregunta = '#nullPregunta' + guiIdentifier;
-    var nameIdPregunta = '#idPregunta' + guiIdentifier;
-    var nameAlteredPregunta = '#alteredPregunta' + guiIdentifier;
     var namePosPregunta = '#posPregunta' + guiIdentifier;
+    var nameIdPregunta = '#idPregunta' + guiIdentifier;
 
-    var idPregunta = $(nameIdPregunta).val();
+    $(nameTextPregunta).removeClass("is-invalid");
     data = {
         'text': $(nameTextPregunta).val(),
         'question_type': $(nameTypePregunta).val(),
@@ -15,13 +15,21 @@ function saveQuestion(guiIdentifier){
         'position': $(namePosPregunta).val(),
         'form': id
     };
+    if($(nameIdPregunta).val() != '') data['id'] = $(nameIdPregunta).val();
+    if(returnIdentifier) data['guiIdentifier'] = guiIdentifier;
+    return data;
+}
 
-    if(idPregunta == ""){
-        addQuestion(data, nameIdPregunta);
-    }
-    else{
-        updateQuestion(idPregunta, data);
-    }
+function saveQuestion(guiIdentifier){
+    var nameIdPregunta = '#idPregunta' + guiIdentifier;
+    var nameAlteredPregunta = '#alteredPregunta' + guiIdentifier;
+
+    var idPregunta = $(nameIdPregunta).val();
+    data = getFormDataQuestion(guiIdentifier);
+
+    if(idPregunta == "") addQuestion(data, nameIdPregunta, guiIdentifier);
+    else updateQuestion(idPregunta, data, guiIdentifier);
+    
     $(nameAlteredPregunta).val("0");
 }
 
@@ -44,12 +52,18 @@ function tryDeleteQuestion(guiIdentifier){
     toBeDeleted = guiIdentifier;
     var nameIdPregunta = '#idPregunta' + guiIdentifier;
     idPregunta = $(nameIdPregunta).val();
-    if(idPregunta == ""){
-        guiDeleteQuestion();
-    }
-    else{
+    if(idPregunta == "") guiDeleteQuestion();
+    else showConfirmationModal(idPregunta);
+}
+
+function showConfirmationModal(idPregunta){
+    $("#confirm_button").unbind("click");
+    $('#confirm_button').click(function(){
         deleteQuestion(idPregunta);
-    }
+        $("#cautionModal").modal('toggle');
+    });
+    $("#cautionModal").modal('toggle');
+    console.log("SHOW");
 }
 
 function guiDeleteQuestion(){
@@ -58,24 +72,42 @@ function guiDeleteQuestion(){
     linkedListQuestionsDelete(toBeDeleted);
 }
 
+function saveError(request, guiIdentifier){
+    var details = request.responseJSON.Error.details;
+    for(field in details){
+        if( details[field].field == "text") setQuestionInvalid(guiIdentifier);
+    }
+}
 
-function addQuestion(data, nameIdPregunta){
+function setQuestionValidity(guiIdentifier, valid){
+    var nameTextPregunta = '#textPregunta' + guiIdentifier;
+    if (!valid) $(nameTextPregunta).addClass("is-invalid");
+    else $(nameTextPregunta).removeClass("is-invalid");
+}
+
+function addQuestion(data, nameIdPregunta, guiIdentifier){
     var ajaxFunctions = {
         'success': function(result){
             SoftNotification.show('Pregunta guardada con exito');
             $(nameIdPregunta).val(result.id);
+        },
+        'error': function(request, status, error, result){
+            saveError(request, guiIdentifier);
         }
     }
 
     standard_question.makePetition(data, 'add_url', ajaxFunctions);
 }
 
-function updateQuestion(idPregunta, data){
+function updateQuestion(idPregunta, data, guiIdentifier){
     raw_replace_url = standard_question.urls['replace_url'].url
     standard_question.urls['replace_url'].url = raw_replace_url + idPregunta;
     var ajaxFunctions = {
         'success': function(result){
             SoftNotification.show('Pregunta actualizada con exito');
+        },
+        'error': function(request, status, error, result){
+            saveError(request, guiIdentifier);
         }
     }
 
@@ -102,6 +134,12 @@ function changeQuestionBehavior(guiIdentifier){
         $(botonOtraPregunta).attr("disabled","disabled");
 
     }
+}
+
+function isQuestionValid(guiIdentifier){
+    var nameText = "#textPregunta" + guiIdentifier;
+    if( $(nameText).val() != "") return true;
+    return false;
 }
 
 function deleteAllAnswers(guiIdentifier){
@@ -138,6 +176,9 @@ function orderQuestions(){
             nameTextPregunta = '#textPregunta' + actual.guiIdentifier;
             nameTypePregunta = '#typePregunta' + actual.guiIdentifier;
             nameNullPregunta = '#nullPregunta' + actual.guiIdentifier;
+            nameIdPregunta = '#idPregunta' + actual.guiIdentifier;
+            idPregunta = $(nameIdPregunta).val();
+            
             $(nameTextPregunta).attr('value', $(nameTextPregunta).val());
             nameTypePregunta = nameTypePregunta + " option[value='" + $(nameTypePregunta).val() + "']";
 
@@ -145,11 +186,15 @@ function orderQuestions(){
             if ($(nameNullPregunta).is(":checked")){
                 $(nameNullPregunta).attr('checked', 'Yes');
             }
-            html = html + $(nameQuestionContainer)[0].outerHTML;
+            $(nameQuestionContainer).find("[id^=textRespuesta]").each(
+                function(){
+                    $(this).attr("value", $(this).val());
+                }
+            );
+
+            container.append($(nameQuestionContainer));
             actual = actual.next;
         } while (actual != null);
-
-        container.html(html);
     }
 }
 

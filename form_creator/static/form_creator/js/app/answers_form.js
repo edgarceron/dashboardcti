@@ -1,20 +1,40 @@
-function saveAnswer(guiIdentifier){
+//TODO Tranform into a class with static method for better recognition
+
+function getFormDataAnswer(guiIdentifier, returnIdentifier=false){
     var nameTextRespuesta = '#textRespuesta' + guiIdentifier;
-    var nameIdPregunta = '#idPreguntaFk' + guiIdentifier;
+    var namePreguntaGui = '#idPreguntaGui' + guiIdentifier;
+
+    var guiPregunta = $(namePreguntaGui).val();
     var nameIdRespuesta = '#idRespuesta' + guiIdentifier;
-    idRespuesta = $(nameIdRespuesta).val();
+    var nameIdPregunta = '#idPregunta' + guiPregunta;
+
+    var idPregunta = $(nameIdPregunta).val();
+    if (idPregunta == ""){
+        saveQuestion(guiPregunta);
+        idPregunta = $(nameIdPregunta).val();
+        if(idPregunta == ""){
+            SoftNotification.show("No se puede guardar la respuesta en una pregunta invalida","danger");
+        }
+    }
 
     data = {
         'text': $(nameTextRespuesta).val(),
-        'question': $(nameIdPregunta).val(),
+        'question': idPregunta,
     };
+    if($(nameIdRespuesta).val() != '') data['id'] = $(nameIdRespuesta).val();
+    if(returnIdentifier) data['guiIdentifier'] = guiIdentifier;
+    return data;
+}
 
-    if(idRespuesta == ""){
-        addAnswer(data, nameIdRespuesta);
-    }
-    else{
-        updateAnswer(idRespuesta, data);
-    }
+function saveAnswer(guiIdentifier){
+    
+    var nameIdRespuesta = '#idRespuesta' + guiIdentifier;
+    idRespuesta = $(nameIdRespuesta).val();
+
+    data = getFormDataAnswer(guiIdentifier);
+
+    if(idRespuesta == "") addAnswer(data, nameIdRespuesta);
+    else updateAnswer(idRespuesta, data);
 }
 
 function addAnswer(data, nameIdRespuesta){
@@ -28,7 +48,7 @@ function addAnswer(data, nameIdRespuesta){
 }
 
 function updateAnswer(idRespuesta, data){
-    raw_replace_url = standard_answer.urls['replace_url'].url
+    raw_replace_url = standard_answer.urls['replace_url'].url;
     standard_answer.urls['replace_url'].url = raw_replace_url + idRespuesta;
     var ajaxFunctions = {
         'success': function(result){
@@ -38,6 +58,46 @@ function updateAnswer(idRespuesta, data){
 
     standard_answer.makePetition(data, 'replace_url', ajaxFunctions);
     standard_answer.urls['replace_url'].url = raw_replace_url;
+}
+
+function deleteAnswer(idAnswer){
+    raw_delete_url = standard_answer.urls['delete_url'].url
+
+    standard_answer.urls['delete_url'].url = raw_delete_url + idAnswer;
+    var ajaxFunctions = {
+        'success': function(result){
+            SoftNotification.show('Respuesta eliminada con exito');
+            guiDeleteAnswer();
+        }
+    }
+    standard_answer.makePetition(null, 'delete_url', ajaxFunctions);
+    standard_answer.urls['delete_url'].url = raw_delete_url;
+}
+
+var answerToBeDeleted;
+function tryDeleteAnswer(guiIdentifier){
+    answerToBeDeleted = guiIdentifier;
+    var nameIdRespuesta = '#idRespuesta' + guiIdentifier;
+    idRespuesta = $(nameIdRespuesta).val();
+    if(idRespuesta == "") guiDeleteAnswer();
+    else deleteAnswer(idRespuesta);
+}
+
+function guiDeleteAnswer(){
+    var nameAnswerContainer = "#answerContainer" + answerToBeDeleted;
+    $(nameAnswerContainer).remove();
+}
+
+function isAnswerValid(guiIdentifier){
+    var nameText = "#textRespuesta" + guiIdentifier;
+    if( $(nameText).val() != "") return true;
+    return false;
+}
+
+function setAnswerValidity(guiIdentifier, valid){
+    var nameTextPregunta = '#textRespuesta' + guiIdentifier;
+    if (!valid) $(nameTextPregunta).addClass("is-invalid");
+    else $(nameTextPregunta).removeClass("is-invalid");
 }
 
 $( document ).ready(function() {

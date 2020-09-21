@@ -7,6 +7,11 @@
 {% block topTitle %}
 {{ action }} formulario
 {% endblock %}
+
+{% block css %}
+    <link href="{% static 'form_creator/css/custom.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <form action="" class="needs-validation w-100" novalidate>
@@ -48,6 +53,9 @@
                     <button type="button" class="btn btn-primary" id="addQuetionButton" onclick="addFieldsNewQuestion()" disabled>
                         Agregar pregunta
                     </button>
+                    <a class="save-all rounded rounded" id="saveAllButton" href="#">
+                        <i class="fas fa-save"></i> Guardar todo
+                    </a>
                 </div>
             </div>
         </div>
@@ -70,26 +78,10 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" tabindex="-1" role="dialog" id="successModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="modalTitle">Unos segundos por favor</h5>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-success" role="alert" id="modalMessage">
-                    Guardado con exito!
-                </div>
-            </div>
-            <div class="modal-footer">
-                Redirigiendo...
-            </div>
-        </div>
-    </div>
-</div>
-
 {% endblock content %}
+
+
+
 {% block javascript %}
 <script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
 <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
@@ -115,6 +107,7 @@
     add_answer_url = "{% url 'add_answer' %}";
     replace_answer_url = "{% url 'replace_answer' answer_id=0 %}";
     delete_answer_url = "{% url 'delete_answer' answer_id=0 %}";
+    save_all_url = "{% url 'save_all' %}";
 
     get_url = get_url.slice(0, -1);
     replace_url = replace_url.slice(0, -1);
@@ -123,11 +116,9 @@
     delete_answer_url = delete_answer_url.slice(0, -1);
     delete_question_url = delete_question_url.slice(0, -1);
 </script>
+{% endblock javascript %}
 {% block additional_javascript %}
 
 {% endblock additional_javascript %}
-
-{% endblock javascript %}
-
 
     

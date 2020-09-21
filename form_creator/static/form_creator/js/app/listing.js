@@ -1,3 +1,5 @@
+//TODO Tranform into a class with static method for better recognition
+
 var standard;
 var urls;
 
@@ -16,7 +18,6 @@ function deleteForm(form_id){
 }
 
 function toogleFormState(form_id, square_element){
-    console.log(form_id);
     urls['toggle_url'] = {'url' : toggle_url + form_id, 'method':'POST'};
     standard = new StandardCrud(urls);
     var ajaxFunctions = {

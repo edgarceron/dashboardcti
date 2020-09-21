@@ -22,6 +22,7 @@ def get_actions():
         {"name": "add_answer", "label": "Webservice crear respuesta"},
         {"name": "replace_answer", "label": "Webservice actualizar respuesta"},
         {"name": "delete_answer", "label": "Webservice borrar respuesta"},
+        {"name": "save_all", "label": "Webservice para guardar todo un formulario"},
         {
             "name": "get_questions_form",
             "label": "Webservice cargar preguntas en el generador de formularios"
@@ -105,7 +106,7 @@ def replace_answer(request, answer_id):
     crud_object = Crud(AnswerSerializer, Answer)
     return crud_object.replace(request, answer_id, 'replace_answer')
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 def delete_answer(request, answer_id):
     """Tries to delete an answer and returns the result."""
     crud_object = Crud(AnswerSerializer, Answer)
@@ -115,3 +116,8 @@ def delete_answer(request, answer_id):
 def get_questions_form(request, form_id):
     """Returns a json rensponse with the questions for the given form"""
     return form_data_management.get_questions_form(request, form_id)
+
+@api_view(['POST'])
+def save_all(request):
+    """Saves form, questions and answers"""
+    return form_data_management.save_all(request)

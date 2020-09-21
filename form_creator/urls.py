@@ -34,4 +34,5 @@ urlpatterns = [
         webservices.get_questions_form,
         name='get_questions_form'
     ),
+    path('save_all', webservices.save_all, name='save_all'),
 ]

@@ -1,3 +1,4 @@
+//TODO Tranform into a class with static method for better recognition
 
 function linkedQuestionListAdd(guiIdentifier){
     var pos = 1;

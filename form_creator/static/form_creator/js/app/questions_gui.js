@@ -1,4 +1,6 @@
 /** Managges the gui elements for creating questions */
+//TODO Tranform into a class with static method for better recognition
+
 function addFieldsNewQuestion(idValue=""){
     orderQuestions();
     var html = htmlPregunta(questions, idValue);
@@ -40,12 +42,12 @@ function htmlPregunta(count, idValue=""){
                     <label class="custom-control-label" for="nullPregunta${count}">Obligatoria</label>
                 </div>
                 <div class="col btn-group btn-group-toggle">
-                    <button type="button" class="btn btn-primary">
-                        <i class="fas fa-chevron-down" onclick="sortQuestionDown(${count})"></i>
-                    </button>  
-                    <button type="button" class="btn btn-primary">
-                        <i class="fas fa-chevron-up" onclick="sortQuestionUp(${count})"></i>
-                    </button>        
+                    <button type="button" class="btn btn-primary" onclick="sortQuestionDown(${count})">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="sortQuestionUp(${count})">
+                        <i class="fas fa-chevron-up"></i>
+                    </button> 
                 </div>
                 <div class="col">
                     <button class="btn btn-outline-primary" onclick="saveQuestion(${count})">
@@ -60,17 +62,17 @@ function htmlPregunta(count, idValue=""){
             </div>
         </div>
         <div class="row pl-2 pb-2" id="div-pregunta${count}">
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <label for="textPregunta${count}">Pregunta</label>
                 <input type="text" class="form-control" onkeydown="questionAltered(${count})" id="textPregunta${count}" required>
             </div>
             <div class="col-md-4">
                 <label for="typePregunta${count}">Tipo</label>
                 <select class="form-control" onchange="questionAltered(${count})" id="typePregunta${count}">
-                <option value="1">Falso o verdadero</option>
-                <option value="2">Texto</option>
-                <option value="3">Multiples opciones, una respuesta</option>
-                <option value="4">Multiples opciones, multiples respuestas</option>
+                    <option value="1">Falso o verdadero</option>
+                    <option value="2">Texto</option>
+                    <option value="3">Multiples opciones, una respuesta</option>
+                    <option value="4">Multiples opciones, multiples respuestas</option>
                 </select>
                 <input type="hidden" id="idPregunta${count}" value="${idValue}">
                 <input type="hidden" id="alteredPregunta${count}" value="0">
