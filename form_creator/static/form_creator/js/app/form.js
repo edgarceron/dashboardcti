@@ -105,15 +105,15 @@ function getAllData(){
     var question_data = [];
     var answer_data = [];
     
-    question_data = auxGetAll(
-        questions, '#questionContainer', isQuestionValid,
-        getFormDataQuestion, setQuestionValidity
-    );
-
     answer_data = auxGetAll(
         answers, '#answerContainer', isAnswerValid,
         getFormDataAnswer, setAnswerValidity
     )
+
+    question_data = auxGetAll(
+        questions, '#questionContainer', isQuestionValid,
+        getFormDataQuestion, setQuestionValidity
+    );
 
     data = {
         'form': JSON.stringify(getValues()),
