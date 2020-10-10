@@ -16,31 +16,28 @@ from sedes.models import Sede
 # tall_cita.is_valid()
 # tall_cita.errors
 def create_cita(request):
-    permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('validate_cedula')
-    if validation['status']:
-        data = {}
-        tall_cita = create_tall_cita(request.data)
+    data = {}
+    tall_cita = create_tall_cita(request.data)
 
-        if not tall_cita.is_valid():
-            data['tall_cita_data'] = tall_cita.errors
+    if not tall_cita.is_valid():
+        data['tall_cita_data'] = tall_cita.errors
 
-        crm_cita = create_crm_cita(tall_cita.initial_data)
+    crm_cita = create_crm_cita(tall_cita.initial_data)
 
-        if not crm_cita.is_valid():
-            data['crm_cita_data'] = crm_cita.data
+    if not crm_cita.is_valid():
+        data['crm_cita_data'] = crm_cita.data
 
-        if crm_cita.is_valid() and tall_cita.is_valid():
-            model_crm = crm_cita.save()
-            model_tall = tall_cita.save()
-            data["tall_cita_id"] = model_tall.id_cita
-            data["crm_cita_id"] = model_crm.seq
-            update_call_consolidacion(request, model_tall.id_cita, model_crm.seq)
-            return Response(data, status=status.HTTP_200_OK, content_type='application/json')
-        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
-    return permission_obj.error_response_webservice(validation, request)
+    if crm_cita.is_valid() and tall_cita.is_valid():
+        model_crm = crm_cita.save()
+        model_tall = tall_cita.save()
+        data["tall_cita_id"] = model_tall.id_cita
+        data["crm_cita_id"] = model_crm.seq
+        update_call_consolidacion(request, model_tall.id_cita, model_crm.seq)
+        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+    return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
 
 def update_call_consolidacion(request, tall_cita, crm_cita):
+    """Updates a call_consolidacion when a call is registered to it"""
     id_cc = request.data['call_consolidacion_id']
     call_consolidacion = CallConsolidacion.objects.get(id=id_cc)
     call_consolidacion.cita_tall_id = tall_cita

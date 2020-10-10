@@ -60,6 +60,13 @@ def options_form(request):
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('options_form')
     if validation['status']:
+        # TODO:
+        # Break -> Los datos de los recesos
+        # Listar todos los break
+        # Al lado de cada brek aparece un tiempo
+        # Crear una tabla para guardar los tiempos
+        # int  break -> Integer, time -> Integer
+        # Rutina -> borrar de nuestra base de datos los breaks que no aparezcan en el call_center
         data = {
             "success": "True",
             'username': permission_obj.user.name
