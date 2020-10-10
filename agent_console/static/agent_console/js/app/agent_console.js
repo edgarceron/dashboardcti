@@ -12,42 +12,10 @@ function getValues(){
         'fecha': $('#fechaInput').val(),
         'hora': $('#horaInput').val(),
         'motivo': $('#motivoInput').val(),
-        'call_consolidacion_id': call_consolidacion_id,
+        'call_consolidacion_id': $('#call_consolidacion_idInput').val(),
     }
     data_email = data;
     return data;
-}
-
-function setCallConsolidacionId(id){
-    call_consolidacion_id = id;
-}
-
-function getHorariosDisponibles(){
-    data = {
-        'sede': $('#sedeInput').val(),
-        'fecha': $('#fechaInput').val()
-    }
-    $('#horaInput').prop('disabled', 'disabled');
-    standard.async = true;
-    var ajaxFunctions = {
-        'success': function(result){
-            var horarios = result.horarios
-            $('#horaInput').empty();
-            horarios.forEach(element => {
-                $('#horaInput').append($('<option>').val(element).text(element));
-            });
-            $('#horaInput').prop('disabled', false);
-        },
-        'error': function(request, status, error){
-            var result = request.responseJSON
-            if($('#fechaInput').val() != ""){
-                SoftNotification.show(result.message, 'danger');
-            }
-            $('#horaInput').empty();
-        }
-    }
-    standard.makePetition(getValues(), 'check_horarios', ajaxFunctions);
-    standard.async = false;
 }
 
 function getAgentState(agent, previous_state, previous_call){ 
@@ -81,8 +49,8 @@ function getAgentState(agent, previous_state, previous_call){
                     if(result.call){
                         previous_call = result.llamada_id;
                         data = {'data':result}
-                        setCallConsolidacionId(result.call_consolidacion_id);
-                        standard.standardSetValues(data);
+                        Citas.setCallConsolidacionId(result.call_consolidacion_id);
+                        StandardCrud.standardSetValues(data);
                     }
                 }
                 if(result.update){
@@ -108,108 +76,19 @@ function getAgentState(agent, previous_state, previous_call){
     }
 }
 
-function createCita(){
-    var ajaxFunctions = {
-        'success': function(result){
-            SoftNotification.show('Cita creada con exito');
-            $('#successModal').modal('hide');
-            setTimeout(function(){ 
-                $('#contentCita').addClass('d-none');
-                $('#contentEmail').removeClass('d-none');
-                $('#successModal').modal('toggle');
-            }, 1001);   
-        },
-        'error': function(request, status, error){
-            console.log(status);
-            if(request.responseJSON !== undefined){
-                var data = request.responseJSON;
-                SoftNotification.show('Hubo un error al crear la cita');
-                console.log(data['crm_cita_data']);
-                console.log(data['tall_cita_data']);
-            }
-            else{
-                SoftNotification.show('Hubo un error en el servidor');
-            }
-        }
-    }
-    standard.makePetition(getValues(), 'create_cita_url', ajaxFunctions);
-}
-
-function sendConfirmationEmail(){
-    var ajaxFunctions = {
-        'success': function(result){
-            if(result.success){
-                SoftNotification.show('Correo enviado con exito');
-            }
-            else{
-                SoftNotification.show("El cliente no tiene una dirección de correo registrada o no existe");
-            }
-        },
-        'error': function(request, status, error, result){
-            console.log(status);
-            SoftNotification.show('Hubo un error al enviar el correo','danger');
-        },
-        'complete': function(){
-            endTransaction();
-        }
-    }
-    standard.makePetition(data_email, 'send_confirmation_mail_url', ajaxFunctions);
-}
-
-function cancel(){
-    endTransaction();
-    $('#successModal').modal('hide');
-}
-
-function endTransaction(){
-    inTransaction = false;
-    if(stateChanged){
-        reset = true;
-        stateChanged = false;
-    } 
-}
-
-function updatePickerSede(pickerName, resultados, null_value=""){
-    var input = $(pickerName);
-    input.html('');
-    var opVal;
-    var opText;
-
-    if(null_value != ""){
-        FormFunctions.addOption(input, "", null_value);
-    }
-
-    for(let data of resultados){
-        opVal = data.id;
-        opText = data.name + " " + data.address;
-        FormFunctions.addOption(input, opVal, opText);
-    }
-    input.selectpicker("refresh");
-}
-
-function goToCitasTaller(){
-    var url = "https://www.renaultcali.com/citas-taller/";
-    var win = window.open(url, '_blank');
-    if (win) {
-        win.focus();
-    } else {
-        alert('Por favor permita las ventanas emergentes para esta pagina');
-    }
-}
 
 $( document ).ready(function() {
-
     $('#horaInput').prop('disabled', 'disabled');
     $('#sedeInput').selectpicker({"liveSearch": true});
     $('#motivoInput').selectpicker({"liveSearch": true});
-    $('#generarCitaButton').click(createCita);
-    $('#gotoCitasTallerButton').click(goToCitasTaller);
-    $('#emailButton').click(sendConfirmationEmail);
-    $('#sedeInput').change(getHorariosDisponibles);
-    $('#fechaInput').change(getHorariosDisponibles);
-    $('#fechaInput').change(getHorariosDisponibles);
-    $('#noEmailButton').click(cancel);
-    $('#cancelButton').click(cancel);
+    $('#generarCitaButton').click(Citas.createCita);
+    $('#gotoCitasTallerButton').click(Citas.goToCitasTaller);
+    $('#emailButton').click(Citas.sendConfirmationEmail);
+    $('#sedeInput').change(Citas.getHorariosDisponibles);
+    $('#fechaInput').change(Citas.getHorariosDisponibles);
+    $('#fechaInput').change(Citas.getHorariosDisponibles);
+    $('#noEmailButton').click(Citas.cancel);
+    $('#cancelButton').click(Citas.cancel);
 
     urls = {
         'get_motivo_url': {'url' : get_motivo_url, 'method':'POST'},
@@ -218,11 +97,12 @@ $( document ).ready(function() {
         'check_horarios': {'url' : check_horarios_url, 'method':'POST'},
         'send_confirmation_mail_url': {'url' : send_confirmation_mail_url, 'method':'POST'},
     }
-    standard = new StandardCrud(urls);
 
-    FormFunctions.setAjaxLoadPicker('#sedeInput', picker_search_sede_url, updatePickerSede, "Escoja una sede");
+    Citas.standard = new StandardCrud(urls);;
+
+    FormFunctions.setAjaxLoadPicker('#sedeInput', picker_search_sede_url, Citas.updatePickerSede, "Escoja una sede");
     FormFunctions.setAjaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "Escoja un motivo");
-    FormFunctions.ajaxLoadPicker('#sedeInput', picker_search_sede_url, updatePickerSede, "", "Escoja una sede");
+    FormFunctions.ajaxLoadPicker('#sedeInput', picker_search_sede_url, Citas.updatePickerSede, "", "Escoja una sede");
     FormFunctions.ajaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "", "Escoja un motivo");
 
     setTimeout(function(){ 

@@ -44,3 +44,17 @@ def listing_form(request):
             }
         )
     return permission_obj.error_response_view(validation, request)
+
+def draw(request):
+    "Returns the rendered template for form listing."
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('listing_form')
+    if validation['status']:
+        return render(
+            request,
+            'form_creator/draw.html',
+            {
+                'username': permission_obj.user.name
+            }
+        )
+    return permission_obj.error_response_view(validation, request)

@@ -48,7 +48,7 @@ class CallConsolidacionSerializer(serializers.ModelSerializer):
     """Serializer for CallConsolidacion model"""
     class Meta:
         model = CallConsolidacion
-        fields = ['consolidacion', 'call', 'cita_tall_id', 'cita_crm_id']
+        fields = ['consolidacion', 'call', 'cita_tall_id', 'cita_crm_id', 'call_made']
 
     def create(self, validated_data):
         obj = CallConsolidacion(**validated_data)

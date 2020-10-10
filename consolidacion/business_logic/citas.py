@@ -132,7 +132,6 @@ def create_tall_cita(data):
         'numeroespacios': numeroespacios,
         'facturado': facturado,
     }
-    print(data)
     tall_cita = TallCitasSerializer(data=data)
     return tall_cita
 

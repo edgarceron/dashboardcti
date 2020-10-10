@@ -1,0 +1,126 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+{{ action }} formulario
+{% endblock %}
+
+{% block topTitle %}
+{{ action }} formulario
+{% endblock %}
+
+{% block css %}
+    <link href="{% static 'form_creator/css/custom.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="card w-100">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                Texto de la pregunta
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="pregunta1" id="respuesta1pregunta1" value="1" checked>
+                    <label class="form-check-label" for="respuesta1pregunta1">
+                        Respuesta 1
+                    </label>
+                </div>
+        
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="pregunta1" id="respuesta2pregunta1" value="2">
+                    <label class="form-check-label" for="respuesta2pregunta1">
+                        Respuesta 2
+                    </label>
+                </div>
+        
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="pregunta1" id="respuesta3pregunta1" value="3">
+                    <label class="form-check-label" for="respuesta3pregunta1">
+                        Respuesta 3
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+<br>
+<div class="card w-100">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                Texto de la pregunta:
+                <div class="form-group">
+                    <textarea class="form-control" id="textAreaPregunta2" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="card w-100">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="row">
+                    <div class="col-md-12">     
+                        Texto grepunta: LOREM IPSU Texto grepunta: LOREM IPSU Texto grepunta: LOREM IPSU
+                        Texto grepunta: LOREM IPSU Texto grepunta: LOREM IPSU Texto grepunta: LOREM IPSU
+                        Texto grepunta: LOREM IPSU Texto grepunta: LOREM IPSU Texto grepunta: LOREM IPSU
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkPregunta3">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="card w-100">
+    <div class="card-body">
+        <div class="row">
+            Texto pregunta
+            <div class="col-md-12">
+                <div class="form-check">
+                    <input class="form-check-input" name="pregunta4" type="checkbox" value="1" id="respuesta1pregunta4">
+                    <label class="form-check-label" for="respuesta1pregunta4">
+                    Texto respuesta1
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-check">
+                    <input class="form-check-input" name="pregunta4" type="checkbox" value="2" id="respuesta2pregunta4">
+                    <label class="form-check-label" for="respuesta2pregunta4">
+                    Texto respuesta2
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-check">
+                    <input class="form-check-input" name="pregunta4" type="checkbox" value="3" id="respuesta3pregunta4">
+                    <label class="form-check-label" for="respuesta3pregunta4">
+                    Texto respuesta3
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block javascript %}
+<script src="{% static 'maingui/js/app/FormFunctions.js' %}"></script>
+<script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'form_creator/js/app/questions_gui.js' %}"></script>
+<script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script>
+
+{% endblock javascript %}
+{% block additional_javascript %}
+
+{% endblock additional_javascript %}
+
+    

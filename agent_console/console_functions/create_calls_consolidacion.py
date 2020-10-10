@@ -1,4 +1,3 @@
-from django.db.models import Q
 from datetime import datetime, timedelta
 from consolidacion.serializers import CallConsolidacionSerializer
 from consolidacion.models import Consolidacion, CallConsolidacion

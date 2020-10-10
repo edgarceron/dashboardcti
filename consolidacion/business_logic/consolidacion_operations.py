@@ -125,7 +125,6 @@ def create_cf_observaciones_consolidacion(request, data_serializer):
     fecha = data['fecha']
     cedula = data['cedula']
     return insert_cf_observaciones(fecha, cedula)
-    
 
 def insert_cf_observaciones(fecha, cedula):
     """Creates a cf_observaciones in the database"""
