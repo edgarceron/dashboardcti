@@ -1,0 +1,93 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+    {{ action }} campaña
+{% endblock %}
+{% block topTitle %}
+    {{ action }} campaña
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <form action="" class="needs-validation w-100" novalidate>
+            <div class="row">
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <label for='nameInput'>Nombre de la campaña</label>
+                        <input type='text' class='form-control appform' id='nameInput'>
+                        <div class='valid-feedback' id='nameValid'>Correcto.</div>
+                        <div class='invalid-feedback' id = 'nameInvalid'>Debe ingresar un nombre valido.</div>
+                    </div>
+                </div>
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <label for='type_campaignInput'>Tipo de campaña</label>
+                        <select class="form-control" id="type_campaignInput">
+                            <option value="1">Entrante</option>
+                            <option value="2">Saliente</option>
+                        </select>
+                    </div>
+                </div>    
+            </div>
+            <div class="row">
+                <div class='col-md-6'>
+                    <div class="form-group">
+                        <label for='formInput'>Formulario</label>
+                        <select class='form-control' id='formInput'>
+                            <option value="">Escoja una opción</option>
+                        </select>
+                        <div class='valid-feedback' id='formValid'>Correcto.</div>
+                        <div class='invalid-feedback' id = 'formInvalid'>Debe ingresar una campaña.</div>
+                    </div>
+                </div> 
+            </div>
+            <br>
+            <div class='row'>
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class='modal fade' tabindex='-1' role='dialog' id='successModal'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='modalTitle'>Unos segundos por favor</h5>
+                </div>
+                <div class='modal-body'>
+                    <div class='alert alert-success' role='alert' id='modalMessage'>
+                        Guardado con exito!
+                    </div>
+                </div>
+                <div class='modal-footer'>
+                    Redirigiendo...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block javascript %}
+    <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
+    <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
+    <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
+    <script>
+        $( document ).ready(function() {
+            id = {{ id }};
+            listing_url = "{% url 'listing_campaign' %}";
+            add_url = "{% url 'add_campaign' %}";
+            get_url = "{% url 'get_campaign' campaign_id=0 %}";
+            get_form_url = "{% url 'get_form' form_id=0 %}";
+            replace_url = "{% url 'replace_campaign' campaign_id=0 %}";
+            picker_search_form_url = "{% url 'picker_search_form' %}";
+            get_url = get_url.slice(0, -1);
+            get_form_url = get_form_url.slice(0, -1);
+            replace_url = replace_url.slice(0, -1);
+        });
+    </script>
+    <script src="{% static 'campaigns/js/app/form.js' %}"></script>
+{% endblock %}

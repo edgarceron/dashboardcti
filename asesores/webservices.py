@@ -1,6 +1,5 @@
 """Contains the webservices for the asesores app"""
 from rest_framework.decorators import api_view
-from rest_framework import status
 from core.crud.standard import Crud
 from asesores.business_logic import data_filters
 from .models import Asesor
@@ -53,7 +52,7 @@ def toggle_asesor(request, asesor_id):
 def picker_search_asesor(request):
     "Returns a JSON response with asesor data for a selectpicker."
     crud_object = Crud(AsesorSerializer, Asesor, data_filters.asesor_picker_filter)
-    return crud_object.picker_search(request, 'picker_search_user')
+    return crud_object.picker_search(request, 'picker_search_asesor')
 
 @api_view(['POST'])
 def list_asesor(request):

@@ -39,6 +39,7 @@ WEB_APPS = [
     'sedes',
     'asesores',
     'consolidacion',
+    'campaigns'
 ]
 
 WEB_APPS_LABELS = {
@@ -51,6 +52,7 @@ WEB_APPS_LABELS = {
     'sedes': 'Sedes',
     'asesores': 'Asesores de taller',
     'consolidacion': 'Consolidación de citas futuras',
+    'campaigns': 'Campañas',
 }
 
 INSTALLED_APPS = [

@@ -1,11 +1,9 @@
 """Contains the webservices for the form_creator app"""
-import datetime
-import pytz
-from django.contrib.auth.hashers import PBKDF2PasswordHasher
-from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
-from users.permission_validation import PermissionValidation
+from core.crud.standard import Crud
+from campaings.business_logic import data_filters
+from .models import CampaignForm
+from .serializers import CampaignFormSerializer
 
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
@@ -21,28 +19,42 @@ def get_actions():
 
 @api_view(['POST'])
 def add_campaign(request):
-    pass
+    """Tries to create a campaign and returns the result"""
+    crud_object = Crud(CampaignFormSerializer, CampaignForm)
+    return crud_object.add(request, 'add_campaign')
 
 @api_view(['PUT'])
 def replace_campaign(request, campaign_id):
-    pass
+    "Tries to update a campaign and returns the result"
+    crud_object = Crud(CampaignFormSerializer, CampaignForm)
+    return crud_object.replace(request, campaign_id, 'replace_campaign')
 
 @api_view(['POST'])
 def get_campaign(request, campaign_id):
-    pass
+    "Return a JSON response with campaign data for the given id"
+    crud_object = Crud(CampaignFormSerializer, CampaignForm)
+    return crud_object.get(request, campaign_id, 'get_campaign')
 
 @api_view(['DELETE'])
 def delete_campaign(request, campaign_id):
-    pass
+    """Tries to delete an campaign and returns the result."""
+    crud_object = Crud(CampaignFormSerializer, CampaignForm)
+    return crud_object.delete(request, campaign_id, 'delete_campaign', "CampaignForm elminado exitosamente")
 
 @api_view(['POST'])
 def toggle_campaign(request, campaign_id):
-    pass
+    """Toogles the active state for a given user"""
+    crud_object = Crud(CampaignFormSerializer, CampaignForm)
+    return crud_object.toggle(request, campaign_id, 'toggle_campaign', "CampaignForm")
 
 @api_view(['POST'])
 def picker_search_campaign(request):
-    pass
+    "Returns a JSON response with campaign data for a selectpicker."
+    crud_object = Crud(CampaignFormSerializer, CampaignForm, data_filters.campaign_picker_filter)
+    return crud_object.picker_search(request, 'picker_search_campaign')
 
 @api_view(['POST'])
 def list_campaign(request):
-    pass 
+    """Returns a JSON response containing registered campaign for a datatable"""
+    crud_object = Crud(CampaignFormSerializer, CampaignForm, data_filters.campaign_listing_filter)
+    return crud_object.listing(request, 'list_campaign')

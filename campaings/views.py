@@ -10,7 +10,7 @@ def get_actions():
     ]
     return actions
 
-def campaign_form(request, campaign_id=0):
+def form_campaign(request, campaign_id=0):
     "Returns the rendered template for the given user."
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('campaign_campaign')
@@ -29,7 +29,7 @@ def campaign_form(request, campaign_id=0):
                 'username': permission_obj.user.name
             }
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)
 
 def listing_campaign(request):
     "Returns the rendered template for campaign listing."
@@ -43,4 +43,4 @@ def listing_campaign(request):
                 'username': permission_obj.user.name
             }
         )
-    return PermissionValidation.error_response_view(validation, request)
+    return permission_obj.error_response_view(validation, request)

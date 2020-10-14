@@ -28,6 +28,7 @@ urlpatterns = [
     path('sedes/', include('sedes.urls')),
     path('asesores/', include('asesores.urls')),
     path('consolidacion/', include('consolidacion.urls')),
+    path('campaigns/', include('campaigns.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
