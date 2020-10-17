@@ -257,7 +257,6 @@ def picker_search_campaign(request):
     crud_object = Crud(CampaignSerializer, Campaign, data_filters.campaign_picker_filter)
     return crud_object.picker_search(request, 'picker_search_campaign')
 
-
 @api_view(['POST'])
 def picker_search_campaign_entry(request):
     "Returns a JSON response with campaign data for a selectpicker."

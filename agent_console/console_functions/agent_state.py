@@ -1,11 +1,14 @@
 """Manages the agent state logic """
 from datetime import datetime
 import pytz
+from django.db.models import Q
 from dms.models import Terceros
+from dms.serializers import TercerosSerializer
 from consolidacion.models import CallConsolidacion
+from campaigns.models import CampaignForm
 from agent_console.models import (
     Audit, Agent, CurrentCallEntry,
-    CedulaLlamada, ServerLog, CurrentCalls)
+    CedulaLlamada, ServerLog, CurrentCalls, AgentConsoleOptions)
 
 class AgentState():
     """Class for agent state logic"""
@@ -63,61 +66,100 @@ class AgentState():
         except CedulaLlamada.DoesNotExist:
             return None
 
+    @staticmethod
+    def answer_borrado(answer):
+        answer['message'] = "El agente fue borrado del servidor de telefonía"
+        answer['call'] = False
+        answer['status'] = "No encontrado"
+        return answer
+
+    @staticmethod
+    def answer_not_logged(answer):
+        answer['message'] = "Por favor, inicie sesión en su telefono"
+        answer['call'] = False
+        answer['status'] = "No conectado"
+        return answer
+
+    @staticmethod
+    def answer_call_wait(answer):
+        answer['message'] = "Esperando llamada"
+        answer['call'] = False
+        answer['status'] = "Conectado"
+        return answer
+
+
+    @staticmethod
+    def answer_consolidacion(answer, current_call, id_agent):
+        consolidacion, call_consolidacion_id = AgentState.get_consolidacion_by_call(
+            current_call.id_call.id
+        )
+        try:
+            tercero = Terceros.objects.get(nit=consolidacion.cedula)
+        except Terceros.DoesNotExist:
+            tercero = {'nombres':'Tercero eliminado de la bd'}
+
+        agent = Agent.objects.get(id=id_agent)
+        
+        answer['cedula'] = consolidacion.cedula
+        answer['placa'] = consolidacion.placa
+        answer['nombre'] = tercero.nombres
+        answer['sede'] = consolidacion.sede.id
+        try:
+            answer['asesor'] = consolidacion.sede.asesor.name
+        except:
+            answer['asesor'] = ""
+        answer['motivo'] = consolidacion.motivo.id
+        answer['extension'] = agent.number
+        answer['llamada_id'] = current_call.uniqueid
+        answer['call_consolidacion_id'] = call_consolidacion_id
+        return answer
+
+    @staticmethod
+    def answer_poll(answer, telefono, poll_campaign):
+        data_terceros = Terceros.objects.filter(Q(telefono_1=telefono) | Q(telefono_2=telefono))
+        terceros = TercerosSerializer(data=data_terceros, many=True).data
+        answer['terceros'] = terceros
+        answer['campaign'] = poll_campaign.id
+        answer['form'] = poll_campaign.form
+
     def get_answer(self, state, id_agent, current_call_entry=None, current_call=None):
         """Returns the server answer given a state"""
         answer = {}
         answer['previous'] = state
         if state == "1":
-            answer['message'] = "El agente fue borrado del servidor de telefonía"
-            answer['call'] = False
-            answer['status'] = "No encontrado"
-
+            answer = AgentState.answer_borrado(answer)
         elif state == "2":
-            answer['message'] = "Por favor, inicie sesión en su telefono"
-            answer['call'] = False
-            answer['status'] = "No conectado"
-
+            answer = AgentState.answer_not_logged(answer)
         elif state == "3":
-            answer['message'] = "Esperando llamada"
-            answer['call'] = False
-            answer['status'] = "Conectado"
-
+            answer = AgentState.answer_call_wait(answer)
         elif state == "4":
-            agent = Agent.objects.get(id=id_agent)
+            campaign_isabel = current_call_entry.id_call_entry.id_campaig
+            campaign = AgentState.pollCampaign(campaign_isabel, 2)
+            cedula = AgentState.get_cedula(current_call_entry.uniqueid)
+            if cedula != None:
+                Terceros.objects.get
             answer['message'] = "En llamada"
             answer['call'] = True
             answer['status'] = "Conectado"
             answer['phone'] = current_call_entry.callerid
-            answer['cedula'] = AgentState.get_cedula(current_call_entry.uniqueid)
-            answer['extension'] = agent.number
-            answer['llamada_id'] = current_call_entry.uniqueid
+            answer['cedula'] = 
 
         elif state == "5":
-            consolidacion, call_consolidacion_id = AgentState.get_consolidacion_by_call(
-                current_call.id_call.id
-            )
-            try:
-                tercero = Terceros.objects.get(nit=consolidacion.cedula)
-            except Terceros.DoesNotExist:
-                tercero = {'nombres':'Tercero eliminado de la bd'}
-            agent = Agent.objects.get(id=id_agent)
+            id_campaign = current_call.id_call.id_campaign
+            campaign_cosolidacion = AgentConsoleOptions.objects.get(option='CAMPAIGN_CONSOLIDACION')
+            poll_campaign = AgentState.pollCampaign(id_campaign, 1)
+            telefono = current_call.id_call.phone
+
             answer['message'] = "En llamada"
             answer['call'] = True
             answer['status'] = "Conectado"
-            answer['phone'] = current_call.id_call.phone
-            answer['cedula'] = consolidacion.cedula
-            answer['placa'] = consolidacion.placa
-            answer['nombre'] = tercero.nombres
-            answer['sede'] = consolidacion.sede.id
-            try:
-                answer['asesor'] = consolidacion.sede.asesor.name
-            except:
-                answer['asesor'] = ""
-            answer['motivo'] = consolidacion.motivo.id
-            answer['extension'] = agent.number
-            answer['llamada_id'] = current_call.uniqueid
-            answer['call_consolidacion_id'] = call_consolidacion_id
+            answer['phone'] = telefono
 
+            if(id_campaign == campaign_cosolidacion):
+                answer = AgentState.answer_consolidacion(answer, current_call, id_agent)
+            
+            elif(poll_campaign is not None):
+                answer = AgentState.answer_poll(answer, telefono, poll_campaign)
         if self.verbosity:
             timezone = pytz.timezone("America/Bogota")
             server_log = ServerLog(
@@ -156,3 +198,14 @@ class AgentState():
     def get_consolidacion_by_call(id_call):
         consolidacion = CallConsolidacion.objects.get(call=id_call)
         return consolidacion.consolidacion, consolidacion.id
+
+    @staticmethod
+    def pollCampaign(id_campaign, type_campaign):
+        try:
+            campaign = CampaignForm.objects.get(
+                isabel_campaign=id_campaign, 
+                type_campaign=type_campaign
+            )
+        except CampaignForm.DoesNotExist:
+            campaign = None
+        return campaign

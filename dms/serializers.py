@@ -1,6 +1,6 @@
 """Contains the serializers for the dms module"""
 from rest_framework import serializers
-from .models import CrmCitas, TallCitas
+from .models import CrmCitas, TallCitas, Terceros
 
 class CrmCitasSerializer(serializers.ModelSerializer):
     """Serializer for CrmCitas model"""
@@ -50,3 +50,9 @@ class TallCitasSerializer(serializers.ModelSerializer):
         obj = TallCitas(**validated_data)
         obj.save()
         return obj
+
+class TercerosSerializer(serializers.ModelSerializer):
+    """Serializer for Terceros model"""
+    class Meta:
+        model = Terceros
+        fields = ['nit', 'nombres', 'mail']
