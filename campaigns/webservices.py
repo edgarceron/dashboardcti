@@ -1,7 +1,7 @@
 """Contains the webservices for the form_creator app"""
 from rest_framework.decorators import api_view
 from core.crud.standard import Crud
-from campaings.business_logic import data_filters
+from campaigns.business_logic import data_filters
 from .models import CampaignForm
 from .serializers import CampaignFormSerializer
 
@@ -39,13 +39,13 @@ def get_campaign(request, campaign_id):
 def delete_campaign(request, campaign_id):
     """Tries to delete an campaign and returns the result."""
     crud_object = Crud(CampaignFormSerializer, CampaignForm)
-    return crud_object.delete(request, campaign_id, 'delete_campaign', "CampaignForm elminado exitosamente")
+    return crud_object.delete(request, campaign_id, 'delete_campaign', "Campaña elminada exitosamente")
 
 @api_view(['POST'])
 def toggle_campaign(request, campaign_id):
     """Toogles the active state for a given user"""
     crud_object = Crud(CampaignFormSerializer, CampaignForm)
-    return crud_object.toggle(request, campaign_id, 'toggle_campaign', "CampaignForm")
+    return crud_object.toggle(request, campaign_id, 'toggle_campaign', "Campaña")
 
 @api_view(['POST'])
 def picker_search_campaign(request):

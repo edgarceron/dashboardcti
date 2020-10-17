@@ -4,9 +4,10 @@ var standard;
 
 function getValues(){
     data = {
-        'name': $('#nameInput').val(),
+        "name": $('#nameInput').val(),
         "type_campaign" : $('#type_campaignInput').val(),
         "form" : $('#formInput').val(),
+        "isabel_campaign" : $('#isabel_campaignInput').val(),
     }
     return data;
 }
@@ -46,6 +47,9 @@ function updateCampaign(){
 function getDataCampaign(){
     var ajaxFunctions = {
         'success': function(result){
+            var type = result.data.type_campaign;
+            console.log(type);
+            changeTypeCampaign(type);
             standard.standardSetValues(result);
         },
         'error': function(result){
@@ -53,6 +57,42 @@ function getDataCampaign(){
         }
     }
     standard.makePetition(null, 'get_url', ajaxFunctions);
+}
+
+function setLoaderIsabelCampaign(url_picker, url_get){
+    standard.urls['get_isabel_campaign_url'] = {'url' : url_get, 'method':'POST'};
+    $('#isabel_campaignInput').siblings().find("input[type='text']").unbind('keydown');
+    FormFunctions.setAjaxLoadPicker(
+        '#isabel_campaignInput', url_picker, FormFunctions.updatePicker, "Escoja una campaña"
+    );
+    FormFunctions.ajaxLoadPicker(
+        '#isabel_campaignInput', url_picker, FormFunctions.updatePicker, "", "Escoja una campaña"
+    );
+    $('#isabel_campaignInput')
+        .removeAttr('readonly') 
+        .val("")
+        .selectpicker('refresh')
+    ;
+}
+
+function changeTypeCampaign(type){
+    if( type == 1){
+        setLoaderIsabelCampaign(picker_search_campaign_url, get_campaign_url);
+    }
+    else if( type == 2){
+        setLoaderIsabelCampaign(picker_search_campaign_entry_url, get_campaign_entry_url);
+    }
+    else if( type == 0){
+        $('#isabel_campaign')
+            .find('option')
+            .remove()
+            .end()
+            .append('<option value="">Escoja una campaña</option>')
+            .val("")
+            .selectpicker('refresh')
+            .attr('readonly', 'readonly')
+        ;
+    }
 }
 
 $( document ).ready(function() {
@@ -66,7 +106,7 @@ $( document ).ready(function() {
         'add_url': {'url' : add_url, 'method':'POST'},
         'get_url': {'url' : get_url, 'method':'POST'},
         'replace_url': {'url' : replace_url, 'method':'PUT'},
-        'get_form_url': {'url' : get_form_url, 'method':'PUT'}
+        'get_form_url': {'url' : get_form_url, 'method':'PUT'},
     }
     standard = new StandardCrud(urls);
 
@@ -79,7 +119,17 @@ $( document ).ready(function() {
         }
     });
 
+    $('#type_campaignInput').change(function(){
+        changeTypeCampaign($('#type_campaignInput').val());
+    });
+
     $('#formInput').selectpicker(
+        {
+            "liveSearch": true
+        }
+    );
+
+    $('#isabel_campaignInput').selectpicker(
         {
             "liveSearch": true
         }

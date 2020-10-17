@@ -19,17 +19,6 @@
                     </div>
                 </div>
                 <div class='col-md-6'>
-                    <div class='form-group'>
-                        <label for='type_campaignInput'>Tipo de campaña</label>
-                        <select class="form-control" id="type_campaignInput">
-                            <option value="1">Entrante</option>
-                            <option value="2">Saliente</option>
-                        </select>
-                    </div>
-                </div>    
-            </div>
-            <div class="row">
-                <div class='col-md-6'>
                     <div class="form-group">
                         <label for='formInput'>Formulario</label>
                         <select class='form-control' id='formInput'>
@@ -38,7 +27,27 @@
                         <div class='valid-feedback' id='formValid'>Correcto.</div>
                         <div class='invalid-feedback' id = 'formInvalid'>Debe ingresar una campaña.</div>
                     </div>
+                </div>    
+            </div>
+            <div class="row">
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <label for='type_campaignInput'>Tipo de campaña</label>
+                        <select class="form-control" id="type_campaignInput">
+                            <option value="0">Seleccione una campaña</option>
+                            <option value="1">Saliente</option>
+                            <option value="2">Entrante</option>
+                        </select>
+                    </div>
                 </div> 
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <label for='isabel_campaignInput'>Campaña en isabel</label>
+                        <select class="form-control" id="isabel_campaignInput" readonly>
+
+                        </select>
+                    </div>
+                </div>
             </div>
             <br>
             <div class='row'>
@@ -80,13 +89,19 @@
             id = {{ id }};
             listing_url = "{% url 'listing_campaign' %}";
             add_url = "{% url 'add_campaign' %}";
-            get_url = "{% url 'get_campaign' campaign_id=0 %}";
+            get_url = "{% url 'get_campaign_manticore' campaign_id=0 %}";
             get_form_url = "{% url 'get_form' form_id=0 %}";
             replace_url = "{% url 'replace_campaign' campaign_id=0 %}";
             picker_search_form_url = "{% url 'picker_search_form' %}";
+            picker_search_campaign_url = "{% url 'picker_search_campaign' %}";
+            picker_search_campaign_entry_url = "{% url 'picker_search_campaign_entry' %}";
+            get_campaign_url = "{% url 'get_campaign' campaign_id=0 %}";
+            get_campaign_entry_url = "{% url 'get_campaign_entry' campaign_id=0 %}";
             get_url = get_url.slice(0, -1);
             get_form_url = get_form_url.slice(0, -1);
             replace_url = replace_url.slice(0, -1);
+            get_campaign_url = get_campaign_url.slice(0, -1);
+            get_campaign_entry_url = get_campaign_entry_url.slice(0, -1);
         });
     </script>
     <script src="{% static 'campaigns/js/app/form.js' %}"></script>

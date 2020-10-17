@@ -29,7 +29,13 @@ urlpatterns = [
         webservices.picker_search_campaign,
         name='picker_search_campaign'
     ),
+    path(
+        'picker_search_campaign_entry',
+        webservices.picker_search_campaign_entry,
+        name='picker_search_campaign_entry'
+    ),
     path('get_campaign/<int:campaign_id>', webservices.get_campaign, name='get_campaign'),
+    path('get_campaign_entry/<int:campaign_id>', webservices.get_campaign_entry, name='get_campaign_entry'),
     path('create_cita', webservices.create_cita, name='create_cita'),
     path('check_horarios', webservices.check_horarios, name='check_horarios'),
     path('create_calls_asterisk', webservices.create_calls_asterisk, name='create_calls_asterisk'),

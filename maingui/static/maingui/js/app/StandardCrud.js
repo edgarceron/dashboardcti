@@ -220,7 +220,7 @@ class StandardCrud{
         }, 2000);
     }
 
-    static standardSetValues(result){
+    standardSetValues(result){
         var data = result.data;
         var keys = Object.keys(data);
         for(var field in keys){

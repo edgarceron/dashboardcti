@@ -5,7 +5,6 @@ from form_creator.models import Form
 def form_picker_filter(value):
     """Given a value, filters forms for a select picker"""
     return list(Form.objects.filter(
-        Q(active=True),
         Q(name__contains=value)
     )[:10])
 

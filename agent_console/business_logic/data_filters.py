@@ -1,10 +1,16 @@
 """Includes the data filters for pickers and datatables in the sedes app"""
 from django.db.models import Q
-from agent_console.models import Campaign, Agent
+from agent_console.models import Campaign, Agent, CampaignEntry
 
 def campaign_picker_filter(value):
     """Given a value, filters campaign for a select picker"""
     return list(Campaign.objects.filter(
+        Q(name__icontains=value)
+    )[:10])
+
+def campaign_entry_picker_filter(value):
+    """Given a value, filters campaign for a select picker"""
+    return list(CampaignEntry.objects.filter(
         Q(name__icontains=value)
     )[:10])
 

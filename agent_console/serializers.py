@@ -1,6 +1,6 @@
 """Contains the serializers for the users module"""
 from rest_framework import serializers
-from .models import UserAgent, Agent, UserSede, Campaign, Calls, CallEntry, CurrentCallEntry
+from .models import UserAgent, Agent, UserSede, Campaign, Calls, CallEntry, CurrentCallEntry, CampaignEntry
 
 class AgentSerializer(serializers.ModelSerializer):
     """Serializer for Agent model"""
@@ -46,6 +46,7 @@ class CampaignSerializer(serializers.ModelSerializer):
     """Serializer for Campaign model"""
     class Meta:
         model = Campaign
+        
         fields = [
             'id', 'name', 'datetime_init', 'datetime_end',
             'daytime_init', 'daytime_end', 'retries',
@@ -77,6 +78,41 @@ class CampaignSerializer(serializers.ModelSerializer):
         instance.estatus = validated_data['estatus']
         instance.id_url = validated_data['id_url']
         instance.save()
+        return instance
+
+class CampaignEntrySerializer(serializers.ModelSerializer):
+    """Serializer for campaign entry model"""
+    class Meta:
+        model = CampaignEntry
+        fields = [
+            'name',
+            'id_queue_call_entry',
+            'id_form',
+            'datetime_init',
+            'datetime_end',
+            'daytime_init',
+            'daytime_end',
+            'estatus',
+            'script',
+            'id_url',
+        ]
+
+    def create(self, validated_data):
+        campaign_obj = CampaignEntry(**validated_data)
+        campaign_obj.save()
+        return campaign_obj
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data['name']
+        instance.id_queue_call_entry = validated_data['id_queue_call_entry']
+        instance.id_form = validated_data['id_form']
+        instance.datetime_init = validated_data['datetime_init']
+        instance.datetime_end = validated_data['datetime_end']
+        instance.daytime_init = validated_data['daytime_init']
+        instance.daytime_end = validated_data['daytime_end']
+        instance.estatus = validated_data['estatus']
+        instance.script = validated_data['script']
+        instance.id_url = validated_data['id_url']
         return instance
 
 class CallsSerializer(serializers.ModelSerializer):

@@ -9,8 +9,8 @@ from consolidacion.business_logic import citas
 from .console_functions.agent_state import AgentState
 from .console_functions.generate_users import GenerateUsers
 from .console_functions import create_calls_consolidacion
-from .serializers import AgentSerializer, CampaignSerializer
-from .models import Agent, AgentConsoleOptions, Campaign
+from .serializers import AgentSerializer, CampaignSerializer, CampaignEntrySerializer
+from .models import Agent, AgentConsoleOptions, Campaign, CampaignEntry
 from .business_logic import user_extra_fields
 
 def get_actions():
@@ -41,8 +41,16 @@ def get_actions():
             "label": "Webservice para actualizar el picker de campañas salientes"
         },
         {
+            "name": "picker_search_campaign_entry",
+            "label": "Webservice para actualizar el picker de campañas entrantes"
+        },
+        {
             "name": "get_campaign",
             "label": "Webservice para obteber los datos de una campaña saliente"
+        },
+        {
+            "name": "get_campaign_entry",
+            "label": "Webservice para obteber los datos de una campaña entrante"
         },
         {
             "name": "create_cita",
@@ -238,10 +246,24 @@ def get_campaign(request, campaign_id):
     return crud_object.get(request, campaign_id, 'get_campaign')
 
 @api_view(['POST'])
+def get_campaign_entry(request, campaign_id):
+    "Return a JSON response with campaign data for the given id"
+    crud_object = Crud(CampaignEntrySerializer, CampaignEntry)
+    return crud_object.get(request, campaign_id, 'get_campaign_entry')
+
+@api_view(['POST'])
 def picker_search_campaign(request):
     "Returns a JSON response with campaign data for a selectpicker."
     crud_object = Crud(CampaignSerializer, Campaign, data_filters.campaign_picker_filter)
     return crud_object.picker_search(request, 'picker_search_campaign')
+
+
+@api_view(['POST'])
+def picker_search_campaign_entry(request):
+    "Returns a JSON response with campaign data for a selectpicker."
+    crud_object = Crud(
+        CampaignEntrySerializer, CampaignEntry, data_filters.campaign_entry_picker_filter)
+    return crud_object.picker_search(request, 'picker_search_campaign_entry')
 
 @api_view(['POST'])
 def create_cita(request):

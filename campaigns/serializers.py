@@ -3,9 +3,10 @@ from .models import CampaignForm, AnswersHeader, AnswersBody
 
 class CampaignFormSerializer(serializers.ModelSerializer):
     """Serializer for CampaingForm model"""
+    
     class Meta:
         model = CampaignForm
-        fields = ['id', 'type_campaign', 'isabel_campaign', 'form']
+        fields = ['id', 'name', 'type_campaign', 'isabel_campaign', 'form']
 
     def create(self, validated_data):
         obj = CampaignForm(**validated_data)
@@ -13,6 +14,7 @@ class CampaignFormSerializer(serializers.ModelSerializer):
         return obj
 
     def update(self, instance, validated_data):
+        instance.name = validated_data["name"]
         instance.type_campaign = validated_data["type_campaign"]
         instance.isabel_campaign = validated_data["isabel_campaign"]
         instance.form = validated_data["form"]

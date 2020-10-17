@@ -5,7 +5,7 @@ from users.permission_validation import PermissionValidation
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
     actions = [
-        {"name": "campaign_form", "label": "Pagina del formulario de camapaña"},
+        {"name": "form_campaign", "label": "Pagina del formulario de camapaña"},
         {"name": "listing_campaign", "label": "Pagina del listado de campañas"}
     ]
     return actions
@@ -13,7 +13,7 @@ def get_actions():
 def form_campaign(request, campaign_id=0):
     "Returns the rendered template for the given user."
     permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('campaign_campaign')
+    validation = permission_obj.validate('form_campaign')
     if validation['status']:
         if campaign_id == 0:
             action = "Crear"
@@ -22,7 +22,7 @@ def form_campaign(request, campaign_id=0):
 
         return render(
             request,
-            'forms/form.html',
+            'campaigns/form.html',
             {
                 'id':campaign_id,
                 'action':action,
@@ -38,7 +38,7 @@ def listing_campaign(request):
     if validation['status']:
         return render(
             request,
-            'forms/listing.html',
+            'campaigns/listing.html',
             {
                 'username': permission_obj.user.name
             }

@@ -44,5 +44,5 @@ $(document).ready(function() {
         { "data": "name" }
     ];
     
-    standard.standardDatatable(columns, deleteCampaign, toogleCampaignState);
+    standard.standardDatatable(columns, deleteCampaign, null);
 } );

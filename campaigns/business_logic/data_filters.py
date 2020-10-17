@@ -1,6 +1,6 @@
 """Includes the data filters for pickers and datatables in the campaigns app"""
 from django.db.models import Q
-from campaings.models import CampaignForm
+from campaigns.models import CampaignForm
 
 def campaign_picker_filter(value):
     """Given a value, filters campaigns for a select picker"""

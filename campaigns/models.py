@@ -16,7 +16,7 @@ class AnswersHeader(models.Model):
 class AnswersBody(models.Model):
     """Class for answers body"""
     header = models.ForeignKey(AnswersHeader, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.SET_NULL)
+    question = models.ForeignKey(Question, on_delete=models.SET_NULL, null=True)
     question_text = models.TextField()
-    answer = models.ForeignKey(Answer, on_delete=models.SET_NULL)
+    answer = models.ForeignKey(Answer, on_delete=models.SET_NULL, null=True)
     answer_text = models.TextField()
