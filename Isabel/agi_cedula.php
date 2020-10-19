@@ -21,6 +21,6 @@
     $agi->verbose('Cedula guardada');
     mysql_free_result($result);
     mysql_close($link);
-    $agi->exec("Queue", "6000,t,,"); //Llamo a la cola 
+    $agi->exec("Queue", "6000,t,,"); //Llamo a la cola1
 
 ?>
