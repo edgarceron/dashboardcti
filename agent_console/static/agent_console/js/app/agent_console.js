@@ -4,9 +4,6 @@ var reset = false;
 var stateChanged = false;
 
 function getAgentState(agent, previous_state, previous_call){ 
-    console.log(inTransaction);
-    console.log(reset);
-
     if(agent != null){
         $.ajax({
             url: agent_state_url,
@@ -22,25 +19,11 @@ function getAgentState(agent, previous_state, previous_call){
                 if(result.update && !inTransaction){
                     $('#lblStatus').html(result.status);
                     $('#lblMessage').html(result.message);
-                    if(result.call){
-                        inTransaction = true;
-                        $('#contentCita').removeClass('d-none');
-                        $('#contentEmail').addClass('d-none');
-                        $('#fechaInput').val("");
-                        $('#successModal').modal('show');
-                        $('#successModal').modal({backdrop:'static', keyboard:false});
-                    }
+                    if(result.call) calculateActions(result);
                     previous_state = result.previous;
-                    if(result.call){
-                        previous_call = result.llamada_id;
-                        data = {'data':result}
-                        Citas.setCallConsolidacionId(result.call_consolidacion_id);
-                        StandardCrud.standardSetValues(data);
-                    }
+                    if(result.call) previous_call = result.llamada_id;
                 }
-                if(result.update){
-                    stateChanged = true;
-                }
+                if(result.update) stateChanged = true;
             },
             complete: function(){
                 setTimeout(function(){ 
@@ -48,9 +31,7 @@ function getAgentState(agent, previous_state, previous_call){
                         getAgentState(agent, -1, previous_call);
                         reset = false;
                     }
-                    else{
-                        getAgentState(agent, previous_state, previous_call);
-                    }
+                    else getAgentState(agent, previous_state, previous_call);    
                 }, 1000);
             },
         });
@@ -59,6 +40,33 @@ function getAgentState(agent, previous_state, previous_call){
         $('#lblStatus').html("No es agente");
         $('#lblMessage').html("No hay un agente ligado a este usuario");
     }
+}
+
+function responseConsolidacion(result){
+    $('#contentCita').removeClass('d-none');
+    $('#contentEmail').addClass('d-none');
+    $('#fechaInput').val("");
+    $('#successModal').modal('show');
+    $('#successModal').modal({backdrop:'static', keyboard:false});
+
+    data = {'data':result}
+    Citas.setCallConsolidacionId(result.call_consolidacion_id);
+    StandardCrud.standardSetValues(data);
+}
+
+function calculateActions(result){
+    inTransaction = true;
+    var actionDecided = false;
+    if (result.call_consolidacion_id){
+        actionDecided = true;
+        responseConsolidacion(result);
+    }
+    else if (result.campaign){
+        actionDecided = true;
+        loadForm();
+        terceroManagement(result.terceros);
+    }
+    if(!actionDecided) loadManualTools();
 }
 
 

@@ -4,9 +4,10 @@
 Consola de agente
 {% endblock %}
 
-{% block topTitle %}
-<span class="text-light">Consola de agente</span> 
+{% block titleBar %}
+
 {% endblock %}
+
 {% block bg_class %}
     bg-dark
 {% endblock bg_class %}
@@ -14,13 +15,60 @@ Consola de agente
 {% block content %}
 
 <div class="card">
-    <div class="card-header text-dark text-center">
-        <h3>Estado del agente: <span id="lblStatus">......</span></h3>
-    </div>
-    <div class="card-body bg-dark text-light">
-        <h4><span id="lblMessage">Cargando...</span></h4>
+    <div class="card-header text-dark">
+        <div class="row">
+            <div class="col">
+                Estado del agente: 
+                <span id="lblStatus">
+                    ......
+                </span>
+            </div>
+            <div class="col">
+                <span id="lblMessage">
+                    <i class="fas fa-exclamation-triangle text-danger"></i>Cargando...
+                </span>
+            </div>
+        </div>
     </div>
 </div>
+
+<div class="accordion" id="accordionAgentConsole">
+    <div class="card">
+      <div class="card-header" id="headingOne">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseCitas" aria-expanded="true" aria-controls="collapseCitas">
+                Citas de taler <i class="fas fa-plus text-primary"></i>
+          </button>
+        </h2>
+      </div>
+  
+      <div id="collapseCitas" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#accordionAgentConsole">
+        <div class="card-body">
+            {% include "./citas.html" %}
+        </div>
+      </div>
+    </div> 
+
+    <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapsePolls" aria-expanded="true" aria-controls="collapsePolls">
+                Encuestas y formularios <i class="fas fa-plus text-primary"></i>
+            </button>
+          </h2>
+        </div>
+    
+        <div id="collapsePolls" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#accordionAgentConsole">
+            <div class="card-body">
+                {% include "./polls.html" %}
+            </div>
+        </div>
+    </div> 
+
+
+</div>
+
+
 
 <div class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" id="successModal">
     <div class="modal-dialog" role="document">
@@ -31,7 +79,9 @@ Consola de agente
                 </div>
             </div>
             <div class="modal-body">
-                {% include "./citas.html" %}
+                <div id="citasForm">
+                    
+                </div>
             </div>
         </div>
         <div class="modal-content d-none" id="contentEmail">
@@ -55,7 +105,7 @@ Consola de agente
 <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
 <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
 <script src="{% static 'agent_console/js/app/agent_console.js' %}"></script>
-<script src="{% static 'agent_console/js/app/cita.js' %}"></script>
+<script src="{% static 'agent_console/js/app/Citas.js' %}"></script>
 <script>
     var id_agent = {{ id_agent }};
     agent_state_url = "{% url 'agent_state' %}";
@@ -69,5 +119,8 @@ Consola de agente
     get_motivo_url = get_motivo_url.slice(0, -1);
     create_cita_url = "{% url 'create_cita' %}";
     send_confirmation_mail_url = "{% url 'send_confirmation_mail' %}";
+    picker_search_campaign_url = "{% url 'picker_search_motivo' %}";
+    get_questions_form_url = "{% url 'get_questions_form' form_id=0 %}";
+    get_questions_form_url = get_questions_form_url.slice(0, -1)
 </script>
 {% endblock %}
