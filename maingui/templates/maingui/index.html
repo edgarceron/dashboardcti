@@ -185,9 +185,12 @@
                 <div class="container-fluid">
                     
                     <!-- Page Heading -->
+                    {% block titleBar %}
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">{% block topTitle %}Dashboard{% endblock %}</h1>
+                        <h1 class="h3 mb-0 text-gray-800">{% block topTitle %}Dashboard{% endblock topTitle %}</h1>
                     </div>
+                    {% endblock titleBar %}
+                    
                     {% block content %}
                     <!-- Content Row -->
                     <div class="row">
