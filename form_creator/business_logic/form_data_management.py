@@ -5,7 +5,18 @@ from rest_framework.response import Response
 from users.permission_validation import PermissionValidation
 from core.crud.standard import Crud
 from form_creator.models import Question, Answer, Form
+from campaigns.models import CampaignForm
 from form_creator.serializers import QuestionSerializer, AnswerSerializer, FormSerializer
+
+def get_questions_campaign(request, campaign_id):
+    """Returns a json rensponse with the questions for the given campaign"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate("get_questions_campaign")
+    if validation['status']:
+        campaign = CampaignForm.objects.get(id=campaign_id)
+        print(campaign.form)
+        return get_questions_form(request, campaign.form)
+    return permission_obj.error_response_webservice(validation, request)
 
 def get_questions_form(request, id_form):
     """Returns a json rensponse with the questions for the given form"""

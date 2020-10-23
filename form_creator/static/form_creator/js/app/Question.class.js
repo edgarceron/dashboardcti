@@ -1,5 +1,10 @@
 class Question {
 
+    static TYPE_BOOL = 1;
+    static TYPE_TEXT = 2;
+    static TYPE_MULTI_ONE = 3;
+    static TYPE_MULTI_MANY = 4;
+
     constructor(id, text, type, empty){
         this.text = text;
         this.type = type;
@@ -14,16 +19,16 @@ class Question {
 
     draw(container){
         var html;
-        if(this.type == TYPE_BOOL){
+        if(this.type == Question.TYPE_BOOL){
             html = this.drawBool();
         }
-        else if (this.type == TYPE_TEXT){
+        else if (this.type == Question.TYPE_TEXT){
             html = this.drawText();
         }
-        else if (this.type == TYPE_MULTI_ONE){
+        else if (this.type == Question.TYPE_MULTI_ONE){
             html = this.drawMultiOne();
         }
-        else if (this.type == TYPE_MULTI_MANY){
+        else if (this.type == Question.TYPE_MULTI_MANY){
             html = this.drawMultiMany();
         }
         container.html(container.html() + html);
@@ -94,7 +99,7 @@ class Question {
             </div>
         </div>
         `;
-        return cardEnvelope(html);
+        return this.cardEnvelope(html);
     }
 
     drawMultiMany(){
@@ -127,7 +132,7 @@ class Question {
         </div>
         `;
 
-        return cardEnvelope(html);
+        return this.cardEnvelope(html);
     }
 
     isValid(){
@@ -135,27 +140,37 @@ class Question {
         var idPregunta;
         var selector;
         switch (this.type){
-            case TYPE_BOOL:
+            case Question.TYPE_BOOL:
                 return true;
-            case TYPE_TEXT:
+            case Question.TYPE_TEXT:
                 name = "#textAreaPregunta" + this.id;
                 var input = $(name);
-                if (this.required){
-                    if(input.text().trim() != "") return true;
+                if (this.empty){
+                    if(input.val().trim() != "") return true;
                     return false;
                 }
                 return true;
-            case TYPE_MULTI_ONE:
+            case Question.TYPE_MULTI_ONE:
                 idPregunta = "pregunta" + this.id;
-                selector = '[id$='+ idPregunta +'] :checked';
-                if(this.required && $(selector).length == 1) return true;
-                return false;
-            case TYPE_MULTI_MANY:
+                selector = '[id$='+ idPregunta +']';
+                var checked = false;
+                $(selector).each(
+                    function(){
+                        checked = checked || $(this).is(":checked");
+                    }
+                );
+                return checked;
+            case Question.TYPE_MULTI_MANY:
                 idPregunta = "pregunta" + this.id;
-                selector = '[id$='+ idPregunta +'] :checked';
-                if (this.required){
-                    if($(selector).length >= 1) return true;
-                    return false;
+                selector = '[id$='+ idPregunta +']';
+                if (this.empty){
+                    var checked = false;
+                    $(selector).each(
+                        function(){
+                            checked = checked || $(this).is(":checked");
+                        }
+                    );
+                    return checked;
                 }
                 return true;
         }
@@ -164,19 +179,19 @@ class Question {
     getAnswer(){
         var name = "";
         switch (this.type){       
-            case TYPE_BOOL:
+            case Question.TYPE_BOOL:
                 name = "#checkPregunta" + this.id;
                 return $(name).prop('checked');
-            case TYPE_TEXT:
+            case Question.TYPE_TEXT:
                 name = "#textAreaPregunta" + this.id;
                 return $(name).text();
-            case TYPE_MULTI_ONE:
+            case Question.TYPE_MULTI_ONE:
                 idPregunta = "pregunta" + this.id;
                 selector = '[id$='+ idPregunta +'] :checked';
                 var selected = $(selector);
                 if(selected.length == 0) return [];
                 return $(selector).val();
-            case TYPE_MULTI_MANY:
+            case Question.TYPE_MULTI_MANY:
                 idPregunta = "pregunta" + this.id;
                 selector = '[id$='+ idPregunta +'] :checked';
                 var selected = $(selector);

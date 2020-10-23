@@ -63,8 +63,7 @@ function calculateActions(result){
     }
     else if (result.campaign){
         actionDecided = true;
-        loadForm();
-        terceroManagement(result.terceros);
+        Polls.loadForm(result);
     }
 }
 

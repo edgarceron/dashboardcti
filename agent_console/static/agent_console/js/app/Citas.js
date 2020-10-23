@@ -35,7 +35,7 @@ class Citas {
                 SoftNotification.show('Cita creada con exito');
                 $('#successModal').modal('hide');
                 setTimeout(function(){ 
-                    $('#contentCita').addClass('d-none');
+                    $('#contentTeceros').addClass('d-none');
                     $('#contentEmail').removeClass('d-none');
                     $('#successModal').modal('toggle');
                 }, 1001);   

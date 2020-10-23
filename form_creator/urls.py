@@ -34,6 +34,11 @@ urlpatterns = [
         webservices.get_questions_form,
         name='get_questions_form'
     ),
+    path(
+        'get_questions_campaign/<int:campaign_id>',
+        webservices.get_questions_campaign,
+        name='get_questions_campaign'
+    ),
     path('save_all', webservices.save_all, name='save_all'),
     path('draw', views.draw, name='draw'),
 ]

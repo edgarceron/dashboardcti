@@ -26,6 +26,14 @@ def get_actions():
             "name": "validate_cedula",
             "label": "Webservice para validar cedula antes de crear consolidación"
         },
+        {
+            "name": "check_tercero_cedula",
+            "label": "Webservice para validar cedula de un cliente"
+        },
+        {
+            "name": "check_placa",
+            "label": "Webservice para validar placa de un cliente"
+        },
     ]
     return actions
 
@@ -95,3 +103,15 @@ def upload_consolidacion(request):
 def validate_cedula(request):
     """Validates that the given request contains a cedula for """
     return consolidacion_operations.validate_cedula(request)
+
+@api_view(['POST'])
+def check_tercero_cedula(request):
+    """Validates that the given request contains a cedula for """
+    return consolidacion_operations.check_tercero_cedula(request)
+
+@api_view(['POST'])
+def check_placa(request):
+    """Validates that the given request contains a cedula for """
+    return consolidacion_operations.check_placa(request)
+
+

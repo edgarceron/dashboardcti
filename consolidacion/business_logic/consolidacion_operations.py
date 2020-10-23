@@ -11,6 +11,39 @@ from consolidacion.business_logic.list_class import ConsolidacionList
 from consolidacion.serializers import ConsolidacionFileUploadsSerializer, ConsolidacionSerializer
 from consolidacion.business_logic import citas
 
+def check_tercero_cedula(request):
+    """Checks if the given nit belongs to a database tercero row and returns the name"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('check_tercero_cedula')
+    if validation['status']:
+        data = request.data
+        nit = data['nit']
+        tercero = citas.get_tercero(nit)
+        answer = {}
+        if tercero is None:
+            answer['success'] = False
+        else:
+            answer['success'] = True
+            answer['nombres'] = tercero.nombres
+        return Response(answer, status.HTTP_200_OK, content_type='application/json')
+    return permission_obj.error_response_webservice(validation, request)    
+
+def check_placa(request):
+    """Checks if the given placa belongs to a database vehicle"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('check_placa')
+    if validation['status']:
+        data = request.data
+        placa = data['placa']
+        vehiculo = citas.get_veh(placa)
+        answer = {}
+        if vehiculo is None:
+            answer['success'] = False
+        else:
+            answer['success'] = True
+        return Response(answer, status.HTTP_200_OK, content_type='application/json')
+    return permission_obj.error_response_webservice(validation, request)        
+
 def validate_cedula(request):
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('validate_cedula')
