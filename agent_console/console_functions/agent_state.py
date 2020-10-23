@@ -130,8 +130,8 @@ class AgentState():
     @staticmethod
     def answer_entry(answer, current_call_entry):
         """Gets the answer for a call entry scenario"""
-        print(current_call_entry.id_call_entry)
-        campaign_isabel = current_call_entry.id_call_entry.id_campaign
+        ce = current_call_entry.id_call_entry
+        campaign_isabel = ce.id_campaign
         campaign = AgentState.pollCampaign(campaign_isabel, 2)
         answer['campaign'] = campaign.id if campaign is not None else None
         cedula = AgentState.get_cedula(current_call_entry.uniqueid)
