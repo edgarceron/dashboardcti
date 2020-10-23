@@ -66,7 +66,6 @@ function calculateActions(result){
         loadForm();
         terceroManagement(result.terceros);
     }
-    if(!actionDecided) loadManualTools();
 }
 
 
