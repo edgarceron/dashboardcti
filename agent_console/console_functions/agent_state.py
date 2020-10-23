@@ -139,7 +139,7 @@ class AgentState():
         if cedula is not None:
             try:
                 tercero_data = Terceros.objects.get(nit=cedula)
-                tercero = TercerosSerializer(data=tercero_data).initial_data
+                tercero = TercerosSerializer(tercero_data).data
             except Terceros.DoesNotExist:
                 pass
 
