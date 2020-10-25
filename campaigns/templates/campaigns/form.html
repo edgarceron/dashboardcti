@@ -51,9 +51,14 @@
             </div>
             <br>
             <div class='row'>
-                <div class='col-md-6'>
+                <div class='col'>
                     <div class='form-group'>
                         <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+                    </div>
+                </div>
+                <div class='col'>
+                    <div class='form-group'>
+                        <a class="btn btn-primary" href="{% url 'upload_data_campaign' campaign_id=id %}">Subir datos</a>
                     </div>
                 </div>
             </div>

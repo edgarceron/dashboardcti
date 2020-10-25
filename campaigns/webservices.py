@@ -1,9 +1,10 @@
 """Contains the webservices for the form_creator app"""
 from rest_framework.decorators import api_view
 from core.crud.standard import Crud
-from campaigns.business_logic import data_filters
+from campaigns.business_logic import data_filters, campaign_operations
 from .models import CampaignForm
 from .serializers import CampaignFormSerializer
+
 
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
@@ -58,3 +59,9 @@ def list_campaign(request):
     """Returns a JSON response containing registered campaign for a datatable"""
     crud_object = Crud(CampaignFormSerializer, CampaignForm, data_filters.campaign_listing_filter)
     return crud_object.listing(request, 'list_campaign')
+
+@api_view(['POST'])
+def upload_calls_campaign(request):
+    """Uploads the calls for the campaign"""
+    return campaign_operations.upload_calls_campaign(request)
+    

@@ -68,7 +68,9 @@ class Polls {
     }
 
     static saveHeader(){
-        
+        data = {
+            
+        }
     }
 
     static checkValidity(){
@@ -120,6 +122,10 @@ $( document ).ready(function() {
 
     $('#buttonSavePoll').click(function(){
         Polls.saveForm();
+    });
+
+    $('#cedulaPollInput').change(function(){
+        Polls.validateCedula();
     });
 
     FormFunctions.setAjaxLoadPicker('#campaignInput', picker_search_campaign_url, FormFunctions.updatePicker, "Escoja una campaña");

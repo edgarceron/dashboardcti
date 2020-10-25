@@ -75,6 +75,18 @@ function setLoaderIsabelCampaign(url_picker, url_get){
     ;
 }
 
+$('#formInput').selectpicker(
+    {
+        "liveSearch": true
+    }
+);
+
+$('#isabel_campaignInput').selectpicker(
+    {
+        "liveSearch": true
+    }
+);
+
 function changeTypeCampaign(type){
     if( type == 1){
         setLoaderIsabelCampaign(picker_search_campaign_url, get_campaign_url);
@@ -123,17 +135,7 @@ $( document ).ready(function() {
         changeTypeCampaign($('#type_campaignInput').val());
     });
 
-    $('#formInput').selectpicker(
-        {
-            "liveSearch": true
-        }
-    );
-
-    $('#isabel_campaignInput').selectpicker(
-        {
-            "liveSearch": true
-        }
-    );
+    
 
     FormFunctions.setAjaxLoadPicker(
         '#formInput', picker_search_form_url, FormFunctions.updatePicker, "Escoja un formulario"
