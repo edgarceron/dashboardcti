@@ -113,5 +113,3 @@ def check_tercero_cedula(request):
 def check_placa(request):
     """Validates that the given request contains a cedula for """
     return consolidacion_operations.check_placa(request)
-
-

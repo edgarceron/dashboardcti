@@ -33,9 +33,21 @@ $( document ).ready(function() {
         'create_cita_url': {'url' : create_cita_url, 'method':'POST'},
         'check_horarios': {'url' : check_horarios_url, 'method':'POST'},
         'send_confirmation_mail_url': {'url' : send_confirmation_mail_url, 'method':'POST'},
+        'check_placa_url': {'url' : check_placa_url, 'method':'POST'},
+        'check_tercero_cedula_url': {'url' : check_tercero_cedula_url, 'method':'POST'},
     }
 
     Citas.standard = new StandardCrud(urls);
+
+    $('#cedulaInput').change(function(){
+        var cedula = $('#cedulaInput').val();
+        Citas.validateCedula(cedula);
+    });
+
+    $('#placaInput').change(function(){
+        var placa = $('#placaInput').val();
+        Citas.validatePlaca(placa);
+    });
 
     FormFunctions.setAjaxLoadPicker('#sedeInput', picker_search_sede_url, Citas.updatePickerSede, "Escoja una sede");
     FormFunctions.setAjaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "Escoja un motivo");

@@ -106,6 +106,7 @@ Consola de agente
 <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
 <script src="{% static 'agent_console/js/app/agent_console.js' %}"></script>
 <script src="{% static 'agent_console/js/app/Citas.js' %}"></script>
+<script src="{% static 'agent_console/js/app/gestion_citas.js' %}"></script>
 <script src="{% static 'agent_console/js/app/Polls.js' %}"></script>
 <script src="{% static 'form_creator/js/app/Question.class.js' %}"></script>
 <script>
@@ -124,6 +125,14 @@ Consola de agente
     picker_search_campaign_url = "{% url 'picker_search_campaign_manticore' %}";
     get_questions_campaign_url = "{% url 'get_questions_campaign' campaign_id=0 %}";
     check_tercero_cedula_url = "{% url 'check_tercero_cedula' %}";
+    check_placa_url = "{% url 'check_placa' %}"
     get_questions_campaign_url = get_questions_campaign_url.slice(0, -1);
+
+    add_header_url = "{% url 'add_header' %}";
+    replace_header_url = "{% url 'replace_header' header_id=0 %}";
+    save_answers_url = "{% url 'save_answers' header_id=0 %}";
+    replace_header_url = replace_header_url.slice(0, -1);
+    save_answers_url = save_answers_url.slice(0, -1);
+
 </script>
 {% endblock %}

@@ -186,14 +186,14 @@ class Question {
                 name = "#textAreaPregunta" + this.id;
                 return $(name).text();
             case Question.TYPE_MULTI_ONE:
-                idPregunta = "pregunta" + this.id;
-                selector = '[id$='+ idPregunta +'] :checked';
+                var idPregunta = "pregunta" + this.id;
+                var selector = '[id$='+ idPregunta +'] :checked';
                 var selected = $(selector);
                 if(selected.length == 0) return [];
                 return $(selector).val();
             case Question.TYPE_MULTI_MANY:
-                idPregunta = "pregunta" + this.id;
-                selector = '[id$='+ idPregunta +'] :checked';
+                var idPregunta = "pregunta" + this.id;
+                var selector = '[id$='+ idPregunta +'] :checked';
                 var selected = $(selector);
                 if(selected.length == 0) return [];
                 else if(selected.length == 1)  return $(selector).val();

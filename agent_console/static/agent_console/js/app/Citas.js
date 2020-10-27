@@ -122,4 +122,38 @@ class Citas {
     static setCallConsolidacionId(id){
         $("#call_consolidacion_idInput").val(id);
     }
+
+    static validateCedula(cedula){
+        var data = {
+            'nit': cedula
+        }
+        var ajaxFunctions = {
+            'success': function(result){
+                if(!result.success){
+                    SoftNotification.show("No existe un tercero con esta cedula");
+                }
+            },
+            'error': function(request, status, error){
+                SoftNotification.show("Sucedio un error", "danger");
+            }
+        }
+        Citas.standard.makePetition(data, 'check_tercero_cedula_url', ajaxFunctions);
+    }
+
+    static validatePlaca(placa){
+        var data = {
+            'placa': placa
+        }
+        var ajaxFunctions = {
+            'success': function(result){
+                if(!result.success){
+                    SoftNotification.show("No existe esta placa en el sistema");
+                }
+            },
+            'error': function(request, status, error){
+                SoftNotification.show("Sucedio un error al intentar verificar la placa", "danger");
+            }
+        }
+        Citas.standard.makePetition(data, 'check_placa_url', ajaxFunctions);
+    }
 }

@@ -16,4 +16,7 @@ urlpatterns = [
     path('delete/<int:campaign_id>', webservices.delete_campaign, name='delete_campaign'),
     path('toggle/<int:campaign_id>', webservices.toggle_campaign, name='toggle_campaign'),
     path('upload_calls_campaign', webservices.upload_calls_campaign, name='upload_calls_campaign'),
+    path('add_header', webservices.add_header, name='add_header'),
+    path('replace_header/<int:header_id>', webservices.replace_header, name='replace_header'),
+    path('save_answers/<int:header_id>', webservices.save_answers, name='save_answers'),
 ]

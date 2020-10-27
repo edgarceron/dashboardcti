@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from users.permission_validation import PermissionValidation
 from consolidacion.serializers import ConsolidacionFileUploadsSerializer
 from agent_console.models import Calls, Campaign
-from campaigns.serializers import DataLlamadaSerializar
-from campaigns.models import CampaignForm, AnswersHeader
+from campaigns.serializers import DataLlamadaSerializar, AnswersBodySerializer
+from campaigns.models import CampaignForm, AnswersHeader, Question, AnswersBody, Answer
 
 def upload_calls_campaign(request):
     """Uploads the calls for the campaign"""
@@ -68,6 +68,8 @@ def get_campaign(id_campaign):
 
 def create_call(phone, id_campaign):
     campaign = Campaign.objects.get(id=id_campaign)
+    campaign.estatus = 'A'
+    campaign.save()
     call = Calls(phone=phone, id_campaign=campaign, retries=0, dnc=0, scheduled=0)
     call.save()
     return call.id
@@ -99,3 +101,59 @@ def obtain_data_from_row(row):
             data['linea_veh'] = col
         aux += 1
     return data
+
+def save_answers(request, header_id):
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('save_answers')
+    if validation['status']:
+        data = request.data
+        keys = data.keys()
+        header = AnswersHeader.objects.get(id=header_id)
+        for question_id in keys:
+            question = Question.objects.get(id=question_id)
+            answer_data = data[question_id]
+            if check_answers(answer_data):
+                answers = obtain_asnwers(answer_data)
+                store_answers(answers, header, question)
+            else:
+                store_answer_bool_text(answer_data, header, question)
+        return Response(
+            {"success":True, "message": "Respuestas guardadas correctamente"},
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
+    return permission_obj.error_response_webservice(validation, request)
+
+def obtain_asnwers(data_answers):
+    if isinstance(data_answers, list):
+        answers = []
+        for asnwer in data_answers:
+            answers.append(Answer.objects.get(id=data_answers))
+    else:
+        answers = [Answer.objects.get(id=data_answers)]
+    return answers
+
+def store_answers(answers, header, question):
+    if len(answers) == 0:
+        body = AnswersBody(header, question, question.text, None, "")
+        body.save()
+    else:
+        for answer in answers:
+            body = AnswersBody(header, question, question.text, answer.id, answer.text)
+            body.save()
+
+def store_answer_bool_text(answer, header, question):
+    if isinstance(answer, bool):
+        if(answer):
+            answer = "Verdadero"
+        else:
+            answer = "Falso"
+
+    body = AnswersBody(header=header, question=question, question_text=question.text,
+    answer=None, answer_text=answer)
+    body.save()
+
+def check_answers(data_answers):
+    if isinstance(data_answers, bool) or isinstance(data_answers, str):
+        return False
+    return True

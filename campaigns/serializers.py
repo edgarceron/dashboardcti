@@ -25,7 +25,7 @@ class AnswersHeaderSerializer(serializers.ModelSerializer):
     """Serializer for AnswersHeader model"""
     class Meta:
         model = AnswersHeader
-        fields = ['id', 'campaing', 'tercero']
+        fields = ['id', 'campaing', 'tercero', 'agente', 'call_id', 'data_llamada']
 
     def create(self, validated_data):
         obj = AnswersHeader(**validated_data)
