@@ -130,7 +130,11 @@ class Citas {
         var ajaxFunctions = {
             'success': function(result){
                 if(!result.success){
-                    SoftNotification.show("No existe un tercero con esta cedula");
+                    SoftNotification.show("No existe un tercero con esta cedula", "danger");
+                }
+                else{
+                    SoftNotification.show("El tercero esta creado en el sistema");
+                    $('#nombreInpunt').val(result.nombres);
                 }
             },
             'error': function(request, status, error){
@@ -147,7 +151,10 @@ class Citas {
         var ajaxFunctions = {
             'success': function(result){
                 if(!result.success){
-                    SoftNotification.show("No existe esta placa en el sistema");
+                    SoftNotification.show("No existe esta placa en el sistema", "danger");
+                }
+                else{
+                    SoftNotification.show("La placa esta registrada en el sistema")
                 }
             },
             'error': function(request, status, error){
