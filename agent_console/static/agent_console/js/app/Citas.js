@@ -38,10 +38,12 @@ class Citas {
                     $('#contentTeceros').addClass('d-none');
                     $('#contentEmail').removeClass('d-none');
                     $('#successModal').modal('toggle');
-                    $('#cedulaInput').val('');
-                    $('#nombreInput').val('');
-                    $('placaInput').val('');
                 }, 1001);   
+                $('#cedulaInput').val('');
+                $('#nombreInput').val('');
+                $('#placaInput').val('');
+                $('#sedeInput').val("");
+                $('#fechaInput').val("");
             },
             'error': function(request, status, error){
                 console.log(status);
