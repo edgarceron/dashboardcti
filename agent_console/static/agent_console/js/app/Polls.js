@@ -241,7 +241,7 @@ class Polls {
         if (terceros.length == 1){
             $('#cedulaPollInput').val(terceros[0].nit);
             $('#nombrePollInput').val(terceros[0].nombres);
-            Polls.tercero = terceros[0].nit;
+            if(terceros.length > 0) Polls.tercero = terceros[0].nit;
         }
         else if (terceros.length > 1){
             $("#selectTercero").empty();
