@@ -193,6 +193,7 @@ class AgentState():
             answer['status'] = "Conectado"
             answer['phone'] = telefono
             answer['header'] = None
+            answer['campaign_id'] = id_campaign.id
 
             if id_campaign.id == campaign_cosolidacion:
                 answer = AgentState.answer_consolidacion(answer, current_call, id_agent)
