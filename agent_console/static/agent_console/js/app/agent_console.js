@@ -46,7 +46,7 @@ function responseConsolidacion(result){
 
     data = {'data':result}
     Citas.setCallConsolidacionId(result.call_consolidacion_id);
-    var standard = StandardCrud({});
+    //var standard = StandardCrud({});
     Citas.standard.standardSetValues(data);
 }
 
