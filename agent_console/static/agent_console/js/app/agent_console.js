@@ -66,6 +66,8 @@ function calculateActions(result){
         Polls.loadForm(result);
     }
     Polls.setTelefono(result.phone);
+    $('#cedulaInput').val(result.cedula);
+    $('#cedulaPollInput').val(result.cedula);
 }
 
 
