@@ -14,6 +14,7 @@ def get_answered_before(start_date, end_date, agent, campaign):
         start_date, end_date, agent, campaign
     )
     conditions['duration_wait__lte'] = seconds
+    conditions['status'] = 'Success'
 
     answered_before = CallEntry.objects.filter(
         **conditions
