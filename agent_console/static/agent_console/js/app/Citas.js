@@ -134,7 +134,7 @@ class Citas {
                 }
                 else{
                     SoftNotification.show("El tercero esta creado en el sistema");
-                    $('#nombreInpunt').val(result.nombres);
+                    $('#nombreInput').val(result.nombres);
                 }
             },
             'error': function(request, status, error){
