@@ -184,7 +184,7 @@ class AgentState():
             answer = AgentState.answer_entry(answer, current_call_entry)
         elif state == "5":
             id_campaign = current_call.id_call.id_campaign
-            campaign_cosolidacion = AgentConsoleOptions.objects.get(option='CAMPAIGN_CONSOLIDACION')
+            campaign_cosolidacion = AgentConsoleOptions.objects.get(option='CAMPAIGN_CONSOLIDACION').value
             poll_campaign = AgentState.get_poll_campaign(id_campaign, 1)
             telefono = current_call.id_call.phone
 
@@ -193,8 +193,6 @@ class AgentState():
             answer['status'] = "Conectado"
             answer['phone'] = telefono
             answer['header'] = None
-            answer['campaign_id'] = id_campaign.id
-            answer['campaign_cosolidacion'] = campaign_cosolidacion
 
 
             if id_campaign.id == campaign_cosolidacion:
