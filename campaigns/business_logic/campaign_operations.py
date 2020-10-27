@@ -7,6 +7,7 @@ from consolidacion.serializers import ConsolidacionFileUploadsSerializer
 from agent_console.models import Calls, Campaign
 from campaigns.serializers import DataLlamadaSerializar, AnswersBodySerializer
 from campaigns.models import CampaignForm, AnswersHeader, Question, AnswersBody, Answer
+import json
 
 def upload_calls_campaign(request):
     """Uploads the calls for the campaign"""
@@ -125,10 +126,12 @@ def save_answers(request, header_id):
     return permission_obj.error_response_webservice(validation, request)
 
 def obtain_asnwers(data_answers):
+    if isinstance(data_answers, str):
+        data_answers = json.loads(data_answers)
     if isinstance(data_answers, list):
         answers = []
-        for asnwer in data_answers:
-            answers.append(Answer.objects.get(id=data_answers))
+        for answer in data_answers:
+            answers.append(Answer.objects.get(id=answer))
     else:
         answers = [Answer.objects.get(id=data_answers)]
     return answers
@@ -139,7 +142,8 @@ def store_answers(answers, header, question):
         body.save()
     else:
         for answer in answers:
-            body = AnswersBody(header, question, question.text, answer.id, answer.text)
+            body = AnswersBody(header=header, question=question, question_text=question.text,
+            answer=answer, answer_text=answer.text)
             body.save()
 
 def store_answer_bool_text(answer, header, question):
@@ -154,6 +158,13 @@ def store_answer_bool_text(answer, header, question):
     body.save()
 
 def check_answers(data_answers):
-    if isinstance(data_answers, bool) or isinstance(data_answers, str):
+    if isinstance(data_answers, bool): 
         return False
+    if isinstance(data_answers, str):
+        try:
+            data = json.loads(data_answers)
+            if not isinstance(data, list):
+                return False 
+        except json.decoder.JSONDecodeError:
+            return False
     return True

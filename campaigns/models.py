@@ -25,7 +25,6 @@ class AnswersHeader(models.Model):
     call_id = models.IntegerField(null=True)
     data_llamada = models.ForeignKey(DataLlamada, null=True, on_delete=models.CASCADE)
 
-
 class AnswersBody(models.Model):
     """Class for answers body"""
     header = models.ForeignKey(AnswersHeader, on_delete=models.CASCADE)

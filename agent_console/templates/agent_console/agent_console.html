@@ -134,5 +134,8 @@ Consola de agente
     replace_header_url = replace_header_url.slice(0, -1);
     save_answers_url = save_answers_url.slice(0, -1);
 
+    add_data_llamada_url = "{% url 'add_data_llamada' %}";
+    replace_data_llamada_url = "{% url 'replace_data_llamada' data_llamada_id=0 %}";
+
 </script>
 {% endblock %}

@@ -65,6 +65,7 @@ function calculateActions(result){
         actionDecided = true;
         Polls.loadForm(result);
     }
+    Polls.setTelefono(result.phone);
 }
 
 

@@ -38,6 +38,9 @@ class Citas {
                     $('#contentTeceros').addClass('d-none');
                     $('#contentEmail').removeClass('d-none');
                     $('#successModal').modal('toggle');
+                    $('#cedulaInput').val('');
+                    $('#nombreInput').val('');
+                    $('placaInput').val('');
                 }, 1001);   
             },
             'error': function(request, status, error){

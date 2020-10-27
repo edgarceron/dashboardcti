@@ -91,10 +91,67 @@ class Polls {
     }
 
     static saveForm(){
+        Polls.saveDataLlamada();
         if(Polls.checkValidity()){
             Polls.saveHeader();
             Polls.saveBodies(Polls.header);
         }
+        Polls.clearDataLlamada();
+    }
+
+    static clearDataLlamada(){
+        $('#telefonoPollInput').val('');
+        $('#nombrePollInput').val('');
+        $('#cedulaPollInput').val('');
+        $('#correoPollInput').val('');
+        $('#placaPollInput').val('');
+        $('#lineaPollInput').val('');
+        $('#campaignInput').val("");
+        Polls.data_llamada = null;
+        Polls.header = null;
+    }
+
+    static saveDataLlamada(){
+        var data = {};
+        data['telefono'] = $('#telefonoPollInput').val();
+        data['name'] = $('#nombrePollInput').val();
+        data['cedula'] = $('#cedulaPollInput').val();
+        data['correo'] = $('#correoPollInput').val();
+        data['placa'] = $('#placaPollInput').val();
+        data['linea_veh'] = $('#lineaPollInput').val();
+        
+        var data_llamada_id = Polls.data_llamada;
+        if(data_llamada_id == null){
+            Polls.addDataLlamada(data);
+        }
+        else {
+            Polls.replaceDataLlamada(data, data_llamada_id);
+        }
+    }
+
+    static addDataLlamada(data){
+        var ajaxFunctions = {
+            'success': function(result){
+                console.log("Data llamada creado correctamente");
+                Polls.data_llamada = result.id;
+            },
+            'error': function(result){
+                SoftNotification.show("Diligencie el número de telefono del contacto");
+            }
+        }
+        Polls.standard.makePetition(data, 'add_data_llamada_url', ajaxFunctions);
+    }
+
+    static replaceDataLlamada(data, data_llamada_id){
+        var url = Polls.standard.urls['replace_data_llamada_url']['url'];
+        Polls.standard.urls['replace_data_llamada_url']['url'] = url + data_llamada_id;
+        var ajaxFunctions = {
+            'success': function(result){
+                console.log("Data llamada guardada correctamente");
+            },
+        }
+        Polls.standard.makePetition(data, 'replace_data_llamada_url', ajaxFunctions);
+        Polls.standard.urls['replace_data_llamada_url']['url'] = url;
     }
 
     static saveHeader(){
@@ -118,9 +175,11 @@ class Polls {
         var url = Polls.standard.urls['save_answers_url']['url'];
         Polls.standard.urls['save_answers_url']['url'] = url + header_id;
         for(let question of Polls.questionsList){
-            answers[question.id] = question.getAnswer();
+            var aux = question.getAnswer();
+            if(Array.isArray(aux)) aux = JSON.stringify(aux);
+            answers[question.id] = aux;
         }
-
+        console.log(answers);
         var ajaxFunctions = {
             'success': function(result){
                 SoftNotification.show("Respuestas guardadas correctamente");
@@ -162,6 +221,9 @@ class Polls {
     }
 
     static checkValidity(){
+        if(Polls.data_llamada == null){
+            return false;
+        }
         var valid = true;
         for(let question of Polls.questionsList){
             console.log(question);
@@ -169,6 +231,10 @@ class Polls {
             valid = valid && question.isValid();
         }
         return valid;
+    }
+
+    static setTelefono(telefono){
+        $('#telefonoPollInput').val(telefono);
     }
 
     static terceroManagement(terceros){
@@ -199,6 +265,8 @@ $( document ).ready(function() {
         'add_header_url': {'url' : add_header_url, 'method': 'POST'},
         'replace_header_url': {'url' : replace_header_url, 'method': 'POST'},
         'save_answers_url': {'url' : save_answers_url, 'method': 'POST'},
+        'add_data_llamada_url': {'url' : add_data_llamada_url, 'method': 'POST'},
+        'replace_data_llamada_url': {'url' : replace_data_llamada_url, 'method': 'POST'},
     }
 
     Polls.standard =  new StandardCrud(urlsPolls);
@@ -209,6 +277,7 @@ $( document ).ready(function() {
             var campaign = $(e.delegateTarget).val(); 
             Polls.getQuestionObjects(campaign);
             Polls.drawForm();
+            Polls.campaign = campaign;
         });
 
     $('#buttonSavePoll').click(function(){

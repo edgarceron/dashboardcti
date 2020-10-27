@@ -61,6 +61,11 @@
                         <a class="btn btn-primary" href="{% url 'upload_data_campaign' campaign_id=id %}">Subir datos</a>
                     </div>
                 </div>
+                <div class="col">
+                    <div class='form-group'>
+                        <a class="btn btn-primary" href="{% url 'download_poll_answers' campaign_id=id %}">Descargar respuestas</a>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

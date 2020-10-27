@@ -1,7 +1,10 @@
 "Contains the views for the form_creator app."
-from django.shortcuts import render, redirect
+import os
+from django.shortcuts import render, redirect, HttpResponse
 from users.permission_validation import PermissionValidation
+from campaigns.business_logic import show_results
 from .models import CampaignForm
+
 
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
@@ -63,3 +66,13 @@ def upload_data_campaign(request, campaign_id):
             }
         )
     return permission_obj.error_response_view(validation, request)
+
+def download_poll_answers(request, campaign_id):
+    collected_data = show_results.collect_data(campaign_id)
+    file_path = show_results.data_to_csv(collected_data)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    return render(request, 'maingui/http_error.html', None, status=404)

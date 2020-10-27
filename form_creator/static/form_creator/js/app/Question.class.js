@@ -184,26 +184,31 @@ class Question {
                 return $(name).prop('checked');
             case Question.TYPE_TEXT:
                 name = "#textAreaPregunta" + this.id;
-                return $(name).text();
+                return $(name).val();
             case Question.TYPE_MULTI_ONE:
                 var idPregunta = "pregunta" + this.id;
-                var selector = '[id$='+ idPregunta +'] :checked';
-                var selected = $(selector);
-                if(selected.length == 0) return [];
-                return $(selector).val();
+                var selector = '[id$='+ idPregunta +']';
+                var checked;
+                $(selector).each(
+                    function(){
+                        if($(this).is(":checked")){
+                            checked = $(this).val();
+                        }
+                    }
+                );
+                return checked;
             case Question.TYPE_MULTI_MANY:
                 var idPregunta = "pregunta" + this.id;
-                var selector = '[id$='+ idPregunta +'] :checked';
-                var selected = $(selector);
-                if(selected.length == 0) return [];
-                else if(selected.length == 1)  return $(selector).val();
-                else {
-                    var values = []
-                    for(var i = 0; i < selected.length; i++){
-                        values.push(selected[i].val());
+                var selector = '[id$='+ idPregunta +']';
+                var selected = [];
+                $(selector).each(
+                    function(){
+                        if($(this).is(":checked")){
+                            selected.push($(this).val());
+                        }
                     }
-                    return values;
-                }
+                );
+                return selected;
         }
     }
 
