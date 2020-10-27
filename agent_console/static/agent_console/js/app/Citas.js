@@ -76,7 +76,7 @@ class Citas {
                 SoftNotification.show('Hubo un error al enviar el correo','danger');
             },
             'complete': function(){
-                endTransaction();
+                //endTransaction();
             }
         }
         Citas.standard.makePetition(data_email, 'send_confirmation_mail_url', ajaxFunctions);
