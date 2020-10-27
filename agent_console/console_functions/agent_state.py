@@ -194,7 +194,7 @@ class AgentState():
             answer['phone'] = telefono
             answer['header'] = None
 
-            if id_campaign == campaign_cosolidacion:
+            if id_campaign.id == campaign_cosolidacion:
                 answer = AgentState.answer_consolidacion(answer, current_call, id_agent)
 
             elif poll_campaign is not None:
