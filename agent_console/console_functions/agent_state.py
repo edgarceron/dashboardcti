@@ -167,6 +167,7 @@ class AgentState():
         answer['cedula'] = cedula
         answer['terceros'] = [tercero]
         answer['data_llamada'] = None
+        answer['llamada_id'] = ce.uniqueid
         return answer
 
     def get_answer(self, state, id_agent, current_call_entry=None, current_call=None):
