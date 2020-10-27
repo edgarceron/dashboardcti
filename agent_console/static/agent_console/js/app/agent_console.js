@@ -51,7 +51,8 @@ function responseConsolidacion(result){
 
     data = {'data':result}
     Citas.setCallConsolidacionId(result.call_consolidacion_id);
-    StandardCrud.standardSetValues(data);
+    var standard = StandardCrud({}):
+    standard.standardSetValues(data);
 }
 
 function calculateActions(result){
@@ -65,9 +66,12 @@ function calculateActions(result){
         actionDecided = true;
         Polls.loadForm(result);
     }
-    Polls.setTelefono(result.phone);
-    $('#cedulaInput').val(result.cedula);
-    $('#cedulaPollInput').val(result.cedula);
+    else{
+        Polls.setTelefono(result.phone);
+        $('#cedulaInput').val(result.cedula);
+        $('#cedulaPollInput').val(result.cedula);
+    }
+    
 }
 
 
