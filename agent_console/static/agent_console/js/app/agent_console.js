@@ -43,15 +43,10 @@ function getAgentState(agent, previous_state, previous_call){
 }
 
 function responseConsolidacion(result){
-    $('#contentCita').removeClass('d-none');
-    $('#contentEmail').addClass('d-none');
-    $('#fechaInput').val("");
-    $('#successModal').modal('show');
-    $('#successModal').modal({backdrop:'static', keyboard:false});
 
     data = {'data':result}
     Citas.setCallConsolidacionId(result.call_consolidacion_id);
-    var standard = StandardCrud({}):
+    var standard = StandardCrud({});
     standard.standardSetValues(data);
 }
 
