@@ -89,6 +89,7 @@ class Citas {
         $('#placaInput').val('');
         $('#sedeInput').val("");
         $('#fechaInput').val("");
+        $('#collapseCitas').collapse('hide');
         Citas.endTransaction();
         $('#successModal').modal('hide');
     }

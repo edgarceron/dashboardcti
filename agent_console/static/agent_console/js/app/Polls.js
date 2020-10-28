@@ -275,6 +275,7 @@ class Polls {
         Polls.clearDataLlamada();
         Polls.resetPoll();
         Polls.endTransaction();
+        $('#collapsePolls').collapse('hide');
     }
 
 }

@@ -134,7 +134,7 @@ class AgentState():
             header = AnswersHeader.objects.get(call_id=call.id)
             if header.data_llamada is not None:
                 data_llamada = header.data_llamada
-                serializer = DataLlamadaSerializar(data_llamada).initial_data
+                serializer = DataLlamadaSerializar(instance=data_llamada).data
                 answer['data_llamada'] = serializer
                 answer['terceros'] = []
                 answer['header'] = header.id
