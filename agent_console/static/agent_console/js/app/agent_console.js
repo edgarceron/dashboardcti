@@ -46,8 +46,7 @@ class AgentConsole{
     }
 
     static responseConsolidacion(result){
-
-        data = {'data':result}
+        var data = {'data':result}
         Citas.setCallConsolidacionId(result.call_consolidacion_id);
         Citas.standard.standardSetValues(data);
     }
