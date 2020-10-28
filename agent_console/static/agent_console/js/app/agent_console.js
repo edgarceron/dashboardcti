@@ -49,6 +49,7 @@ class AgentConsole{
         var data = {'data':result}
         Citas.setCallConsolidacionId(result.call_consolidacion_id);
         Citas.standard.standardSetValues(data);
+        $('#collapseCitas').collapse('show');
     }
 
     static calculateActions(result){
