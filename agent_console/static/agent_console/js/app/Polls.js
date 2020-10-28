@@ -256,6 +256,12 @@ class Polls {
         }
     }
 
+    static selectTercero(){
+        var nit = $('#selectTercero').val();
+        $('#cedulaPollInput').val(nit);
+        $('#successModal').modal('hide');
+    }
+
 }
 
 
@@ -288,6 +294,14 @@ $( document ).ready(function() {
 
     $('#cedulaPollInput').change(function(){
         Polls.validateCedula();
+    });
+
+    $('#cedulaPollInput').change(function(){
+        Polls.validateCedula();
+    });
+
+    $('#selectTerceroButton').change(function(){
+        Polls.selectTercero();
     });
 
     FormFunctions.setAjaxLoadPicker('#campaignInput', picker_search_campaign_url, FormFunctions.updatePicker, "Escoja una campaña");
