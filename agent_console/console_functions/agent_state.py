@@ -125,7 +125,7 @@ class AgentState():
         terceros = TercerosSerializer(instance=data_terceros, many=True).data
         answer['terceros'] = terceros
         answer['data_llamada'] = None
-        answer['form'] = poll_campaign.form
+        answer['form'] = poll_campaign.form.id
         return answer
 
     @staticmethod
