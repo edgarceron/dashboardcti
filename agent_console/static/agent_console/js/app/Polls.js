@@ -184,15 +184,7 @@ class Polls {
         var ajaxFunctions = {
             'success': function(result){
                 SoftNotification.show("Respuestas guardadas correctamente");
-                //Reset form
-                var container = $("#pollBody");
-                container.empty();
-
-                $('#anonimoInput').removeAttr('readonly');
-                $('#anonimoInput').removeAttr('disabled');
-                $('#campaignInput').removeAttr('readonly');
-                $('#campaignInput').removeAttr('disabled');
-
+                Polls.resetPoll();
             },
         }
         Polls.standard.makePetition(answers, 'save_answers_url', ajaxFunctions);
@@ -268,10 +260,21 @@ class Polls {
 
     static endTransaction(){
         AgentConsole.inTransaction = false;
-        if(AgentConsole.stateChanged){
-            AgentConsole.reset = true;
-            AgentConsole.stateChanged = false;
-        } 
+    }
+
+    static resetPoll(){
+        var container = $("#pollBody");
+        container.empty();
+        $('#anonimoInput').removeAttr('readonly');
+        $('#anonimoInput').removeAttr('disabled');
+        $('#campaignInput').removeAttr('readonly');
+        $('#campaignInput').removeAttr('disabled');
+    }
+
+    static cancel(){
+        Polls.clearDataLlamada();
+        Polls.resetPoll();
+        Polls.endTransaction();
     }
 
 }
@@ -300,9 +303,8 @@ $( document ).ready(function() {
             Polls.campaign = campaign;
         });
 
-    $('#buttonSavePoll').click(function(){
-        Polls.saveForm();
-    });
+    $('#buttonSavePoll').click(Polls.saveForm);
+    $('#buttonCancelPoll').click(Polls.cancel);
 
     $('#cedulaPollInput').change(function(){
         Polls.validateCedula();

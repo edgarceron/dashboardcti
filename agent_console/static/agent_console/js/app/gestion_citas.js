@@ -25,6 +25,7 @@ $( document ).ready(function() {
     $('#fechaInput').change(Citas.getHorariosDisponibles);
     $('#fechaInput').change(Citas.getHorariosDisponibles);
     $('#noEmailButton').click(Citas.cancel);
+    $('#cancelCitaButton').click(Citas.cancel);
     $('#cancelButton').click(Citas.cancel);
 
     urls = {

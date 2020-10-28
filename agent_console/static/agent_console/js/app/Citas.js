@@ -84,16 +84,17 @@ class Citas {
 
     
     static cancel(){
+        $('#cedulaInput').val('');
+        $('#nombreInput').val('');
+        $('#placaInput').val('');
+        $('#sedeInput').val("");
+        $('#fechaInput').val("");
         Citas.endTransaction();
         $('#successModal').modal('hide');
     }
 
     static endTransaction(){
         AgentConsole.inTransaction = false;
-        if(AgentConsole.stateChanged){
-            AgentConsole.reset = true;
-            AgentConsole.stateChanged = false;
-        } 
     }
 
     static updatePickerSede(pickerName, resultados, null_value=""){
