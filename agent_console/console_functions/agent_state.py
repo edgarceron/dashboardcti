@@ -122,7 +122,7 @@ class AgentState():
     def answer_poll_no_data(answer, telefono, poll_campaign):
         """Gets the answer for a call poll scenario"""
         data_terceros = Terceros.objects.filter(Q(telefono_1=telefono) | Q(telefono_2=telefono))
-        terceros = TercerosSerializer(data=data_terceros, many=True).data
+        terceros = TercerosSerializer(instance=data_terceros, many=True).data
         answer['terceros'] = terceros
         answer['data_llamada'] = None
         answer['form'] = poll_campaign.form
@@ -134,7 +134,7 @@ class AgentState():
             header = AnswersHeader.objects.get(call_id=call.id)
             if header.data_llamada is not None:
                 data_llamada = header.data_llamada
-                serializer = DataLlamadaSerializar(data_llamada).data
+                serializer = DataLlamadaSerializar(data_llamada).initial_data
                 answer['data_llamada'] = serializer
                 answer['terceros'] = []
                 answer['header'] = header.id
