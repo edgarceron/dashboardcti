@@ -29,7 +29,7 @@ class AgentConsole{
                         if(result.break != ""){
                             AgentConsole.since = new Date(result.date + " " + result.time);
                             AgentConsole.break = result.break;
-                        } 
+                        }
                         else AgentConsole.since = 0;
                         previous_break = result.break;
                         previous_state = result.previous;
