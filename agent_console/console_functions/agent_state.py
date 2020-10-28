@@ -200,7 +200,7 @@ class AgentState():
 
             elif poll_campaign is not None:
                 answer['campaign'] = poll_campaign.id
-                answer['call_id'] = current_call.id_call.id
+                answer['llamada_id'] = current_call.id_call.id
                 answer['agente'] = id_agent
                 answer = AgentState.answer_poll(answer, current_call.id_call, telefono, poll_campaign)
         if self.verbosity:
