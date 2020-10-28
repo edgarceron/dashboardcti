@@ -301,7 +301,7 @@ $( document ).ready(function() {
         Polls.validateCedula();
     });
 
-    $('#selectTerceroButton').change(function(){
+    $('#selectTerceroButton').click(function(){
         Polls.selectTercero();
     });
 
