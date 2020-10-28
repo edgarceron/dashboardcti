@@ -257,9 +257,10 @@ class Polls {
     }
 
     static selectTercero(){
+        console.log("Yeah");
         var nit = $('#selectTercero').val();
-        console.log(nit);
         $('#cedulaPollInput').val(nit);
+        $('#successModal').modal('hide');
     }
 
 }
