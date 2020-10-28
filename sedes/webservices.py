@@ -55,7 +55,7 @@ def toggle_sede(request, sede_id):
 def picker_search_sede(request):
     "Returns a JSON response with sede data for a selectpicker."
     crud_object = Crud(SedeSerializer, Sede, data_filters.sede_picker_filter)
-    return crud_object.picker_search(request, 'picker_search_user')
+    return crud_object.picker_search(request, 'picker_search_sede')
 
 @api_view(['POST'])
 def picker_search_bodega(request):

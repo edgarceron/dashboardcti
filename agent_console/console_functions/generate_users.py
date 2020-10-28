@@ -54,7 +54,7 @@ class GenerateUsers():
     def bulk_create_users():
         """Create the profile, users and user_agents for every agent if doesn't exist already"""
         profile = GenerateUsers.create_profile()
-        agents = Agent.objects.all()
+        agents = Agent.objects.filter(estatus='A')
         for agent in agents:
             number = agent.number
             name = agent.name

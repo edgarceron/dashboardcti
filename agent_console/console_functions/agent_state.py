@@ -180,6 +180,7 @@ class AgentState():
             answer = AgentState.answer_not_logged(answer)
         elif state == "3":
             answer = AgentState.answer_call_wait(answer)
+            answer = AgentState.get_descanso(answer, id_agent)
         elif state == "4":
             answer = AgentState.answer_entry(answer, current_call_entry)
         elif state == "5":
@@ -226,6 +227,7 @@ class AgentState():
         CurrentCall data"""
         current_call = None
         current_call_entry = None
+        active_break = ""
         exist, agentnum = AgentState.agent_exist(id_agent)
         if not exist:
             state = "1"
@@ -236,12 +238,17 @@ class AgentState():
             current_call = AgentState.agent_current_call(agentnum)
             if current_call_entry is None and current_call is None:
                 state = "3"
+                break_obj = AgentState.get_active_break(id_agent)
+                if break_obj is None:
+                    active_break = ""
+                else:
+                    active_break = break_obj.id_break.name.encode('latin-1').decode('utf-8')
             elif current_call_entry is not None:
                 state = "4"
             else:
                 state = "5"
 
-        return state, current_call_entry, current_call
+        return state, current_call_entry, current_call, active_break
 
     @staticmethod
     def get_consolidacion_by_call(id_call):
@@ -260,3 +267,22 @@ class AgentState():
         except CampaignForm.DoesNotExist:
             campaign = None
         return campaign
+
+    @staticmethod
+    def get_descanso(answer, id_agent):
+        """Gets break information if agent is in break"""
+        active_break = AgentState.get_active_break(id_agent)
+        answer['break'] = ""
+        if active_break is not None:
+            answer['break'] = active_break.id_break.name.encode('latin-1').decode('utf-8')
+            answer['date'] = active_break.datetime_init.date()
+            answer['time'] = active_break.datetime_init.time()
+
+        return answer
+
+    @staticmethod
+    def get_active_break(id_agent):
+        active_break = Audit.objects.filter(id_agent=id_agent, datetime_end__isnull=True, id_break__isnull=False)
+        if len(active_break) > 0:
+            return active_break[0]
+        return None

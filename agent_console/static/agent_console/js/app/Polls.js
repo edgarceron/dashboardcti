@@ -87,7 +87,8 @@ class Polls {
         for(var i = 0; i < Polls.questionsList.length; i++){
             Polls.questionsList[i].draw(container);
         }
-        $('#buttonSavePoll').removeClass('d-none')
+        $('#buttonSavePoll').removeClass('d-none');
+        $('#buttonCancelPoll').removeClass('d-none');
     }
 
     static saveForm(){
@@ -108,6 +109,8 @@ class Polls {
         $('#placaPollInput').val('');
         $('#lineaPollInput').val('');
         $('#campaignInput').val("");
+        $('#buttonSavePoll').addClass('d-none');
+        $('#buttonCancelPoll').addClass('d-none');
         Polls.data_llamada = null;
         Polls.header = null;
     }
