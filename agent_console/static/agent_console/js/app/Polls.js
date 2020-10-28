@@ -97,6 +97,7 @@ class Polls {
             Polls.saveBodies(Polls.header);
         }
         Polls.clearDataLlamada();
+        Polls.endTransaction();
     }
 
     static clearDataLlamada(){
@@ -258,9 +259,19 @@ class Polls {
 
     static selectTercero(){
         console.log("Yeah");
+        var nombre = $( "#selectTercero option:selected").text();
         var nit = $('#selectTercero').val();
         $('#cedulaPollInput').val(nit);
+        $('#nombrePollInput').val(nombre);
         $('#successModal').modal('hide');
+    }
+
+    static endTransaction(){
+        AgentConsole.inTransaction = false;
+        if(AgentConsole.stateChanged){
+            AgentConsole.reset = true;
+            AgentConsole.stateChanged = false;
+        } 
     }
 
 }

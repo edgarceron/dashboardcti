@@ -76,7 +76,7 @@ class Citas {
                 SoftNotification.show('Hubo un error al enviar el correo','danger');
             },
             'complete': function(){
-                //endTransaction();
+                Citas.endTransaction();
             }
         }
         Citas.standard.makePetition(data_email, 'send_confirmation_mail_url', ajaxFunctions);
@@ -89,10 +89,10 @@ class Citas {
     }
 
     static endTransaction(){
-        inTransaction = false;
-        if(stateChanged){
-            reset = true;
-            stateChanged = false;
+        AgentConsole.inTransaction = false;
+        if(AgentConsole.stateChanged){
+            AgentConsole.reset = true;
+            AgentConsole.stateChanged = false;
         } 
     }
 
