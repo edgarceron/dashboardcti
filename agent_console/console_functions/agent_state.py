@@ -5,7 +5,8 @@ from django.db.models import Q
 from dms.models import Terceros
 from dms.serializers import TercerosSerializer
 from consolidacion.models import CallConsolidacion
-from campaigns.models import CampaignForm
+from campaigns.models import CampaignForm, AnswersHeader
+from campaigns.serializers import DataLlamadaSerializar
 from agent_console.models import (
     Audit, Agent, CurrentCallEntry,
     CedulaLlamada, ServerLog, CurrentCalls, AgentConsoleOptions)
@@ -118,27 +119,44 @@ class AgentState():
         return answer
 
     @staticmethod
-    def answer_poll(answer, telefono, poll_campaign):
+    def answer_poll_no_data(answer, telefono, poll_campaign):
         """Gets the answer for a call poll scenario"""
         data_terceros = Terceros.objects.filter(Q(telefono_1=telefono) | Q(telefono_2=telefono))
-        terceros = TercerosSerializer(data=data_terceros, many=True).data
+        terceros = TercerosSerializer(instance=data_terceros, many=True).data
         answer['terceros'] = terceros
-        answer['campaign'] = poll_campaign.id
-        answer['form'] = poll_campaign.form
+        answer['data_llamada'] = None
+        answer['form'] = poll_campaign.form.id
         return answer
+
+    @staticmethod
+    def answer_poll(answer, call, telefono, poll_campaign):
+        try:
+            header = AnswersHeader.objects.get(call_id=call.id)
+            if header.data_llamada is not None:
+                data_llamada = header.data_llamada
+                serializer = DataLlamadaSerializar(instance=data_llamada).data
+                answer['data_llamada'] = serializer
+                answer['terceros'] = []
+                answer['header'] = header.id
+                answer['llamada_id'] = call.uniqueid
+                return answer
+        except AnswersHeader.DoesNotExist:
+            pass
+        return AgentState.answer_poll_no_data(answer, telefono, poll_campaign)
 
     @staticmethod
     def answer_entry(answer, current_call_entry):
         """Gets the answer for a call entry scenario"""
-        campaign_isabel = current_call_entry.id_call_entry.id_campaig
-        campaign = AgentState.pollCampaign(campaign_isabel, 2)
+        ce = current_call_entry.id_call_entry
+        campaign_isabel = ce.id_campaign
+        campaign = AgentState.get_poll_campaign(campaign_isabel, 2)
         answer['campaign'] = campaign.id if campaign is not None else None
         cedula = AgentState.get_cedula(current_call_entry.uniqueid)
         tercero = None
         if cedula is not None:
             try:
                 tercero_data = Terceros.objects.get(nit=cedula)
-                tercero = TercerosSerializer(data=tercero_data).data
+                tercero = TercerosSerializer(tercero_data).data
             except Terceros.DoesNotExist:
                 pass
 
@@ -148,6 +166,8 @@ class AgentState():
         answer['phone'] = current_call_entry.callerid
         answer['cedula'] = cedula
         answer['terceros'] = [tercero]
+        answer['data_llamada'] = None
+        answer['llamada_id'] = ce.uniqueid
         return answer
 
     def get_answer(self, state, id_agent, current_call_entry=None, current_call=None):
@@ -160,24 +180,30 @@ class AgentState():
             answer = AgentState.answer_not_logged(answer)
         elif state == "3":
             answer = AgentState.answer_call_wait(answer)
+            answer = AgentState.get_descanso(answer, id_agent)
         elif state == "4":
             answer = AgentState.answer_entry(answer, current_call_entry)
         elif state == "5":
             id_campaign = current_call.id_call.id_campaign
-            campaign_cosolidacion = AgentConsoleOptions.objects.get(option='CAMPAIGN_CONSOLIDACION')
-            poll_campaign = AgentState.pollCampaign(id_campaign, 1)
+            campaign_cosolidacion = AgentConsoleOptions.objects.get(option='CAMPAIGN_CONSOLIDACION').value
+            poll_campaign = AgentState.get_poll_campaign(id_campaign, 1)
             telefono = current_call.id_call.phone
 
             answer['message'] = "En llamada"
             answer['call'] = True
             answer['status'] = "Conectado"
             answer['phone'] = telefono
+            answer['header'] = None
 
-            if id_campaign == campaign_cosolidacion:
+
+            if id_campaign.id == int(campaign_cosolidacion):
                 answer = AgentState.answer_consolidacion(answer, current_call, id_agent)
 
             elif poll_campaign is not None:
-                answer = AgentState.answer_poll(answer, telefono, poll_campaign)
+                answer['campaign'] = poll_campaign.id
+                answer['llamada_id'] = current_call.id_call.id
+                answer['agente'] = id_agent
+                answer = AgentState.answer_poll(answer, current_call.id_call, telefono, poll_campaign)
         if self.verbosity:
             self.save_log(state, id_agent, answer)
         answer['update'] = True
@@ -201,6 +227,7 @@ class AgentState():
         CurrentCall data"""
         current_call = None
         current_call_entry = None
+        active_break = ""
         exist, agentnum = AgentState.agent_exist(id_agent)
         if not exist:
             state = "1"
@@ -211,12 +238,17 @@ class AgentState():
             current_call = AgentState.agent_current_call(agentnum)
             if current_call_entry is None and current_call is None:
                 state = "3"
+                break_obj = AgentState.get_active_break(id_agent)
+                if break_obj is None:
+                    active_break = ""
+                else:
+                    active_break = break_obj.id_break.name.encode('latin-1').decode('utf-8')
             elif current_call_entry is not None:
                 state = "4"
             else:
                 state = "5"
 
-        return state, current_call_entry, current_call
+        return state, current_call_entry, current_call, active_break
 
     @staticmethod
     def get_consolidacion_by_call(id_call):
@@ -225,13 +257,32 @@ class AgentState():
         return consolidacion.consolidacion, consolidacion.id
 
     @staticmethod
-    def pollCampaign(id_campaign, type_campaign):
+    def get_poll_campaign(id_campaign, type_campaign):
         """Checks if the given id matches a poll campaign"""
         try:
             campaign = CampaignForm.objects.get(
-                isabel_campaign=id_campaign, 
+                isabel_campaign=id_campaign.id, 
                 type_campaign=type_campaign
             )
         except CampaignForm.DoesNotExist:
             campaign = None
         return campaign
+
+    @staticmethod
+    def get_descanso(answer, id_agent):
+        """Gets break information if agent is in break"""
+        active_break = AgentState.get_active_break(id_agent)
+        answer['break'] = ""
+        if active_break is not None:
+            answer['break'] = active_break.id_break.name.encode('latin-1').decode('utf-8')
+            answer['date'] = active_break.datetime_init.date()
+            answer['time'] = active_break.datetime_init.time()
+
+        return answer
+
+    @staticmethod
+    def get_active_break(id_agent):
+        active_break = Audit.objects.filter(id_agent=id_agent, datetime_end__isnull=True, id_break__isnull=False)
+        if len(active_break) > 0:
+            return active_break[0]
+        return None

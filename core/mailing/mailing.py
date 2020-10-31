@@ -10,7 +10,7 @@ def send_confirmacion(to, template, context):
         subject='That’s your subject',
         message=plain_message,
         html_message=html_message,
-        from_email='edgar.mauricio.ceron@gmail.com',
+        from_email='Concesionario Caribe Renault<notificaciones@caribecali.com>',
         recipient_list=[to,],
         fail_silently=False
     )

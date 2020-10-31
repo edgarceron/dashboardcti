@@ -52,7 +52,7 @@ def toggle_motivo(request, motivo_id):
 def picker_search_motivo(request):
     "Returns a JSON response with motivo data for a selectpicker."
     crud_object = Crud(MotivoSerializer, Motivo, data_filters.motivo_picker_filter)
-    return crud_object.picker_search(request, 'picker_search_user')
+    return crud_object.picker_search(request, 'picker_search_motivo')
 
 @api_view(['POST'])
 def list_motivo(request):

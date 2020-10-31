@@ -1,0 +1,91 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+    Subir datos de contacto
+{% endblock %}
+{% block topTitle %}
+    Subir datos de contacto
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-11">
+            <form action="" class="needs-validation w-100" novalidate>
+                <div class="row">
+                    <div class='col-md-6'>
+                        <div class='form-group'>
+                            <label >Campaña: {{ campaign_name }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    Estructura del Archivo: Cedula, Nombre, Correo, Placa, Telefono, Linea del vehiculo
+                </div>
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="inputGroupFileAddon">Archivo</span>
+                        </div>
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="inputFile" aria-describedby="inputGroupFileAddon">
+                          <label class="custom-file-label" for="inputFile">Choose file</label>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class='row'>
+                    <div class='col-md-6'>
+                        <div class='form-group'>
+                            <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-1">
+            <div class="spinner-border d-none" role="status" id="spiner">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row d-none" id="divArea">
+        <div class="col">
+            <label for="failsArea">Errores</label>
+            <textarea class="form-control" id="failsArea" rows="10"></textarea>
+        </div>
+    </div>
+    
+
+    <div class='modal fade' tabindex='-1' role='dialog' id='successModal'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='modalTitle'>Unos segundos por favor</h5>
+                </div>
+                <div class='modal-body'>
+                    <div class='alert alert-success' role='alert' id='modalMessage'>
+                        Guardado con exito!
+                    </div>
+                </div>
+                <div class='modal-footer'>
+                    Redirigiendo...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block javascript %}
+    <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
+    <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
+    <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'campaigns/js/app/upload_data.js' %}"></script> 
+
+    <script>
+        $( document ).ready(function() {
+            id = {{ id }};
+            upload_url = "{% url 'upload_calls_campaign' %}";
+        });
+    </script>
+{% endblock %}

@@ -35,10 +35,15 @@ class Citas {
                 SoftNotification.show('Cita creada con exito');
                 $('#successModal').modal('hide');
                 setTimeout(function(){ 
-                    $('#contentCita').addClass('d-none');
+                    $('#contentTeceros').addClass('d-none');
                     $('#contentEmail').removeClass('d-none');
                     $('#successModal').modal('toggle');
                 }, 1001);   
+                $('#cedulaInput').val('');
+                $('#nombreInput').val('');
+                $('#placaInput').val('');
+                $('#sedeInput').val("");
+                $('#fechaInput').val("");
             },
             'error': function(request, status, error){
                 console.log(status);
@@ -71,7 +76,7 @@ class Citas {
                 SoftNotification.show('Hubo un error al enviar el correo','danger');
             },
             'complete': function(){
-                endTransaction();
+                Citas.endTransaction();
             }
         }
         Citas.standard.makePetition(data_email, 'send_confirmation_mail_url', ajaxFunctions);
@@ -79,16 +84,18 @@ class Citas {
 
     
     static cancel(){
+        $('#cedulaInput').val('');
+        $('#nombreInput').val('');
+        $('#placaInput').val('');
+        $('#sedeInput').val("");
+        $('#fechaInput').val("");
+        $('#collapseCitas').collapse('hide');
         Citas.endTransaction();
         $('#successModal').modal('hide');
     }
 
     static endTransaction(){
-        inTransaction = false;
-        if(stateChanged){
-            reset = true;
-            stateChanged = false;
-        } 
+        AgentConsole.inTransaction = false;
     }
 
     static updatePickerSede(pickerName, resultados, null_value=""){
@@ -121,5 +128,46 @@ class Citas {
 
     static setCallConsolidacionId(id){
         $("#call_consolidacion_idInput").val(id);
+    }
+
+    static validateCedula(cedula){
+        var data = {
+            'nit': cedula
+        }
+        var ajaxFunctions = {
+            'success': function(result){
+                if(!result.success){
+                    SoftNotification.show("No existe un tercero con esta cedula", "danger");
+                }
+                else{
+                    SoftNotification.show("El tercero esta creado en el sistema");
+                    $('#nombreInput').val(result.nombres);
+                }
+            },
+            'error': function(request, status, error){
+                SoftNotification.show("Sucedio un error", "danger");
+            }
+        }
+        Citas.standard.makePetition(data, 'check_tercero_cedula_url', ajaxFunctions);
+    }
+
+    static validatePlaca(placa){
+        var data = {
+            'placa': placa
+        }
+        var ajaxFunctions = {
+            'success': function(result){
+                if(!result.success){
+                    SoftNotification.show("No existe esta placa en el sistema", "danger");
+                }
+                else{
+                    SoftNotification.show("La placa esta registrada en el sistema")
+                }
+            },
+            'error': function(request, status, error){
+                SoftNotification.show("Sucedio un error al intentar verificar la placa", "danger");
+            }
+        }
+        Citas.standard.makePetition(data, 'check_placa_url', ajaxFunctions);
     }
 }

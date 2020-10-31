@@ -39,10 +39,13 @@ def create_cita(request):
 def update_call_consolidacion(request, tall_cita, crm_cita):
     """Updates a call_consolidacion when a call is registered to it"""
     id_cc = request.data['call_consolidacion_id']
-    call_consolidacion = CallConsolidacion.objects.get(id=id_cc)
-    call_consolidacion.cita_tall_id = tall_cita
-    call_consolidacion.cita_crm_id = crm_cita
-    call_consolidacion.save()
+    try:
+        call_consolidacion = CallConsolidacion.objects.get(id=id_cc)
+        call_consolidacion.cita_tall_id = tall_cita
+        call_consolidacion.cita_crm_id = crm_cita
+        call_consolidacion.save()
+    except CallConsolidacion.DoesNotExist:
+        pass
 
 def create_crm_cita(tall_cita):
     nit_id = tall_cita['nit']

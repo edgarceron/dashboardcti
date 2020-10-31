@@ -27,6 +27,10 @@ def get_actions():
             "name": "get_questions_form",
             "label": "Webservice cargar preguntas en el generador de formularios"
         },
+        {
+            "name": "get_questions_campaign",
+            "label": "Webservice cargar preguntas cuando se va a mostrar la encuesta"
+        },
     ]
     return actions
 
@@ -116,6 +120,11 @@ def delete_answer(request, answer_id):
 def get_questions_form(request, form_id):
     """Returns a json rensponse with the questions for the given form"""
     return form_data_management.get_questions_form(request, form_id)
+
+@api_view(['POST'])
+def get_questions_campaign(request, campaign_id):
+    """Returns a json rensponse with the questions for the given form"""
+    return form_data_management.get_questions_campaign(request, campaign_id)
 
 @api_view(['POST'])
 def save_all(request):

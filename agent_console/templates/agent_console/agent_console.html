@@ -64,15 +64,12 @@ Consola de agente
             </div>
         </div>
     </div> 
-
-
 </div>
-
 
 
 <div class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" id="successModal">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" id="contentCita">
+        <div class="modal-content" id="contentTeceros">
             <div class="modal-header">
                 <div class="row text-right">
                     <button class="btn btn-danger" id="cancelButton">Cancelar</button>
@@ -80,7 +77,11 @@ Consola de agente
             </div>
             <div class="modal-body">
                 <div id="citasForm">
-                    
+                    <label for="selectTercero">Posibles terceros: </label>
+                    <select class="form-control" id="selectTercero">
+
+                    </select>
+                    <button type="button" class="btn btn-secondary" id="selectTerceroButton">Aceptar</button>
                 </div>
             </div>
         </div>
@@ -106,6 +107,9 @@ Consola de agente
 <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
 <script src="{% static 'agent_console/js/app/agent_console.js' %}"></script>
 <script src="{% static 'agent_console/js/app/Citas.js' %}"></script>
+<script src="{% static 'agent_console/js/app/gestion_citas.js' %}"></script>
+<script src="{% static 'agent_console/js/app/Polls.js' %}"></script>
+<script src="{% static 'form_creator/js/app/Question.class.js' %}"></script>
 <script>
     var id_agent = {{ id_agent }};
     agent_state_url = "{% url 'agent_state' %}";
@@ -119,8 +123,20 @@ Consola de agente
     get_motivo_url = get_motivo_url.slice(0, -1);
     create_cita_url = "{% url 'create_cita' %}";
     send_confirmation_mail_url = "{% url 'send_confirmation_mail' %}";
-    picker_search_campaign_url = "{% url 'picker_search_motivo' %}";
-    get_questions_form_url = "{% url 'get_questions_form' form_id=0 %}";
-    get_questions_form_url = get_questions_form_url.slice(0, -1)
+    picker_search_campaign_url = "{% url 'picker_search_campaign_manticore' %}";
+    get_questions_campaign_url = "{% url 'get_questions_campaign' campaign_id=0 %}";
+    check_tercero_cedula_url = "{% url 'check_tercero_cedula' %}";
+    check_placa_url = "{% url 'check_placa' %}"
+    get_questions_campaign_url = get_questions_campaign_url.slice(0, -1);
+
+    add_header_url = "{% url 'add_header' %}";
+    replace_header_url = "{% url 'replace_header' header_id=0 %}";
+    save_answers_url = "{% url 'save_answers' header_id=0 %}";
+    replace_header_url = replace_header_url.slice(0, -1);
+    save_answers_url = save_answers_url.slice(0, -1);
+
+    add_data_llamada_url = "{% url 'add_data_llamada' %}";
+    replace_data_llamada_url = "{% url 'replace_data_llamada' data_llamada_id=0 %}";
+
 </script>
 {% endblock %}

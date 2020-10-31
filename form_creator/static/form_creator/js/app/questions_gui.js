@@ -20,7 +20,10 @@ function setDataQuestion(question, guiIdentifier){
     $(nameTextPregunta).val(question.text);
     $(nameTypePregunta).val(question.question_type);
     $(nameTypePregunta).val(question.question_type);
-    $(nameNullPregunta).prop('checked', questions.empty);
+    if(question.empty) {
+        $(nameNullPregunta).prop('checked', 'checked');
+    }
+    
     $(namePosPregunta).val(question.position);
 
     changeQuestionBehavior(guiIdentifier);

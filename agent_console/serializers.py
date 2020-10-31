@@ -85,6 +85,7 @@ class CampaignEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = CampaignEntry
         fields = [
+            'id',
             'name',
             'id_queue_call_entry',
             'id_form',

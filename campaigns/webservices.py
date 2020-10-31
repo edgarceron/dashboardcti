@@ -1,9 +1,10 @@
 """Contains the webservices for the form_creator app"""
 from rest_framework.decorators import api_view
 from core.crud.standard import Crud
-from campaigns.business_logic import data_filters
-from .models import CampaignForm
-from .serializers import CampaignFormSerializer
+from campaigns.business_logic import data_filters, campaign_operations
+from .models import CampaignForm, AnswersHeader, DataLlamada
+from .serializers import CampaignFormSerializer, AnswersHeaderSerializer, DataLlamadaSerializar
+
 
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
@@ -14,6 +15,11 @@ def get_actions():
         {"name": "delete_campaign", "label": "Webservice borrar campaña"},
         {"name": "picker_search_campaign", "label": "Webservice picker de campañas"},
         {"name": "list_campaign", "label": "Webservice del listado de campañas"},
+        {"name": "add_header", "label": "Webservice crear una cabecera de respuesta"},
+        {"name": "replace_header", "label": "Webservice actualizar una cabecera de respuesta"},
+        {"name": "save_answers", "label": "Webservice guardar las respuesta"},
+        {"name": "add_data_llamada", "label": "Webservice para crear los datos de un usuario en llamada para encuesta"},
+        {"name": "replace_data_llamada", "label": "Webservice actualizar los datos de un usuario en llamada para encuesta"},
     ]
     return actions
 
@@ -58,3 +64,38 @@ def list_campaign(request):
     """Returns a JSON response containing registered campaign for a datatable"""
     crud_object = Crud(CampaignFormSerializer, CampaignForm, data_filters.campaign_listing_filter)
     return crud_object.listing(request, 'list_campaign')
+
+@api_view(['POST'])
+def upload_calls_campaign(request):
+    """Uploads the calls for the campaign"""
+    return campaign_operations.upload_calls_campaign(request)
+
+@api_view(['POST'])
+def add_header(request):
+    """Tries to create a header and returns the result"""
+    crud_object = Crud(AnswersHeaderSerializer, AnswersHeader)
+    return crud_object.add(request, 'add_header')
+
+@api_view(['POST'])
+def replace_header(request, header_id):
+    """Tries to update a header and returns the result"""
+    crud_object = Crud(AnswersHeaderSerializer, AnswersHeader)
+    return crud_object.replace(request, header_id, 'replace_header')
+
+@api_view(['POST'])
+def save_answers(request, header_id):
+    """Tries to update a header and returns the result"""
+    return campaign_operations.save_answers(request, header_id)
+
+
+@api_view(['POST'])
+def add_data_llamada(request):
+    """Tries to create a header and returns the result"""
+    crud_object = Crud(DataLlamadaSerializar, DataLlamada)
+    return crud_object.add(request, 'add_data_llamada')
+
+@api_view(['POST'])
+def replace_data_llamada(request, data_llamada_id):
+    """Tries to update a header and returns the result"""
+    crud_object = Crud(DataLlamadaSerializar, DataLlamada)
+    return crud_object.replace(request, data_llamada_id, 'replace_data_llamada')

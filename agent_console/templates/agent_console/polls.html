@@ -7,13 +7,37 @@
             <div class="input-group-prepend">
               <div class="input-group-text"><i class="fas fa-fw fa-id-card"></i></div>
             </div>
-            <input type="text" class="form-control" id="cedulaPollInput" placeholder="Cedula" readonly>
+            <input type="text" class="form-control" id="cedulaPollInput" placeholder="Cedula">
         </div>
         <div class="input-group mb-2 mr-sm-2">
             <div class="input-group-prepend">
               <div class="input-group-text">Nombre</div>
             </div>
-            <input type="text" class="form-control" id="nombrePollInput" placeholder="Cedula" readonly>
+            <input type="text" class="form-control" id="nombrePollInput" placeholder="Nombre">
+        </div>
+        <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">Telefono</div>
+            </div>
+            <input type="text" class="form-control" id="telefonoPollInput" placeholder="Telefono">
+        </div>
+        <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">Correo</div>
+            </div>
+            <input type="text" class="form-control" id="correoPollInput" placeholder="Correo">
+        </div>
+        <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">Placa</div>
+            </div>
+            <input type="text" class="form-control" id="placaPollInput" placeholder="Placa">
+        </div>
+        <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">Linea de vehiculo</div>
+            </div>
+            <input type="text" class="form-control" id="lineaPollInput" placeholder="Linea de vehiculo">
         </div>
         <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="anonimoInput">
@@ -23,12 +47,17 @@
     <div class="col-12">
         <div class='form-group'>
             <label for='campaignInput'>Campaña</label>
-            <select class="form-control" id="campaignInput" readonly>
+            <select class="form-control" id="campaignInput">
 
             </select>
         </div>
     </div>
     <div class="col-12" id="pollBody">
 
+    </div>
+    <br>
+    <div class="col-12">
+        <button type="button" class="btn btn-primary d-none" id="buttonSavePoll">Guardar</button>
+        <button type="button" class="btn btn-primary d-none" id="buttonCancelPoll">Cancelar</button>
     </div>
 </div>
