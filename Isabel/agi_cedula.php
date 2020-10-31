@@ -5,7 +5,7 @@
     $uniqueid = trim($argv[1]);
     $agi = new AGI();//instancia el AGI
     $agi->answer();// contesta la llamada
-	
+	 
 	$dbase='call_center';
 	$servidor='localhost';
 	$usuario='user';

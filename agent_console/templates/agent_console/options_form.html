@@ -37,9 +37,11 @@ Opciones de consola de agente
                 </div>
             </div>
         </div>
+      
     </div>
     </form>
 </div>
+
 <hr>
 <div class="row">
     <div class='col-md-3'>
@@ -71,6 +73,40 @@ Opciones de consola de agente
         </div>
     </div>
 </div>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <label>Lista de Recesos</label>
+        <table id="t_breaks" class="table table-striped table-bordered w-100" style="width:100%">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Tiempo Permitido</th>
+                </tr>
+            </thead>
+            <tbody>
+                  {% for break1 in b_break %}
+                  <tr>
+                    <td>{{ break1.id }}</td>
+                    <td>{{ break1.name }}</td>
+                    <td>{{ break1.description }}</td>
+                    <td><input type="number" class="form-control" id="{{ break1.id }}"></td>
+                  </tr>
+                  {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-md-6'>
+        <div class='form-group'>
+            <button type="button" class="btn btn-primary" id="saveButton_b">Guardar</button>
+        </div>
+    </div>
+</div>
 
 {% endblock content %}
 
@@ -84,8 +120,11 @@ Opciones de consola de agente
     auto_generate_users_url = "{% url 'auto_generate_users' %}";
     create_calls_asterisk_url = "{% url 'create_calls_asterisk' %}";
     picker_search_campaign_url = "{% url 'picker_search_campaign' %}";
+    add_break = "{% url 'add_break2' %}";
     get_campaign_url = "{% url 'get_campaign' campaign_id=0 %}";
     get_campaign_url = get_campaign_url.slice(0, -1);
+    
 </script>
 <script src="{% static 'agent_console/js/app/options_form.js' %}"></script>
+
 {% endblock %}

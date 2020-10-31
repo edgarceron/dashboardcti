@@ -14,7 +14,7 @@ Opciones de consola de agente
     <div class="col-md-12">
         <div class="row">
             <div class="col">
-                <label>TMO llamadass contestadas antes de:</label>
+                <label>TMO llamadas contestadas antes de:</label>
             </div>
             <div class="col">
                 <input type="number" class="form-control" id="TMOTIMEInput">
@@ -53,6 +53,22 @@ Opciones de consola de agente
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12">
+        <table id="listing" class="table table-striped table-bordered w-100" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Agente</th>
+                    <th>Descanso</th>
+                    <th>Tiempo</th>
+                 
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
 {% endblock content %}
 
 {% block javascript %}
@@ -63,5 +79,6 @@ Opciones de consola de agente
     replace_options_dashboard_url = "{% url 'replace_options_dashboard' %}";
     get_options_dashboard_url = "{% url 'get_options_dashboard' %}";
 </script>
+<script src="{% static 'maingui/vendor/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'dashboard/js/app/options_form.js' %}"></script>
 {% endblock %}

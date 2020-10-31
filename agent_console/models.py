@@ -324,6 +324,9 @@ class UserAgent(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     agent = models.IntegerField(unique=True)
 
+    class Meta:
+        managed = True
+
 class ServerLog(models.Model):
     """Saves the events in the server log, test or debug only"""
     event = models.CharField(max_length=1)
@@ -331,13 +334,22 @@ class ServerLog(models.Model):
     description = models.CharField(max_length=200)
     datetime = models.DateTimeField()
 
+    class Meta:
+        managed = True
+
 class AgentConsoleOptions(models.Model):
     """Stores the values of the options for the agent console"""
     option = models.CharField(max_length=40)
     value = models.CharField(max_length=255, unique=True)
     help_text = models.CharField(max_length=255, null=True, blank=True)
 
+    class Meta:
+        managed = True
+
 class UserSede(models.Model):
     """Each user is related to a sede"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     sede = models.ForeignKey(Sede, on_delete=models.CASCADE)
+
+    class Meta:
+        managed = True
