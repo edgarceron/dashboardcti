@@ -68,8 +68,17 @@ def get_actions():
             "name": "create_calls_asterisk",
             "label": "Webservice para generar llamadas de consolidación en el asterisk"
         },
+        {
+            "name": "add_break2",
+            "label": "Webservice para guardar breaks"
+        },
     ]
     return actions
+
+@api_view(['PUT'])
+def add_break2(request):
+    """Breaks."""
+    return Response({"message": "Got some data!", "data": request.data})    
 
 @api_view(['POST'])
 def set_user_agent(request):
@@ -115,10 +124,12 @@ def agent_state(request):
         previous_state = data['previous_state']
         id_agent = data['id_agent']
         previous_call = data['previous_call']
+        previous_break = data['previous_break']
 
-        state, current_call_entry, current_call = agent_state_obj.check_state(id_agent)
+        state, current_call_entry, current_call, active_break = agent_state_obj.check_state(id_agent)
         if (
                 state != previous_state
+                or previous_break != active_break
                 or (state == 4 and current_call_entry.uniqueid != previous_call)
                 or (state == 5 and current_call.uniqueid != previous_call)
         ):
