@@ -1,4 +1,4 @@
-"""Contains crud extra operations for campaings app"""
+"""Contains crud extra operations for campaigns app"""
 import csv
 from rest_framework import status
 from rest_framework.response import Response
@@ -7,6 +7,7 @@ from consolidacion.serializers import ConsolidacionFileUploadsSerializer
 from agent_console.models import Calls, Campaign
 from campaigns.serializers import DataLlamadaSerializar, AnswersBodySerializer
 from campaigns.models import CampaignForm, AnswersHeader, Question, AnswersBody, Answer
+from . import show_results
 import json
 
 def upload_calls_campaign(request):
@@ -77,7 +78,7 @@ def create_call(phone, id_campaign):
 
 def create_answer_header(campaign, call_id, model_data_llamada):
     answer_header = AnswersHeader(
-        campaing=campaign, tercero=None,
+        campaign=campaign, tercero=None,
         agente=None, call_id=call_id,
         data_llamada=model_data_llamada
     )
@@ -148,13 +149,14 @@ def store_answers(answers, header, question):
 
 def store_answer_bool_text(answer, header, question):
     if isinstance(answer, bool):
-        if(answer):
+        if answer:
             answer = "Verdadero"
         else:
             answer = "Falso"
 
-    body = AnswersBody(header=header, question=question, question_text=question.text,
-    answer=None, answer_text=answer)
+    body = AnswersBody(
+        header=header, question=question, question_text=question.text,
+        answer=None, answer_text=answer)
     body.save()
 
 def check_answers(data_answers):
@@ -168,3 +170,20 @@ def check_answers(data_answers):
         except json.decoder.JSONDecodeError:
             return False
     return True
+
+def data_chart(request):
+    """Returns the data to create charts for every questions"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('save_answers')
+    if validation['status']:
+        data = request.data
+        id_campaign = data['id_campaign']
+        start_date = data['start_date']
+        end_date = data['end_date']
+        result = show_results.data_chart(id_campaign, start_date, end_date)
+        return Response(
+            {"success":True, "questions": result},
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
+    return permission_obj.error_response_webservice(validation, request)

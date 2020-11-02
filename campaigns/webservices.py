@@ -99,3 +99,8 @@ def replace_data_llamada(request, data_llamada_id):
     """Tries to update a header and returns the result"""
     crud_object = Crud(DataLlamadaSerializar, DataLlamada)
     return crud_object.replace(request, data_llamada_id, 'replace_data_llamada')
+
+@api_view(['POST'])
+def data_chart(request):
+    """Returns the data to create charts for every questions"""
+    return campaign_operations.data_chart(request)

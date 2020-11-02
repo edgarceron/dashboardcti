@@ -19,7 +19,7 @@ class DataLlamada(models.Model):
 
 class AnswersHeader(models.Model):
     """Class for answer header"""
-    campaing = models.ForeignKey(CampaignForm, on_delete=models.CASCADE)
+    campaign = models.ForeignKey(CampaignForm, on_delete=models.CASCADE)
     tercero = models.IntegerField(null=True)
     agente = models.IntegerField(null=True)
     call_id = models.IntegerField(null=True)

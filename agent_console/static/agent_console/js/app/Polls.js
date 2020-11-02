@@ -160,7 +160,7 @@ class Polls {
 
     static saveHeader(){
         var data = {};
-        data['campaing'] = Polls.campaign;
+        data['campaign'] = Polls.campaign;
         data['tercero'] = Polls.tercero;
         data['agente'] = Polls.agente;
         data['call_id'] = Polls.call_id;

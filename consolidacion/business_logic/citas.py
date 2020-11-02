@@ -6,7 +6,7 @@ from core.crud.standard import Crud
 from users.permission_validation import PermissionValidation
 from dms.models import Terceros, ReferenciasImp, TallCitas
 from dms.serializers import CrmCitasSerializer, TallCitasSerializer
-from consolidacion.models import CallConsolidacion
+from consolidacion.models import CallConsolidacion, CallEntryCita
 from motivos.models import Motivo
 from sedes.models import Sede
 
@@ -45,8 +45,14 @@ def update_call_consolidacion(request, tall_cita, crm_cita):
         call_consolidacion.cita_crm_id = crm_cita
         call_consolidacion.save()
     except CallConsolidacion.DoesNotExist:
-        pass
-
+        id_call_entry = request.data['id_call_entry']
+        call_entry_cita = CallEntryCita(
+            cita_tall_id=tall_cita,
+            cita_crm_id=crm_cita,
+            call_entry=id_call_entry
+        )
+        call_entry_cita.save()
+        
 def create_crm_cita(tall_cita):
     nit_id = tall_cita['nit']
     id_gru = 3

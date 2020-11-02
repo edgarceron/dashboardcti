@@ -24,9 +24,15 @@ class ConsolidacionFileUploads(models.Model):
     file = models.FileField(upload_to=upload_to, null=False)
 
 class CallConsolidacion(models.Model):
-    """Class for the calls mede for consolidacion"""
+    """Class for the calls made for consolidacion"""
     consolidacion = models.OneToOneField(Consolidacion, null=False, on_delete=models.CASCADE)
     call = models.IntegerField(null=False, unique=True)
     cita_tall_id = models.IntegerField(null=True, unique=True)
     cita_crm_id = models.IntegerField(null=True, unique=True)
     call_made = models.BooleanField(null=False, default=False)
+
+class CallEntryCita(models.Model):
+    """Class for the call entry made for consolidacion"""
+    call_entry = models.IntegerField(null=False, unique=True)
+    cita_tall_id = models.IntegerField(null=True, unique=True)
+    cita_crm_id = models.IntegerField(null=True, unique=True)

@@ -18,5 +18,5 @@ def agent_picker_filter(value):
     """Given a value, filters agent for a select picker"""
     return list(Agent.objects.filter(
         Q(name__icontains=value) |
-        Q(number__icontains=value)
+        Q(number__icontains=value), estatus='A'
     )[:10])

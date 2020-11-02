@@ -36,14 +36,14 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     text = models.TextField()
 
-class PollCampaing(models.Model):
-    """Model for poll campaings """
+class PollCampaign(models.Model):
+    """Model for poll campaigns """
     issabel_campaign = models.IntegerField(null=False, unique=True)
     form = models.ForeignKey(Form, on_delete=models.CASCADE, null=False)
 
 class QuestionAnswers(models.Model):
     "Model for question answers"
-    campaing = models.ForeignKey(PollCampaing, on_delete=models.CASCADE, null=False)
+    campaign = models.ForeignKey(PollCampaign, on_delete=models.CASCADE, null=False)
     client = models.CharField(max_length=20, null=False)
     question = models.TextField()
     asnwer = models.TextField()

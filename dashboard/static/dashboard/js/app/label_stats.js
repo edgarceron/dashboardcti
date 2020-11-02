@@ -12,6 +12,16 @@ function setStatsAgents(agents_logged, agents_in_break, agents_in_call){
     $("#lblIncall").html(agents_in_call);
 }
 
+function setStatsOperationsEntry(citas_count, polls_attended){
+    $("#lblCitasAgendadas").html(citas_count);
+    $("#lblEncuestasRealizadas").html(polls_attended);
+}
+
+function setStatsOperations(consolidacion_count, polls_attended){
+    $("#lblConsolidacion").html(consolidacion_count);
+    $("#lblPollsMade").html(polls_attended);
+}
+
 function setStatsLabelsOut(callsCount){
     var pendientes = callsCount["Placing"] + callsCount[null];
     var fallidas = callsCount["Abandoned"] + callsCount["Failure"] + callsCount["ShortCall"] + callsCount["NoAsnwer"];

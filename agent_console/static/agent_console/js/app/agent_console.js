@@ -7,6 +7,7 @@ class AgentConsole{
     static stateChanged = false;
     static since = 0;
     static break = "";
+    static llamada_id = 0;
 
     static getAgentState(agent, previous_state, previous_call, previous_break){ 
         if(agent != null){
@@ -33,7 +34,10 @@ class AgentConsole{
                         else AgentConsole.since = 0;
                         previous_break = result.break;
                         previous_state = result.previous;
-                        if(result.call) previous_call = result.llamada_id;
+                        if(result.call) {
+                            previous_call = result.llamada_id;
+                            AgentConsole.llamada_id = result.llamada_id;
+                        };
                     }
                     if(result.update) AgentConsole.stateChanged = true;
                 },

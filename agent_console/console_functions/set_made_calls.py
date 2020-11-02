@@ -5,7 +5,7 @@ from agent_console.models import Calls, AgentConsoleOptions, Campaign
 def set_made_calls():
     """Sets CallConsolidacion made field to true is the call has been made"""
     check = CallConsolidacion.objects.filter(call_made=False)
-    retries = get_retries_consolidacion_campaing()
+    retries = get_retries_consolidacion_campaign()
     call_consolidations = list(check.values_list('call', flat=True))
     set_not_dialied_consolidacion_state(call_consolidations, retries)
     for call_consolidacion in check:
@@ -29,7 +29,7 @@ def set_not_dialied_consolidacion_state(call_consolidations, retries):
             call.retries = retries
             call.save()
 
-def get_retries_consolidacion_campaing():
+def get_retries_consolidacion_campaign():
     """Return the numbre of retries setter for the consolidación campaign"""
     id_campaign = AgentConsoleOptions.objects.get(option='CAMPAIGN_CONSOLIDACION').value
     retries = Campaign.objects.get(id=id_campaign)

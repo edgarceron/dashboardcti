@@ -27,6 +27,10 @@ function getDataOut(){
             setStatsLabelsOut(result.calls_count);
             drawCompletionChart(result.completion_rate);
             drawSuccessChart(result.success_rate);
+            setStatsOperations(
+                result.consolidacion_count,
+                result.polls_attended
+            );
         },
         'error': standard.standardError,
         'complete': function(){
@@ -52,6 +56,10 @@ function getDataEntry(){
                 result.agents_logged,
                 result.agents_in_break,
                 result.agents_in_call
+            );
+            setStatsOperationsEntry(
+                result.citas_count,
+                result.polls_attended
             );
         },
         'error': standard.standardError,

@@ -1,7 +1,7 @@
 """Data procesing for dashboard requests"""
 from dashboard.business_logic import queue_stadistics, tmo_calls, agent_state_count
 from dashboard.business_logic import calls_per_hour, count_calls, outgoing_stadistics
-from dashboard.business_logic import conversion_rate
+from dashboard.business_logic import conversion_rate, consolidacion_stadistics, polls_stadistics
 
 def data_outgoing(request):
     """Calls functions to get dashboard data"""
@@ -41,6 +41,10 @@ def data_outgoing(request):
         success_consolidacion, dialed_consolidacion
     )
 
+    consolidacion_count = consolidacion_stadistics.consolidacion_count(start_date, end_date, id_agent)
+    polls_attended = polls_stadistics.polls_attended(
+        start_date, end_date, id_agent, id_campaign, 1)
+
     response = {
         'calls_out_per_hour': calls_out_per_hour,
         'calls_count': calls_count,
@@ -48,6 +52,8 @@ def data_outgoing(request):
         'longets_outgoing_call': longets_outgoing_call,
         'completion_rate': completion_rate,
         'success_rate': success_rate,
+        'consolidacion_count': consolidacion_count,
+        'polls_attended': polls_attended,
     }
 
     return response
@@ -92,6 +98,10 @@ def data_entry(request):
     agents_in_break = agent_state_count.get_agents_in_break(agent_list)
     agents_in_call = agent_state_count.get_agents_in_call()
 
+    citas_count = consolidacion_stadistics.cita_count(start_date, end_date, id_agent, id_campaign)
+    polls_attended = polls_stadistics.polls_attended(
+        start_date, end_date, id_agent, id_campaign, 2)
+
     response = {
         'call_entry_per_hour': call_entry_per_hour,
         'call_entry_count': call_entry_count,
@@ -103,7 +113,9 @@ def data_entry(request):
         'seconds': seconds,
         'agents_logged': agents_logged,
         'agents_in_break': agents_in_break,
-        'agents_in_call': agents_in_call
+        'agents_in_call': agents_in_call,
+        'citas_count': citas_count,
+        'polls_attended': polls_attended,
     }
 
     return response

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import CampaignForm, AnswersHeader, AnswersBody, DataLlamada
 
 class CampaignFormSerializer(serializers.ModelSerializer):
-    """Serializer for CampaingForm model"""
+    """Serializer for CampaignForm model"""
     
     class Meta:
         model = CampaignForm
@@ -25,7 +25,7 @@ class AnswersHeaderSerializer(serializers.ModelSerializer):
     """Serializer for AnswersHeader model"""
     class Meta:
         model = AnswersHeader
-        fields = ['id', 'campaing', 'tercero', 'agente', 'call_id', 'data_llamada']
+        fields = ['id', 'campaign', 'tercero', 'agente', 'call_id', 'data_llamada']
 
     def create(self, validated_data):
         obj = AnswersHeader(**validated_data)
@@ -33,7 +33,7 @@ class AnswersHeaderSerializer(serializers.ModelSerializer):
         return obj
 
     def update(self, instance, validated_data):
-        instance.campaing = validated_data["campaing"]
+        instance.campaign = validated_data["campaign"]
         instance.tercero = validated_data["tercero"]
         instance.save()
         return instance

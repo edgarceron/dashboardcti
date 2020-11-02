@@ -22,15 +22,15 @@ def get_agents_in_break(agents_logged):
     count = query.count()
     return count
 
-def get_agents_in_call(campaing=None):
+def get_agents_in_call(campaign=None):
     """Return the number of agents attending a call"""
     conditions = {}
-    if campaing is not None and campaing != "":
-        conditions['id_call__id_campaign'] = campaing
+    if campaign is not None and campaign != "":
+        conditions['id_call__id_campaign'] = campaign
     queryout = CurrentCalls.objects.filter(**conditions)
 
     conditions = {}
-    if campaing is not None and campaing != "":
-        conditions['id_call_entry__id_campaign'] = campaing
+    if campaign is not None and campaign != "":
+        conditions['id_call_entry__id_campaign'] = campaign
     queryentry = CurrentCallEntry.objects.filter(**conditions)
     return queryout.count() + queryentry.count()
