@@ -68,8 +68,17 @@ def get_actions():
             "name": "create_calls_asterisk",
             "label": "Webservice para generar llamadas de consolidación en el asterisk"
         },
+        {
+            "name": "add_break2",
+            "label": "Webservice para guardar breaks"
+        },
     ]
     return actions
+
+@api_view(['PUT'])
+def add_break2(request):
+    """Breaks."""
+    return Response({"message": "Got some data!", "data": request.data})    
 
 @api_view(['POST'])
 def set_user_agent(request):

@@ -29,6 +29,7 @@ def dashboard(request, user_id=0):
 
 def dashboard_options_form(request):
     "Returns the rendered template for the given user."
+    
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('dashboard_options_form')
     if validation['status']:

@@ -9,6 +9,28 @@ function getValues(){
     return values;
 }
 
+function getValuesBreak(){
+    data = {
+        'name1': $('#2').val(),
+        'name3': $('#3').val(),
+        'name4': $('#4').val(),
+    }
+    return data;
+}
+
+function updateDataBreak(){
+
+    var ajaxFunctions = {
+        'success': function(result){
+            if(result.success){
+                SoftNotification.show("Breaks guardados con éxito");
+            }
+        },
+        'error': standard.standardError
+    }
+    standard.makePetition(getValuesBreak(), 'add_break', ajaxFunctions);
+}
+
 function updateData(){
 
     var ajaxFunctions = {
@@ -83,11 +105,16 @@ $( document ).ready(function() {
         'get_options_agent_console_url': {'url' : get_options_agent_console_url, 'method':'POST'},
         'replace_options_agent_console_url': {'url' : replace_options_agent_console_url, 'method':'PUT'},
         'get_CAMPAIGN_CONSOLIDACION_url': {'url' : get_campaign_url, 'method':'POST'},
+        'add_break': {'url' : add_break, 'method':'PUT'},
     }
     standard = new StandardCrud(urls);
 
     $('#saveButton').click(function(){
         updateData();
+    });
+
+    $('#saveButton_b').click(function(){
+        updateDataBreak();
     });
 
     $('#generateButton').click(function(){
