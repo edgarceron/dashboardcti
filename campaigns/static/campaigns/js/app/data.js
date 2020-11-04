@@ -1,26 +1,29 @@
-
+var standard;
 
 function createCanvas(identifier){
-    var hmtl = 
+    var html = 
     `
-    <div class="col-12 col-lg-12" id="divChart${identifier}">
+    <div class="col-12 col-lg-6" id="divChart${identifier}">
         <canvas id="canvas${identifier}"></canvas>
     </div>
     `;
     $('#answerChartContainer').append(html);
+    return `canvas${identifier}`;
 }
 
 function createConfig(question){
+    var title_text = question.text;
     var answers = question.answers;
     var labels = [];
     var colors = [];
     var data = [];
     var index = 0;
 
-    for(answer of answers){
-        labels.append(answer.text);
-        colors.append(getColor(index));
-        data.append(answer.count);
+    for(pk in answers){
+        labels.push(answers[pk].text);
+        colors.push(getColor(index));
+        data.push(answers[pk].count);
+        index++;
     }
 
     var config = {
@@ -32,6 +35,14 @@ function createConfig(question){
                 label: question.text
             }],
             labels: labels
+        },
+        options: {
+            title: {
+                display: true,
+                text: title_text,
+                fontSize: 16,
+                lineHeight: 1.2
+            }
         }
     }
 
@@ -54,7 +65,41 @@ function getColor(index){
     }
 }
 
+function getDataChart(){
+    var data = {
+        'id_campaign': id,
+        'start_date': $('#fechaInicioInput').val(),
+        'end_date': $('#fechaFinInput').val()
+    };
+    var ajaxFunctions = {
+        'success': function(result){
+            var questions = JSON.parse(result.questions);
+            var canvas;
+            var config;
+            var ctx;
+            var chart;
+            for(pk in questions){
+                canvas = createCanvas(pk);
+                config = createConfig(questions[pk]);
+                ctx = document.getElementById(canvas).getContext('2d');
+                chart = new Chart(ctx, config);
+            }
+        },
+        'error': function(result){
+
+        }
+    }
+    standard.makePetition(data, 'data_chart_campaign_url', ajaxFunctions);
+}
+
 $( document ).ready(function() {
+
+    var urls = {
+        'data_chart_campaign_url':{'url' : data_chart_campaign_url, 'method':'POST'},
+    }
+    console.log(urls);
+
+    standard = new StandardCrud(urls);
 
     $('#downloadButton').click(function(){
         var start_date = $('#fechaInicioInput').val();
@@ -64,6 +109,12 @@ $( document ).ready(function() {
         url = url.replace("def", end_date);
         window.location.href = url;
     });
+
+    $('#reloadCharts').click(function(){
+        getDataChart();
+    });
+
+    getDataChart();
 });
 
 /*

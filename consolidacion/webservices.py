@@ -40,8 +40,6 @@ def get_actions():
 @api_view(['POST'])
 def add_consolidacion(request):
     """Tries to create a consolidacion and returns the result"""
-    if consolidacion_operations.get_user_sede(request) is None:
-        return consolidacion_operations.answer_not_user_sede()
     operation = consolidacion_operations.add_sede_operation(request)
     after = consolidacion_operations.create_cf_observaciones_consolidacion
     crud_object = Crud(ConsolidacionSerializer, Consolidacion, operation, after)

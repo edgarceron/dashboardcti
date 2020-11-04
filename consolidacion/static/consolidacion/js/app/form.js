@@ -8,6 +8,7 @@ function getValues(){
         'placa': $('#placaInput').val(),
         'fecha': $('#fechaInput').val(),
         'motivo': $('#motivoInput').val(),
+        'sede': $('#sedeInput').val(),
     }
     return data;
 }
@@ -83,6 +84,18 @@ function getDataForm(){
     standard.makePetition(null, 'get_url', ajaxFunctions);
 }
 
+$('#motivoInput').selectpicker(
+    {
+        "liveSearch": true
+    }
+);
+
+$('#sedeInput').selectpicker(
+    {
+        "liveSearch": true
+    }
+);
+
 $( document ).ready(function() {
     if(id != 0){
         get_url = get_url + id;
@@ -95,6 +108,7 @@ $( document ).ready(function() {
         'get_url': {'url' : get_url, 'method':'POST'},
         'replace_url': {'url' : replace_url, 'method':'PUT'},
         'get_motivo_url': {'url' : get_motivo_url, 'method':'PUT'},
+        'get_sede_url': {'url' : get_sede_url, 'method':'PUT'},
         'validate_cedula_url': {'url' : validate_cedula_url, 'method':'POST'}
     }
     standard = new StandardCrud(urls);
@@ -112,11 +126,7 @@ $( document ).ready(function() {
         }
     });
 
-    $('#motivoInput').selectpicker(
-        {
-            "liveSearch": true
-        }
-    );
+    
 
     if(id!=0){
         getDataForm();
@@ -124,4 +134,7 @@ $( document ).ready(function() {
 
     FormFunctions.setAjaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "Escoja un motivo");
     FormFunctions.ajaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "", "Escoja un motivo");
+
+    FormFunctions.setAjaxLoadPicker('#sedeInput', pircker_search_sede_url, FormFunctions.updatePicker, "Escoja un motivo");
+    FormFunctions.ajaxLoadPicker('#sedeInput', pircker_search_sede_url, FormFunctions.updatePicker, "", "Escoja un motivo");
 });

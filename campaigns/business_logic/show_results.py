@@ -76,16 +76,37 @@ def data_chart(id_campaign, start_date, end_date):
             data_answers = {}
 
             for answer in answers:
+                data_answers[answer.id] = {}
                 data_answers[answer.id]['text'] = answer.text
                 data_answers[answer.id]['count'] = 0
 
             data[question.id]['answers'] = data_answers
 
+        if question.question_type == 1:
+            data[question.id] = {}
+            data[question.id]['text'] = question.text
+
+            answers = Answer.objects.filter(question=question.id)
+            data_answers = {}
+
+            data_answers["true"] = {}
+            data_answers["true"]['text'] = "Verdadero"
+            data_answers["true"]['count'] = 0
+            data_answers["false"] = {}
+            data_answers["false"]['text'] = "Falso"
+            data_answers["false"]['count'] = 0
+
+            data[question.id]['answers'] = data_answers
+    print(headers)
     for header in headers:
         bodies = AnswersBody.objects.filter(header=header.id)
         for body in bodies:
             if body.question.id in data:
-                data[body.question.id]['answers'][body.answer]['count'] += 1
+                if body.question.question_type >= 3:
+                    data[body.question.id]['answers'][body.answer.id]['count'] += 1
+                else:
+                    print("body.answer_text")
+                    data[body.question.id]['answers'][str(body.answer_text)]['count'] += 1
     return json.dumps(data)
 
 

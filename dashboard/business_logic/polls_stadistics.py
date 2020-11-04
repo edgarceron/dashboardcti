@@ -24,8 +24,8 @@ def polls_attended(start_date, end_date, agent, campaign, type_campaign):
         criteria['agent'] = agent
 
     criteria['campaign__type_campaign'] = type_campaign
-
     id_calls = list(AnswersHeader.objects.values_list('call_id', flat=True).filter(**criteria))
+
     calls = []
 
     criteria = {}
@@ -51,17 +51,18 @@ def polls_attended(start_date, end_date, agent, campaign, type_campaign):
         if start_date != "" and end_date != "":
             start_date = datetime.strptime(end_date, '%Y-%m-%d')
             end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
-            criteria['datetime_init__range'] = (start_date, end_date)
+            criteria['datetime_entry_queue__range'] = (start_date, end_date)
 
         elif start_date != "":
             start_date = datetime.strptime(end_date, '%Y-%m-%d')
-            criteria['datetime_init__gte'] = start_date
+            criteria['datetime_entry_queue__gte'] = start_date
 
         elif end_date != "":
             end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
-            criteria['datetime_init__lte'] = end_date
+            criteria['datetime_entry_queue__lte'] = end_date
 
         criteria['id__in'] = id_calls
+
 
         calls = list(CallEntry.objects.values_list('id', flat=True).filter(**criteria))
         total = AnswersHeader.objects.filter(call_id__in=calls).count()

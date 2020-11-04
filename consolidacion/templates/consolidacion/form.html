@@ -50,6 +50,17 @@ Citas
                     </div>
                 </div>
 
+                <div class='col-md-12'>
+                    <div class='form-group'>
+                        <label for='sedeInput'>Sede</label>
+                        <select class='form-control appform' id='sedeInput'>
+                            <option value="">Sin asignar</option>
+                        </select>
+                        <div class="valid-feedback" id='sedeValid'>Valid.</div>
+                        <div class="invalid-feedback" id = 'sedeInvalid'>Please fill out this field.</div>
+                    </div>
+                </div>
+
                 <div class='col-md-6'>
                     <div class='form-group'>
                         <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
@@ -117,6 +128,9 @@ Citas
             picker_search_motivo_url = "{% url 'picker_search_motivo' %}";
             get_motivo_url = "{% url 'get_motivo' motivo_id=0 %}";
             validate_cedula_url = "{% url 'validate_cedula' %}";
+            pircker_search_sede_url = "{% url 'picker_search_sede' %}";
+            get_sede_url = "{% url 'get_sede' sede_id=0 %}";
+            get_sede_url = get_sede_url.slice(0, -1);
             get_motivo_url = get_motivo_url.slice(0, -1);
             get_url = get_url.slice(0, -1);
             replace_url = replace_url.slice(0, -1);

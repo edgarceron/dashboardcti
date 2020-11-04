@@ -11,9 +11,9 @@ def get_actions():
     actions = [
         {"name": "add_campaign", "label": "Webservice crear campaña"},
         {"name": "replace_campaign", "label": "Webservice actualizar campaña"},
-        {"name": "get_campaign", "label": "Webservice obtener datos campaña"},
+        {"name": "get_campaign_manticore", "label": "Webservice obtener datos campaña"},
         {"name": "delete_campaign", "label": "Webservice borrar campaña"},
-        {"name": "picker_search_campaign", "label": "Webservice picker de campañas"},
+        {"name": "picker_search_campaign_manticore", "label": "Webservice picker de campañas"},
         {"name": "list_campaign", "label": "Webservice del listado de campañas"},
         {"name": "add_header", "label": "Webservice crear una cabecera de respuesta"},
         {"name": "replace_header", "label": "Webservice actualizar una cabecera de respuesta"},
@@ -39,7 +39,7 @@ def replace_campaign(request, campaign_id):
 def get_campaign(request, campaign_id):
     "Return a JSON response with campaign data for the given id"
     crud_object = Crud(CampaignFormSerializer, CampaignForm)
-    return crud_object.get(request, campaign_id, 'get_campaign')
+    return crud_object.get(request, campaign_id, 'get_campaign_manticore')
 
 @api_view(['DELETE'])
 def delete_campaign(request, campaign_id):
@@ -57,7 +57,7 @@ def toggle_campaign(request, campaign_id):
 def picker_search_campaign(request):
     "Returns a JSON response with campaign data for a selectpicker."
     crud_object = Crud(CampaignFormSerializer, CampaignForm, data_filters.campaign_picker_filter)
-    return crud_object.picker_search(request, 'picker_search_campaign')
+    return crud_object.picker_search(request, 'picker_search_campaign_manticore')
 
 @api_view(['POST'])
 def list_campaign(request):
