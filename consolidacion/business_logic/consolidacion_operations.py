@@ -95,10 +95,6 @@ def add_sede_operation(request):
     """Return the data alter operation for add or replace crud standard"""
     sede = get_user_sede(request)
     def operation(data):
-        if sede is not None:
-            data['sede'] = sede.id
-        else:
-            data['sede'] = None
         return data
     return operation
 
