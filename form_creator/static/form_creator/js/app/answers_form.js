@@ -20,6 +20,7 @@ function getFormDataAnswer(guiIdentifier, returnIdentifier=false){
     data = {
         'text': $(nameTextRespuesta).val(),
         'question': idPregunta,
+        'gui': guiIdentifier
     };
     if($(nameIdRespuesta).val() != '') data['id'] = $(nameIdRespuesta).val();
     if(returnIdentifier) data['guiIdentifier'] = guiIdentifier;
@@ -91,6 +92,7 @@ function guiDeleteAnswer(){
 function isAnswerValid(guiIdentifier){
     var nameText = "#textRespuesta" + guiIdentifier;
     if( $(nameText).val() != "") return true;
+    PollCreator.hasErrors = true;
     return false;
 }
 

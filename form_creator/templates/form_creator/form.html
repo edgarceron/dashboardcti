@@ -65,15 +65,22 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="cautionModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="modalTitle">Atención</h5>
+            <div id="modalBodyDelete">
+                <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Atención</h5>
+                </div>
+                <div class="modal-body">
+                        ¿Esta seguro de que quiere eliminar esta pregunta? 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm_button">Si</button>
+                </div>
             </div>
-            <div class="modal-body">
-                    ¿Esta seguro de que quiere eliminar esta pregunta? 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm_button">Si</button>
+            <div id="modalBodyGuardar">
+                <div class='alert alert-success' role='alert' id='modalMessage'>
+                    Guardado con exito! Redirigiendo...
+                </div>
             </div>
         </div>
     </div>

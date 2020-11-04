@@ -1,4 +1,9 @@
 //TODO Tranform into a class with static method for better recognition
+
+class PollCreator {
+    static hasErrors = false;
+}
+
 var questions = 1;
 var answers = 1;
 var urls;
@@ -126,13 +131,22 @@ function getAllData(){
 }
 
 function saveAll(){
+    PollCreator.hasErrors = false;
     var ajaxFunctions = {
         'success': function(result){
-            SoftNotification.show("Se guardaron todos los datos correctos");
+            $("#modalBodyDelete").addClass("d-none");
+            $("#modalBodyGuardar").removeClass("d-none");
+            $("#cautionModal").modal('toggle');
+            $('#cautionModal').modal({backdrop:'static', keyboard:false}); 
+            setTimeout(function(){ 
+                $(location).attr('href', listing_url);
+            }, 2000);
         },
         'error': standard.standardError
     }
-    standard.makePetition(getAllData(), 'save_all', ajaxFunctions);
+    var poll_data = getAllData();
+    if(!PollCreator.hasErrors) standard.makePetition(getAllData(), 'save_all', ajaxFunctions);
+    else SoftNotification.show("Hay errores en el formulario, se han marcado en rojo", "danger");
 }
 
 $( document ).ready(function() {

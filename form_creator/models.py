@@ -15,6 +15,7 @@ class Question(models.Model):
     2. Texto
     3. Multiples opciones, una respuesta
     4. Multiples opciones, multiples respuestas
+    5. Fecha hora
     """
     question_type = models.IntegerField()
     empty = models.BooleanField()
@@ -24,7 +25,7 @@ class Question(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=Q(question_type__lte=4),
+                check=Q(question_type__lte=5),
                 name="question_type_upper"),
             models.CheckConstraint(
                 check=Q(question_type__gte=1),

@@ -76,6 +76,7 @@ function htmlPregunta(count, idValue=""){
                     <option value="2">Texto</option>
                     <option value="3">Multiples opciones, una respuesta</option>
                     <option value="4">Multiples opciones, multiples respuestas</option>
+                    <option value="5">Fecha y hora</option>
                 </select>
                 <input type="hidden" id="idPregunta${count}" value="${idValue}">
                 <input type="hidden" id="alteredPregunta${count}" value="0">

@@ -13,7 +13,8 @@ function getFormDataQuestion(guiIdentifier, returnIdentifier=false){
         'question_type': $(nameTypePregunta).val(),
         'empty': $(nameNullPregunta).is(':checked'),
         'position': $(namePosPregunta).val(),
-        'form': id
+        'form': id,
+        'gui': guiIdentifier
     };
     if($(nameIdPregunta).val() != '') data['id'] = $(nameIdPregunta).val();
     if(returnIdentifier) data['guiIdentifier'] = guiIdentifier;
@@ -62,6 +63,8 @@ function showConfirmationModal(idPregunta){
         deleteQuestion(idPregunta);
         $("#cautionModal").modal('toggle');
     });
+    $("#modalBodyDelete").removeClass("d-none");
+    $("#modalBodyGuardar").addClass("d-none");
     $("#cautionModal").modal('toggle');
     console.log("SHOW");
 }
@@ -139,6 +142,7 @@ function changeQuestionBehavior(guiIdentifier){
 function isQuestionValid(guiIdentifier){
     var nameText = "#textPregunta" + guiIdentifier;
     if( $(nameText).val() != "") return true;
+    PollCreator.hasErrors = true;
     return false;
 }
 

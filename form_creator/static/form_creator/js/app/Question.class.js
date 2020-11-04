@@ -4,6 +4,7 @@ class Question {
     static TYPE_TEXT = 2;
     static TYPE_MULTI_ONE = 3;
     static TYPE_MULTI_MANY = 4;
+    static TYPE_DATE = 5;
 
     constructor(id, text, type, empty){
         this.text = text;
@@ -31,7 +32,26 @@ class Question {
         else if (this.type == Question.TYPE_MULTI_MANY){
             html = this.drawMultiMany();
         }
+        else if (this.type == Question.TYPE_DATE){
+            html = this.drawDate();
+        }
         container.html(container.html() + html);
+
+        var selector = ".form_datetime"
+        jQuery(selector).datetimepicker({
+            allowTimes:[
+                '7:00', '7:15', '7:30', '7:45', 
+                '8:00', '8:15', '8:30', '8:45', 
+                '9:00', '9:15', '9:30', '9:45', 
+                '10:00', '10:15', '10:30', '10:45', 
+                '11:00', '11:15', '11:30', '11:45', 
+                '12:00', '12:15', '12:30', '12:45', 
+                '13:00', '13:15', '13:30', '13:45', 
+                '14:00', '14:15', '14:30', '14:45', 
+                '15:00', '15:15', '15:30', '15:45', 
+                '16:00', '16:15', '16:30', '16:45', 
+            ]
+        });
     }
 
     drawBool(){
@@ -135,6 +155,22 @@ class Question {
         return this.cardEnvelope(html);
     }
 
+    drawDate(){
+        var required = this.empty ? "" : "required";
+        var html = `
+            <div class="row">
+                <div class="col-md-12">
+                    ${this.text}
+                    <div class="form-group">
+                        <input type="text" class="form-control form_datetime" id="datePregunta${this.id}" ${required}>
+                    </div>
+                </div>
+            </div>
+        `;
+        var selector = `#datePregunta${this.id}`;
+        return this.cardEnvelope(html);
+    }
+
     isValid(){
         var name = "";
         var idPregunta;
@@ -173,6 +209,14 @@ class Question {
                     return checked;
                 }
                 return true;
+            case Question.TYPE_DATE:
+                    name = "#datePregunta" + this.id;
+                    var input = $(name);
+                    if (this.empty){
+                        if(input.val().trim() != "") return true;
+                        return false;
+                    }
+                    return true;
         }
     }
 
@@ -209,6 +253,9 @@ class Question {
                     }
                 );
                 return selected;
+            case Question.TYPE_DATE:
+                name = "#datePregunta" + this.id;
+                return $(name).val();
         }
     }
 

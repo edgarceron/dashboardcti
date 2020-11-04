@@ -102,7 +102,7 @@ def data_chart(id_campaign, start_date, end_date):
         bodies = AnswersBody.objects.filter(header=header.id)
         for body in bodies:
             if body.question.id in data:
-                if body.question.question_type >= 3:
+                if body.question.question_type == 3 or body.question.question_type == 4:
                     data[body.question.id]['answers'][body.answer.id]['count'] += 1
                 else:
                     print("body.answer_text")
