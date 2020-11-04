@@ -127,14 +127,14 @@ $( document ).ready(function() {
     });
 
     
-
-    if(id!=0){
-        getDataForm();
-    }
-
     FormFunctions.setAjaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "Escoja un motivo");
     FormFunctions.ajaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "", "Escoja un motivo");
 
     FormFunctions.setAjaxLoadPicker('#sedeInput', pircker_search_sede_url, FormFunctions.updatePicker, "Escoja una sede");
     FormFunctions.ajaxLoadPicker('#sedeInput', pircker_search_sede_url, FormFunctions.updatePicker, "", "Escoja una sede");
+
+    if(id!=0){
+        getDataForm();
+    }
+
 });
