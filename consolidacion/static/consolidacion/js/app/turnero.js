@@ -67,8 +67,6 @@ $( document ).ready(function() {
     $('#sedeInput').change(function(){
         getTurnos();
     });
-    
-    getTurnos();
 
     setInterval(function(){
         getTurnos();
