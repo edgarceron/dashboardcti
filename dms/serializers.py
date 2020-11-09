@@ -48,7 +48,7 @@ class TallCitasSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super(TallCitasSerializer, self).to_representation(instance)
-        representation['fecha_hora_ini'] = instance.fecha_hora_ini.strftime("%H:%M:%S")
+        representation['fecha_hora_ini'] = instance.fecha_hora_ini.strftime("%I:%M:%S %p")
         return representation
 
     def create(self, validated_data):
