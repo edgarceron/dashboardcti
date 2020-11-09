@@ -24,7 +24,7 @@ def get_closest_turns(request):
         queryset = TallCitas.objects.filter(**criteria).order_by('-fecha_hora_ini')
         citas = TallCitasSerializer(queryset, many=True)
         answer = {
-            'turnos': citas,
+            'turnos': citas.data,
             'success': True
         }
         return Response(answer, status.HTTP_200_OK, content_type='application/json')
