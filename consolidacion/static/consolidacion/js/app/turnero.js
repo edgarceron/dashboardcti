@@ -32,6 +32,7 @@ function putTurnos(turnos){
     for(x of turnos){
         html = getTurnoHtml(pos, x.nombre_cliente, x.fecha_hora_ini);
         $('#turnosContainer').append(html);
+        pos++;
     }
 }
 

@@ -46,6 +46,11 @@ class TallCitasSerializer(serializers.ModelSerializer):
             'facturado',
         ]
 
+    def to_representation(self, instance):
+        representation = super(TallCitasSerializer, self).to_representation(instance)
+        representation['fecha_hora_ini'] = instance.created_at.strftime("%Y-%m-%dT%H:%M:%S")
+        return representation
+
     def create(self, validated_data):
         obj = TallCitas(**validated_data)
         obj.save()

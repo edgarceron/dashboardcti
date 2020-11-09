@@ -18,7 +18,7 @@ def get_closest_turns(request):
         bodega = Sede.objects.get(pk=sede).bodega_dms
         criteria = {
             'estado_cita': 'P',
-            'fecha_hora_fin__range': (datetime.now(), (date.today() + timedelta(seconds=186399))),
+            'fecha_hora_fin__range': (datetime.now(), (date.today() + timedelta(seconds=86399))),
             'bodega': bodega
         }
         queryset = TallCitas.objects.filter(**criteria).order_by('-fecha_hora_ini')
