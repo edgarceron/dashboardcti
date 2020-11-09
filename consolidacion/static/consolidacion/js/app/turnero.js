@@ -57,11 +57,11 @@ $( document ).ready(function() {
     standard = new StandardCrud(urls);
 
     FormFunctions.setAjaxLoadPicker(
-        '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "Escoja una sede"
+        '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, ""
     );
 
     FormFunctions.ajaxLoadPicker(
-        '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "", "Escoja una sede"
+        '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "", ""
     );
 
     $('#sedeInput').change(function(){
