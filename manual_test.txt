@@ -1,0 +1,25 @@
+from campaigns import manual_test
+from agent_console.models import Campaign
+ic = Campaign.objects.get(pk=2)
+calls = manual_test.create_calls(3, ic)
+data_llamadas = manual_test.create_data_llamadas(3)
+
+from campaigns.models import CampaignForm
+camp = CampaignForm.objects.get(id=1)
+headers = manual_test.create_headers(camp, calls, data_llamadas) 
+bodies = manual_test.create_bodies(camp.form, headers)
+
+from campaigns import manual_test
+calls, data_llamadas, headers, bodies, call_entry, data_llamadas_entry, headers_entry, bodies_entry = manual_test.test(10)
+
+manual_test.delete_models(bodies)
+manual_test.delete_models(headers)
+manual_test.delete_models(data_llamadas)
+manual_test.delete_models(calls)
+
+manual_test.delete_models(bodies_entry)
+manual_test.delete_models(headers_entry)
+manual_test.delete_models(data_llamadas_entry)
+manual_test.delete_models(call_entry)
+
+

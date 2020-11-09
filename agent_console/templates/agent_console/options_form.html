@@ -83,7 +83,7 @@ Opciones de consola de agente
                     <th>id</th>
                     <th>Nombre</th>
                     <th>Descripción</th>
-                    <th>Tiempo Permitido</th>
+                    <th>Tiempo Permitido (Minutos)</th>
                 </tr>
             </thead>
             <tbody>
@@ -92,7 +92,7 @@ Opciones de consola de agente
                     <td>{{ break1.id }}</td>
                     <td>{{ break1.name }}</td>
                     <td>{{ break1.description }}</td>
-                    <td><input type="number" class="form-control" id="{{ break1.id }}"></td>
+                    <td><input type="number" class="form-control" id="break_input{{ break1.id }}" value="0"></td>
                   </tr>
                   {% endfor %}
             </tbody>
@@ -119,11 +119,23 @@ Opciones de consola de agente
     get_options_agent_console_url = "{% url 'get_options_agent_console' %}";
     auto_generate_users_url = "{% url 'auto_generate_users' %}";
     create_calls_asterisk_url = "{% url 'create_calls_asterisk' %}";
+    save_break_times_url = "{% url 'save_break_times' %}";
     picker_search_campaign_url = "{% url 'picker_search_campaign' %}";
     add_break = "{% url 'add_break2' %}";
     get_campaign_url = "{% url 'get_campaign' campaign_id=0 %}";
     get_campaign_url = get_campaign_url.slice(0, -1);
-    
+
+    var break_data = [
+    {% for break1 in b_break %}
+        '{{ break1.id }}',
+    {% endfor %}
+    ]
+
+    var breaK_time_data = {
+    {% for break1 in break_times %}
+        '{{ break1.id_break }}': '{{ break1.minutes }}',
+    {% endfor %}
+    }
 </script>
 <script src="{% static 'agent_console/js/app/options_form.js' %}"></script>
 

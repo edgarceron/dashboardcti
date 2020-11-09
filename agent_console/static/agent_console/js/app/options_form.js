@@ -9,28 +9,6 @@ function getValues(){
     return values;
 }
 
-function getValuesBreak(){
-    data = {
-        'name1': $('#2').val(),
-        'name3': $('#3').val(),
-        'name4': $('#4').val(),
-    }
-    return data;
-}
-
-function updateDataBreak(){
-
-    var ajaxFunctions = {
-        'success': function(result){
-            if(result.success){
-                SoftNotification.show("Breaks guardados con éxito");
-            }
-        },
-        'error': standard.standardError
-    }
-    standard.makePetition(getValuesBreak(), 'add_break', ajaxFunctions);
-}
-
 function updateData(){
 
     var ajaxFunctions = {
@@ -42,6 +20,36 @@ function updateData(){
         'error': standard.standardError
     }
     standard.makePetition(getValues(), 'replace_options_agent_console_url', ajaxFunctions);
+}
+
+function loadTimes(){
+    var dom_name = "";
+    for(b in breaK_time_data){
+        dom_name = "#break_input" + b;
+        $(dom_name).val(breaK_time_data[b])
+    }
+}
+
+function saveBreakAllowedTimes(){
+    var data = []
+    var dom_name = "";
+    console.log(break_data);
+    for(b of break_data){
+        dom_name = "#break_input" + b;
+        data.push({'id_break': b, 'minutes': $(dom_name).val()});
+    }
+
+    var ajaxFunctions = {
+        'success': function(result){
+            if(result.success){
+                SoftNotification.show("Tiempos permitidos de descanso guardados con exito");
+            }
+        },
+        'error': standard.standardError
+    }
+    data = JSON.stringify(data);
+    standard.makePetition({'breaks': data}, 'save_break_times_url', ajaxFunctions);
+
 }
 
 function getData(user_id){
@@ -106,6 +114,7 @@ $( document ).ready(function() {
         'replace_options_agent_console_url': {'url' : replace_options_agent_console_url, 'method':'PUT'},
         'get_CAMPAIGN_CONSOLIDACION_url': {'url' : get_campaign_url, 'method':'POST'},
         'add_break': {'url' : add_break, 'method':'PUT'},
+        'save_break_times_url': {'url' : save_break_times_url, 'method':'POST'},
     }
     standard = new StandardCrud(urls);
 
@@ -114,7 +123,7 @@ $( document ).ready(function() {
     });
 
     $('#saveButton_b').click(function(){
-        updateDataBreak();
+        saveBreakAllowedTimes();
     });
 
     $('#generateButton').click(function(){
@@ -142,4 +151,5 @@ $( document ).ready(function() {
     
     
     getData();
+    loadTimes();
 });

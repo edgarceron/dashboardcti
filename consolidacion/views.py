@@ -18,6 +18,10 @@ def get_actions():
             "name": "upload_consolidacion_form",
             "label": "Pagina de formulario para subir consolidaciones por archivo plano"
         },
+        {
+            "name": "turnero",
+            "label": "Pagina para mostrar los turnos de una sede"
+        },
     ]
     return actions
 
@@ -65,6 +69,20 @@ def listing_consolidacion(request):
         return render(
             request,
             'consolidacion/listing.html',
+            {
+                'username': permission_obj.user.name
+            }
+        )
+    return permission_obj.error_response_view(validation, request)
+
+def turnero(request):
+    """Return the template for the turnero"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('turnero')
+    if validation['status']:
+        return render(
+            request,
+            'consolidacion/turnero.html',
             {
                 'username': permission_obj.user.name
             }

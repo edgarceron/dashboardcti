@@ -353,3 +353,9 @@ class UserSede(models.Model):
 
     class Meta:
         managed = True
+
+
+class BreakTimes(models.Model):
+    """Saves the times allowed for break"""
+    id_break = models.IntegerField(unique=True, null=False)
+    minutes = models.IntegerField(null=False)

@@ -1,7 +1,7 @@
 """ Contains the view for the agent consoole module"""
 from django.shortcuts import render
 from users.permission_validation import PermissionValidation
-from .models import UserAgent, AgentConsoleOptions, Break
+from .models import UserAgent, AgentConsoleOptions, Break, BreakTimes
 
 def get_actions():
     "Returns the list of actions to be registered for permissions module."
@@ -61,12 +61,18 @@ def options_form(request):
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('options_form')
     if validation['status']:
-        breaks = Break.objects.all()
-       
+        breaks = Break.objects.filter(id__gte=2)
+        break_times = BreakTimes.objects.all()
+
+        for x in range(len(breaks)):
+            breaks[x].name = str(breaks[x].name).encode("latin-1").decode("utf-8")
+            breaks[x].description = str(breaks[x].description).encode("latin-1").decode("utf-8")
+
         data = {
             "success": "True",
             'username': permission_obj.user.name,
-            'b_break': breaks
+            'b_break': breaks,
+            'break_times': break_times
         }
 
         return render(

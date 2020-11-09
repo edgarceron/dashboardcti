@@ -1,6 +1,6 @@
 """Contains the serializers for the users module"""
 from rest_framework import serializers
-from .models import UserAgent, Agent, UserSede, Campaign, Calls, CallEntry, CurrentCallEntry, CampaignEntry
+from .models import UserAgent, Agent, UserSede, Campaign, Calls, CallEntry, CurrentCallEntry, CampaignEntry, BreakTimes
 
 class AgentSerializer(serializers.ModelSerializer):
     """Serializer for Agent model"""
@@ -201,3 +201,20 @@ class CurrentCallEntrySerializer(serializers.ModelSerializer):
             'channelclient',
             'hold',
         ]
+
+class BreakTimesSerializer(serializers.ModelSerializer):
+    """Serializer for UserAgent model"""
+    class Meta:
+        model = BreakTimes
+        fields = ['id', 'id_break', 'minutes']
+
+    def create(self, validated_data):
+        user_obj = BreakTimes(**validated_data)
+        user_obj.save()
+        return user_obj
+
+    def update(self, instance, validated_data):
+        instance.id_break = validated_data["id_break"]
+        instance.minutes = validated_data["minutes"]
+        instance.save()
+        return instance

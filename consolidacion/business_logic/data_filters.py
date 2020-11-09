@@ -19,3 +19,5 @@ def consolidacion_listing_filter(search, start, length, count=False):
     return Consolidacion.objects.filter(
         Q(placa__icontains=search) | Q(cedula__icontains=search) | Q(fecha__icontains=search)
     )[start:start + length]
+
+

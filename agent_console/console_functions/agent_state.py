@@ -8,7 +8,7 @@ from consolidacion.models import CallConsolidacion
 from campaigns.models import CampaignForm, AnswersHeader
 from campaigns.serializers import DataLlamadaSerializar
 from agent_console.models import (
-    Audit, Agent, CurrentCallEntry,
+    Audit, Agent, CurrentCallEntry, BreakTimes,
     CedulaLlamada, ServerLog, CurrentCalls, AgentConsoleOptions)
 
 class AgentState():
@@ -277,6 +277,8 @@ class AgentState():
             answer['break'] = active_break.id_break.name.encode('latin-1').decode('utf-8')
             answer['date'] = active_break.datetime_init.date()
             answer['time'] = active_break.datetime_init.time()
+            limit = BreakTimes.objects.get(id_break=active_break.id_break.id)
+            answer['time_limit'] = limit.minutes * 60
 
         return answer
 

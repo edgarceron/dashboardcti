@@ -1,7 +1,7 @@
 """Contains the webservices for the consolidacion app"""
 from rest_framework.decorators import api_view
 from core.crud.standard import Crud
-from consolidacion.business_logic import data_filters, consolidacion_operations
+from consolidacion.business_logic import data_filters, consolidacion_operations, turnero
 from .models import Consolidacion
 from .serializers import ConsolidacionSerializer, ConsolidacionListSerializer
 
@@ -34,6 +34,11 @@ def get_actions():
             "name": "check_placa",
             "label": "Webservice para validar placa de un cliente"
         },
+        {
+            "name": "get_closest_turns",
+            "label": "Webservice para obtener los turnos en el turnero"
+        },
+        
     ]
     return actions
 
@@ -111,3 +116,8 @@ def check_tercero_cedula(request):
 def check_placa(request):
     """Validates that the given request contains a cedula for """
     return consolidacion_operations.check_placa(request)
+
+@api_view(['POST'])
+def get_closest_turns(request):
+    """Gets the turns that end after the current datetime for todays date"""
+    return turnero.get_closest_turns(request)

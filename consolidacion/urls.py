@@ -23,4 +23,6 @@ urlpatterns = [
     path('validate_cedula', webservices.validate_cedula, name='validate_cedula'),
     path('check_tercero_cedula', webservices.check_tercero_cedula, name='check_tercero_cedula'),
     path('check_placa', webservices.check_placa, name='check_placa'),
+    path('get_closest_turns', webservices.get_closest_turns, name='get_closest_turns'),
+    path('turnero', views.turnero, name='turnero'),
 ]

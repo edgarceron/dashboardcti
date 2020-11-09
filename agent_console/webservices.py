@@ -1,4 +1,5 @@
 """ Webservices for the agent_console app """
+import json
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -9,8 +10,8 @@ from consolidacion.business_logic import citas
 from .console_functions.agent_state import AgentState
 from .console_functions.generate_users import GenerateUsers
 from .console_functions import create_calls_consolidacion
-from .serializers import AgentSerializer, CampaignSerializer, CampaignEntrySerializer
-from .models import Agent, AgentConsoleOptions, Campaign, CampaignEntry
+from .serializers import AgentSerializer, CampaignSerializer, CampaignEntrySerializer, BreakTimesSerializer
+from .models import Agent, AgentConsoleOptions, Campaign, CampaignEntry, BreakTimes
 from .business_logic import user_extra_fields
 
 def get_actions():
@@ -326,4 +327,36 @@ def create_calls_asterisk(request):
             status=status.HTTP_200_OK,
             content_type='application/json'
         )
+    return permission_obj.error_response_webservice(validation, request)
+
+
+@api_view(['POST'])
+def save_break_times(request):
+    """Saves break times"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('create_calls_asterisk')
+    if validation['status']:
+        data_json = request.data['breaks']
+        data = json.loads(data_json)
+        error_data = []
+        for break_time_data in data:
+            try:
+                break_time = BreakTimes.objects.get(id_break=break_time_data['id_break'])
+                serializer = BreakTimesSerializer(break_time, data=break_time_data)
+            except BreakTimes.DoesNotExist:
+                serializer = BreakTimesSerializer(data=break_time_data)
+            
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                error_data.append(Crud.error_data(serializer)['Error']['details'])
+            
+        data = {
+            "succes": True,
+            "Error": {
+                "message": "Tiempos guardados",
+                "details": error_data
+            }
+        }
+        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
     return permission_obj.error_response_webservice(validation, request)

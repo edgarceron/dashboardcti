@@ -6,6 +6,7 @@ class AgentConsole{
     static reset = false;
     static stateChanged = false;
     static since = 0;
+    static limit_break = 0;
     static break = "";
     static llamada_id = 0;
 
@@ -30,6 +31,7 @@ class AgentConsole{
                         if(result.break != ""){
                             AgentConsole.since = new Date(result.date + " " + result.time);
                             AgentConsole.break = result.break;
+                            AgentConsole.limit_break = result.time_limit;
                         }
                         else AgentConsole.since = 0;
                         previous_break = result.break;
@@ -97,11 +99,29 @@ class AgentConsole{
         return hours + ":" + minutes + ":" + seconds;
     }
 
+    static checkAlerta(duration, limit){
+        var seconds = Math.floor(duration / 1000);
+        var remaining_time = limit - seconds;
+        if(remaining_time < 0){
+            SoftNotification.show("El tiempo permitido para el descanso ha terminado","danger");
+        }
+        else if (remaining_time < 60){
+            SoftNotification.show("Queda menos de un minuto para terminar el descanso","warning");
+        }
+    }
+
     static setTimeBreak(){
         if(AgentConsole.since != 0){
             var time = Math.abs(new Date() - AgentConsole.since);
             $('#lblStatus').html("En descanso: " + AgentConsole.break);
             $('#lblMessage').html("Tiempo: " + AgentConsole.msToTime(time));
+        }
+    }
+
+    static setAlertBreak(){
+        if(AgentConsole.since != 0){
+            var time = Math.abs(new Date() - AgentConsole.since);
+            AgentConsole.checkAlerta(time, AgentConsole.limit_break);
         }
     }
 }
@@ -117,4 +137,8 @@ $( document ).ready(function() {
     setInterval(function(){
         AgentConsole.setTimeBreak();
     }, 1000)
+
+    setInterval(function(){
+        AgentConsole.setAlertBreak();
+    }, 15000)
 });
