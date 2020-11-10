@@ -13,7 +13,10 @@ class PermissionValidation():
         key = request.session.get('loginsession')
 
         if key is not None:
-            login_session = LoginSession.objects.get(key=key)
+            try:
+                login_session = LoginSession.objects.get(key=key)
+            except LoginSession.DoesNotExist:
+                login_session = None
         else:
             login_session = None
         self.login_session = login_session
