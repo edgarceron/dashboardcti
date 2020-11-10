@@ -31,7 +31,8 @@ def create_calls_consolidacion():
                 print("Llamada creada")
                 data_cc = {
                     'consolidacion': consolidacion.id,
-                    'call': call.data['id']
+                    'call': call.data['id'],
+                    'observacion':""
                 }
                 call_consolidacion = CallConsolidacionSerializer(data=data_cc)
                 if call_consolidacion.is_valid():
