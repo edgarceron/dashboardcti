@@ -25,7 +25,7 @@ def create_calls_consolidacion():
             else:
                 phone = None
 
-            if phone is not None and phone != "":    
+            if phone is not None and phone != "None":    
                 data = {
                     'phone': phones[cedula][0],
                     'id_campaign': pk_campaign,
