@@ -18,31 +18,39 @@ def create_calls_consolidacion():
         campaign_obj = Campaign.objects.get(id=pk_campaign)
         for consolidacion in to_create:
             cedula = consolidacion.cedula
-            data = {
-                'phone': phones[cedula][0],
-                'id_campaign': pk_campaign,
-                'retries': 0,
-                'dnc': 0,
-                'scheduled': 0
-            }
-            call = CallsSerializer(data=data)
-            if call.is_valid():
-                call.save()
-                print("Llamada creada")
-                data_cc = {
-                    'consolidacion': consolidacion.id,
-                    'call': call.data['id'],
-                    'observacion':""
-                }
-                call_consolidacion = CallConsolidacionSerializer(data=data_cc)
-                if call_consolidacion.is_valid():
-                    call_consolidacion.save()
-                else:
-                    print(call_consolidacion.errors)
-                    print('Error')
+            if phones[cedula][0] is not None:
+                phone = phones[cedula][0]
+            elif 1 in phones and phones[cedula][0] is not None:
+                phone = phones[cedula][0]
             else:
-                print(call.errors)
-                print('Error')
+                phone = None
+
+            if phone is not None and phone != "":    
+                data = {
+                    'phone': phones[cedula][0],
+                    'id_campaign': pk_campaign,
+                    'retries': 0,
+                    'dnc': 0,
+                    'scheduled': 0
+                }
+                call = CallsSerializer(data=data)
+                if call.is_valid():
+                    call.save()
+                    print("Llamada creada")
+                    data_cc = {
+                        'consolidacion': consolidacion.id,
+                        'call': call.data['id'],
+                        'observacion':""
+                    }
+                    call_consolidacion = CallConsolidacionSerializer(data=data_cc)
+                    if call_consolidacion.is_valid():
+                        call_consolidacion.save()
+                    else:
+                        print(call_consolidacion.errors)
+                        print('Error')
+                else:
+                    print(call.errors)
+                    print('Error')
 
         campaign_obj.estatus = 'A'
         campaign_obj.save()
