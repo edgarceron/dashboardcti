@@ -28,13 +28,14 @@ class AgentConsole{
                         $('#lblStatus').html(result.status);
                         $('#lblMessage').html(result.message);
                         if(result.call) AgentConsole.calculateActions(result);
-                        if(result.break != ""){
+                        if('break' in result) previous_break = result.break;
+                        else previous_break = "";
+                        if('break' in result && result.break != ""){
                             AgentConsole.since = new Date(result.date + " " + result.time);
                             AgentConsole.break = result.break;
                             AgentConsole.limit_break = result.time_limit;
                         }
                         else AgentConsole.since = 0;
-                        previous_break = result.break;
                         previous_state = result.previous;
                         if(result.call) {
                             previous_call = result.llamada_id;
