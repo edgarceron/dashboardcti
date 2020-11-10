@@ -50,7 +50,7 @@
             <div class="col-md-6">
                 <div class="input-group mb-2 mr-sm-2">
                     <div class="input-group-prepend">
-                      <div class="input-group-text"><i class="fas fa-calendar-day"></i></div>
+                        <div class="input-group-text"><i class="fas fa-calendar-day"></i></div>
                     </div>
                     <input type="date" class="form-control appform"  id="fechaInput" required>
                 </div>
@@ -64,6 +64,12 @@
                         <select class='form-control appform' id='horaInput'>
                         </select>
                     </div>
+                </div>
+            </div>
+            <div class='col-md-12'>
+                <div class='form-group'>
+                    <label for='observacionesInput'>Observaciones</label>
+                    <textarea class='form-control appforms' id='observacionesInput'></textarea>
                 </div>
             </div>
         </div>
@@ -127,6 +133,3 @@
 {% block javascript %}
 
 {% endblock javascript %}
-
-
-    

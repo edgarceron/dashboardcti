@@ -83,8 +83,8 @@ class AgentConsole{
             Polls.setTelefono(result.phone);
             $('#cedulaInput').val(result.cedula);
             $('#cedulaPollInput').val(result.cedula);
+            Citas.validateCedula(result.cedula);
         }
-        
     }
 
     static msToTime(duration) {

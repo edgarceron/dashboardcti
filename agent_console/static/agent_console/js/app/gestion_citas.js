@@ -8,6 +8,7 @@ function getValues(){
         'fecha': $('#fechaInput').val(),
         'hora': $('#horaInput').val(),
         'motivo': $('#motivoInput').val(),
+        'observaciones': $('#observacionesInput').val(),
         'call_consolidacion_id': $('#call_consolidacion_idInput').val(),
         'id_call_entry': AgentConsole.llamada_id,
     }

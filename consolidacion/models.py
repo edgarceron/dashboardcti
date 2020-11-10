@@ -30,6 +30,7 @@ class CallConsolidacion(models.Model):
     cita_tall_id = models.IntegerField(null=True, unique=True)
     cita_crm_id = models.IntegerField(null=True, unique=True)
     call_made = models.BooleanField(null=False, default=False)
+    observaciones = models.TextField(null=True)
 
 class CallEntryCita(models.Model):
     """Class for the call entry made for consolidacion"""
