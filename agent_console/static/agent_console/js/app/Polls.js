@@ -96,9 +96,12 @@ class Polls {
         if(Polls.checkValidity()){
             Polls.saveHeader();
             Polls.saveBodies(Polls.header);
+            Polls.clearDataLlamada();
+            Polls.endTransaction();
         }
-        Polls.clearDataLlamada();
-        Polls.endTransaction();
+        else {
+            SoftNotification.show("Hay errores en el formulario", "danger");
+        }
     }
 
     static clearDataLlamada(){
@@ -222,8 +225,7 @@ class Polls {
         }
         var valid = true;
         for(let question of Polls.questionsList){
-            console.log(question);
-            console.log(question.isValid());
+            question.setValidation();
             valid = valid && question.isValid();
         }
         return valid;

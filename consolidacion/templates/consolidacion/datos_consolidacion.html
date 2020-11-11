@@ -1,0 +1,67 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+    Datos de citas de taller
+{% endblock %}
+{% block topTitle %}
+    Datos de citas de taller
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <form action="" class="needs-validation w-100" novalidate>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="fechaInicioInput">Fecha inicio</label>
+                        <input type="date" class="form-control appform" id="fechaInicioInput" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="fechaFinInput">Fecha fin</label>
+                        <input type="date" class="form-control appform" id="fechaFinInput" required>
+                    </div>
+                </div>
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <label for='agentInput'>Agente</label>
+                        <select class='form-control appform' id='agentInput'>
+                            <option value="">Sin asignar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class='row'>
+                <div class="col">
+                    <div class='form-group'>
+                        <button type="button" class="btn btn-primary" id="downloadButton">Descargar respuestas</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row" id="answerChartContainer">
+
+    </div>
+
+
+{% endblock %}
+{% block javascript %}
+    <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
+    <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
+    <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
+    
+    <script>
+
+        var id = {{ id }};
+        var listing_url = "{% url 'listing_campaign' %}";
+        var data_chart_campaign_url = "{% url 'data_chart_campaign' %}";
+        var get_agent_url = "{% url 'get_agent' user_id=0 %}";
+        var pircker_search_agent_url = "{% url 'picker_search_agent' %}";
+        var download_consolidaciones_url = "{% url 'download_consolidaciones' agent='0' start_date='abc' end_date='def' %}"
+        get_agent_url = get_agent_url.slice(0, -1);
+
+    </script>
+    <script src="{% static 'campaigns/js/app/data.js' %}"></script>
+{% endblock %}

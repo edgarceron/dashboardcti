@@ -7,7 +7,7 @@ def motivo_picker_filter(value):
     return list(Motivo.objects.filter(
         Q(active=True),
         Q(name__icontains=value)
-    )[:10])
+    )[:30])
 
 def motivo_listing_filter(search, start, length, count=False):
     """Filters the corresponding models given a search string"""

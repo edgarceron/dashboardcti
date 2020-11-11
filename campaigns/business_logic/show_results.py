@@ -105,10 +105,21 @@ def data_chart(id_campaign, start_date, end_date):
                 if body.question.question_type == 3 or body.question.question_type == 4:
                     data[body.question.id]['answers'][body.answer.id]['count'] += 1
                 else:
-                    print("body.answer_text")
-                    data[body.question.id]['answers'][str(body.answer_text)]['count'] += 1
+                    if body.answer_text == 1:
+                        txt = "true"
+                    else:
+                        txt = "false"
+                    data[body.question.id]['answers'][txt]['count'] += 1
     return json.dumps(data)
 
+def headers_csv(quesitons):
+    """Creates the headers for the csv file"""
+    row = {}
+    for header in DATA_LLAMADA_HEADER:
+        row[header] = header
+    for header in quesitons:
+        row[header.id] = header.text
+    return row
 
 def collect_data(id_campaign, start_date="", end_date=""):
     """Gets the answers for the given campaign in the given data range including
@@ -118,6 +129,8 @@ def collect_data(id_campaign, start_date="", end_date=""):
     questions = Question.objects.filter(form=campaign.form)
 
     collected_data = []
+    collected_data.append(headers_csv(questions))
+
     for header in headers:
         row = new_row(questions)
         data_llamada = DataLlamada.objects.get(id=header.data_llamada.id)

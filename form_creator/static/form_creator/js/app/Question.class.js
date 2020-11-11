@@ -18,6 +18,28 @@ class Question {
         this.answers = answers;
     }
 
+    setValidation(){
+        var selector;
+        if(this.type == Question.TYPE_BOOL){
+            selector = `#checkPregunta${this.id}`;
+        }
+        else if (this.type == Question.TYPE_TEXT){
+            selector = `#textAreaPregunta${this.id}`;
+        }
+        else if (this.type == Question.TYPE_MULTI_ONE){
+            selector = `[id$=pregunta${this.id}]`;
+        }
+        else if (this.type == Question.TYPE_MULTI_MANY){
+            selector = `[id$=pregunta${this.id}]`;
+        }
+        else if (this.type == Question.TYPE_DATE){
+            selector = `#datePregunta${this.id}`;
+        }
+        console.log($(selector));
+        if(!this.isValid()) $(selector).addClass('is-invalid');
+        else $(selector).removeClass('is-invalid');
+    }
+
     draw(container){
         var html;
         if(this.type == Question.TYPE_BOOL){
@@ -55,13 +77,14 @@ class Question {
     }
 
     drawBool(){
-        var required = this.empty ? "" : "required";
+        var required = this.empty ? "required" : "";
+        var ast = this.empty ? "*" : "";
         var html = `
             <div class="row">
                 <div class="col-md-11">
                     <div class="row">
-                        <div class="col-md-12">     
-                            ${this.text}
+                        <div class="col-md-12" id="checkPregunta${this.id}">     
+                            ${this.text}${ast}
                         </div>
                     </div>
                 </div>
@@ -76,11 +99,12 @@ class Question {
     }
 
     drawText(){
-        var required = this.empty ? "" : "required";
+        var required = this.empty ? "required" : "";
+        var ast = this.empty ? "*" : "";
         var html = `
             <div class="row">
                 <div class="col-md-12">
-                    ${this.text}
+                    ${this.text} ${ast}
                     <div class="form-group">
                         <textarea class="form-control" id="textAreaPregunta${this.id}" rows="3" ${required}>
                         </textarea>
@@ -92,12 +116,12 @@ class Question {
     }
 
     drawMultiOne(){
+        var ast = this.empty ? "*" : "";
         var html = `
         <div class="row">
             <div class="col-md-12">
-                ${this.text}
+                ${this.text}${ast}
         `;
-
         var answer;
         for(var i = 0; i < this.answers.length; i++){
             answer = this.answers[i];
@@ -106,7 +130,7 @@ class Question {
             <input 
                 class="form-check-input" type="radio" 
                 name="pregunta${this.id}" id="respuesta${answer.id}pregunta${this.id}" 
-                value="${this.id}">
+                value="${answer.id}">
             <label class="form-check-label" for="respuesta${answer.id}pregunta${this.id}">
                 ${answer.text}
             </label>
@@ -123,12 +147,13 @@ class Question {
     }
 
     drawMultiMany(){
+        var ast = this.empty ? "*" : "";
         var html = `
         <div class="row">
             <div class="col-md-12">
-                ${this.text}
+                ${this.text}${ast}
         `;
-
+        
         var answer;
         for(var i = 0; i < this.answers.length; i++){
             answer = this.answers[i];
@@ -156,11 +181,12 @@ class Question {
     }
 
     drawDate(){
-        var required = this.empty ? "" : "required";
+        var ast = this.empty ? "*" : "";
+        var required = this.empty ? "required" : "";
         var html = `
             <div class="row">
                 <div class="col-md-12">
-                    ${this.text}
+                    ${this.text}${ast}
                     <div class="form-group">
                         <input type="text" class="form-control form_datetime" id="datePregunta${this.id}" ${required}>
                     </div>

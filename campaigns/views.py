@@ -75,7 +75,7 @@ def download_poll_answers(request, campaign_id, start_date, end_date):
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('download_poll_answers')
     if validation['status']:
-        collected_data = show_results.collect_data(campaign_id)
+        collected_data = show_results.collect_data(campaign_id, start_date, end_date)
         file_path = show_results.data_to_csv(collected_data)
         if os.path.exists(file_path):
             with open(file_path, 'rb') as fh:
@@ -88,7 +88,7 @@ def download_poll_answers(request, campaign_id, start_date, end_date):
 def data_campaign(request, campaign_id):
     """Shows the view for campaign data"""
     permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('download_poll_answers')
+    validation = permission_obj.validate('data_campaign')
     if validation['status']:
         campaign = CampaignForm.objects.get(id=campaign_id)
         return render(

@@ -139,7 +139,8 @@ def obtain_asnwers(data_answers):
 
 def store_answers(answers, header, question):
     if len(answers) == 0:
-        body = AnswersBody(header, question, question.text, None, "")
+        body = AnswersBody(header=header, question=question, question_text=question.text, 
+        answer=None, answer_text="")
         body.save()
     else:
         for answer in answers:
@@ -165,7 +166,9 @@ def check_answers(data_answers):
     if isinstance(data_answers, str):
         try:
             data = json.loads(data_answers)
-            if not isinstance(data, list):
+            if isinstance(data, int):
+                return True
+            elif not isinstance(data, list):
                 return False 
         except json.decoder.JSONDecodeError:
             return False
