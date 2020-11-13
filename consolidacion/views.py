@@ -1,7 +1,7 @@
 """Manages the views for consolidacion module"""
 import os
 from django.shortcuts import render, HttpResponse
-from consolidacion.business_logic import show_results
+from consolidacion.business_logic import show_results, fail_management
 from users.permission_validation import PermissionValidation
 
 # Create your views here.
@@ -100,12 +100,26 @@ def turnero(request):
     return permission_obj.error_response_view(validation, request)
 
 def download_consolidaciones(request, agent, start_date, end_date):
-    """Creates a csv file which contains the campaign answers and returns a file response with
-    the file"""
+    """Creates a csv file which contains the consolidations with a tall_cita"""
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('download_consolidaciones')
     if validation['status']:
         collected_data = show_results.collect_data(agent, start_date, end_date)
+        file_path = show_results.data_to_csv(collected_data)
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+                return response
+        return render(request, 'maingui/http_error.html', None, status=404)
+    return permission_obj.error_response_view(validation, request)
+
+def download_fails(request, start_date, end_date):
+    """Creates a csv file which contains the failed consolidations"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('download_fails')
+    if validation['status']:
+        collected_data = fail_management.check_fails(start_date, end_date)
         file_path = show_results.data_to_csv(collected_data)
         if os.path.exists(file_path):
             with open(file_path, 'rb') as fh:

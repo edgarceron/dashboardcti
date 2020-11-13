@@ -29,6 +29,8 @@
                     <div class='form-group'>
                         <button type="button" class="btn btn-primary" id="reloadCharts">Cargar graficas</button>
                         <button type="button" class="btn btn-primary" id="downloadButton">Descargar respuestas</button>
+                        <button type="button" class="btn btn-primary" id="downloadFailsButton">Descargar fallos</button>
+                        <button type="button" class="btn btn-primary" id="prepareFailsButton">Volver a llamar fallidas</button>
                     </div>
                 </div>
             </div>
@@ -51,6 +53,8 @@
         var listing_url = "{% url 'listing_campaign' %}";
         var data_chart_campaign_url = "{% url 'data_chart_campaign' %}";
         var download_poll_answers_url = "{% url 'download_poll_answers' campaign_id=id start_date='abc' end_date='def' %}"
+        var download_fails_polls_url = "{% url 'download_fails_polls' campaign_id=id start_date='abc' end_date='def' %}"
+        var fail_prepare_polls_url = "{% url 'fail_prepare_polls' %}";
 
     </script>
     <script src="{% static 'campaigns/js/app/data.js' %}"></script>

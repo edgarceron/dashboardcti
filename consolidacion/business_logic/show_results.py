@@ -15,7 +15,7 @@ def data_to_csv(collected_data):
     return settings.STATIC_ROOT + 'result.csv'
 
 def collect_data(agent="", start_date="", end_date=""):    
-    calls_consolidacion = consolidaciones_date_range(agent, start_date, end_date)
+    calls_consolidacion = calls_date_range(agent, start_date, end_date)
     collected_data = []
     for aux in calls_consolidacion:
         row['cedula'] = aux.consolidacion.cedula
@@ -41,7 +41,7 @@ def collect_data(agent="", start_date="", end_date=""):
     return collected_data
 
 
-def consolidaciones_date_range(agent, start_date, end_date):
+def calls_date_range(agent, start_date, end_date):
 
     criteria = {}
 

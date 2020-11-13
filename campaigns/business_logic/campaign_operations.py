@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from users.permission_validation import PermissionValidation
 from consolidacion.serializers import ConsolidacionFileUploadsSerializer
 from agent_console.models import Calls, Campaign
-from campaigns.serializers import DataLlamadaSerializar, AnswersBodySerializer
+from campaigns.serializers import DataLlamadaSerializar
 from campaigns.models import CampaignForm, AnswersHeader, Question, AnswersBody, Answer
-from . import show_results
+from campaigns.business_logic import show_results, fail_management
 import json
 
 def upload_calls_campaign(request):
@@ -187,6 +187,26 @@ def data_chart(request):
         return Response(
             {"success":True, "questions": result},
             status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
+    return permission_obj.error_response_webservice(validation, request)
+
+def fail_prepare_polls(request):
+    """Create new consolidations for failed consolidations in a given date range"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('fail_prepare_polls')
+    if validation['status']:
+        data = request.data
+        try:
+            fail_management.prepare_to_call(data['campaign'], data['start_date'], data['end_date'])
+            success = True
+            message = "Se volvera a llamar a las encuestas fallidas"
+        except:
+            success = False
+            message = "Ocurrio un error al intentar crear las llamadas"
+        return Response(
+            {"success":success, "message": message},
+            status=status.HTTP_400_BAD_REQUEST,
             content_type='application/json'
         )
     return permission_obj.error_response_webservice(validation, request)

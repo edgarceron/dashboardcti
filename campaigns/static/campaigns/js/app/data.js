@@ -92,13 +92,38 @@ function getDataChart(){
     standard.makePetition(data, 'data_chart_campaign_url', ajaxFunctions);
 }
 
+function prepareFails(){
+    var start_date = $('#fechaInicioInput').val();
+    var end_date = $('#fechaFinInput').val();
+    if(start_date == "") agent = today();
+    if(end_date == "") agent = today();
+
+    var data = {
+        'start_date': start_date,
+        'end_date': end_date,
+        'campaign': id,
+    }
+
+    var ajaxFunctions = {
+        'success': function(result){
+            var color;
+            if(result.success) color = "success";
+            else color = "danger";
+            SoftNotification.show(result.message, color);
+        },
+        'error': function(result){
+            SoftNotification.show("Ocurrio un error", "danger");
+        }
+    }
+    standard.makePetition(data, 'fail_prepare_polls_url', ajaxFunctions);
+}
+
 $( document ).ready(function() {
 
     var urls = {
         'data_chart_campaign_url':{'url' : data_chart_campaign_url, 'method':'POST'},
+        'fail_prepare_polls_url':{'url' : fail_prepare_polls_url, 'method':'POST'},
     }
-    console.log(urls);
-
     standard = new StandardCrud(urls);
 
     $('#downloadButton').click(function(){
@@ -112,50 +137,20 @@ $( document ).ready(function() {
         window.location.href = url;
     });
 
+    $('#downloadFailsButton').click(function(){
+        var start_date = $('#fechaInicioInput').val();
+        var end_date = $('#fechaFinInput').val();
+        var url = download_fails_polls_url;
+        if(start_date == "") agent = today();
+        if(end_date == "") agent = today();
+        url = url.replace("abc", start_date);
+        url = url.replace("def", end_date);
+        window.location.href = url;
+    });
+
     $('#reloadCharts').click(function(){
         getDataChart();
     });
 
     getDataChart();
 });
-
-/*
-window.onload = function() {
-    var ctx = document.getElementById('chart-area').getContext('2d');
-    window.myPie = new Chart(ctx, config);
-};
-
-document.getElementById('randomizeData').addEventListener('click', function() {
-    config.data.datasets.forEach(function(dataset) {
-        dataset.data = dataset.data.map(function() {
-            return randomScalingFactor();
-        });
-    });
-
-    window.myPie.update();
-});
-
-var colorNames = Object.keys(window.chartColors);
-document.getElementById('addDataset').addEventListener('click', function() {
-    var newDataset = {
-        backgroundColor: [],
-        data: [],
-        label: 'New dataset ' + config.data.datasets.length,
-    };
-
-    for (var index = 0; index < config.data.labels.length; ++index) {
-        newDataset.data.push(randomScalingFactor());
-
-        var colorName = colorNames[index % colorNames.length];
-        var newColor = window.chartColors[colorName];
-        newDataset.backgroundColor.push(newColor);
-    }
-
-    config.data.datasets.push(newDataset);
-    window.myPie.update();
-});
-
-document.getElementById('removeDataset').addEventListener('click', function() {
-    config.data.datasets.splice(0, 1);
-    window.myPie.update();
-});*/

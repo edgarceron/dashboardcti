@@ -9,7 +9,7 @@ from agent_console.models import UserSede
 from dms.serializers import CrmCitasSerializer
 from consolidacion.business_logic.list_class import ConsolidacionList
 from consolidacion.serializers import ConsolidacionFileUploadsSerializer, ConsolidacionSerializer
-from consolidacion.business_logic import citas
+from consolidacion.business_logic import citas, fail_management
 
 def check_tercero_cedula(request):
     """Checks if the given nit belongs to a database tercero row and returns the name"""
@@ -233,6 +233,26 @@ def upload_consolidacion(request):
             )
         return Response(
             {"success":False, "message": "Error al intentar guardar el archivo"},
+            status=status.HTTP_400_BAD_REQUEST,
+            content_type='application/json'
+        )
+    return permission_obj.error_response_webservice(validation, request)
+
+def fail_prepare(request):
+    """Create new consolidations for failed consolidations in a given date range"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('fail_management')
+    if validation['status']:
+        data = request.data
+        try:
+            fail_management.prepare_to_call(data['start_date'], data['end_date'])
+            success = True
+            message = "Se volvera a llamar a las consolidaciones fallidas"
+        except:
+            success = False
+            message = "Ocurrio un error al intentar crear las llamadas"
+        return Response(
+            {"success":success, "message": message},
             status=status.HTTP_400_BAD_REQUEST,
             content_type='application/json'
         )

@@ -20,6 +20,7 @@ def get_actions():
         {"name": "save_answers", "label": "Webservice guardar las respuesta"},
         {"name": "add_data_llamada", "label": "Webservice para crear los datos de un usuario en llamada para encuesta"},
         {"name": "replace_data_llamada", "label": "Webservice actualizar los datos de un usuario en llamada para encuesta"},
+        {"name": "fail_prepare_polls", "label": "Webservice crear nuevas llamadas a partir de las encuentas fallidas"},
     ]
     return actions
 
@@ -104,3 +105,8 @@ def replace_data_llamada(request, data_llamada_id):
 def data_chart(request):
     """Returns the data to create charts for every questions"""
     return campaign_operations.data_chart(request)
+
+@api_view(['POST'])
+def fail_prepare_polls(request):
+    """Create new Header for failed AnswerHeaders in a given date range"""
+    return campaign_operations.fail_prepare_polls(request)

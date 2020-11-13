@@ -12,10 +12,21 @@ urlpatterns = [
         name='download_consolidaciones'
     ),
     path(
+        'download_fails/<str:start_date>/<str:end_date>',
+        views.download_fails,
+        name='download_fails'
+    ),
+    path(
         'upload_consolidacion_form', 
         views.upload_consolidacion_form, 
         name='upload_consolidacion_form'
     ),
+    path(
+        'datos_consolidacion', 
+        views.datos_consolidacion, 
+        name='datos_consolidacion'
+    ),
+    path('turnero', views.turnero, name='turnero'),
     path('update/<int:consolidacion_id>', views.form_consolidacion, name='update_consolidacion'),
     path('add', webservices.add_consolidacion, name='add_consolidacion'),
     path('replace/<int:consolidacion_id>', webservices.replace_consolidacion, name='replace_consolidacion'),
@@ -29,5 +40,5 @@ urlpatterns = [
     path('check_tercero_cedula', webservices.check_tercero_cedula, name='check_tercero_cedula'),
     path('check_placa', webservices.check_placa, name='check_placa'),
     path('get_closest_turns', webservices.get_closest_turns, name='get_closest_turns'),
-    path('turnero', views.turnero, name='turnero'),
+    path('fail_prepare', webservices.fail_prepare, name='fail_prepare'),
 ]

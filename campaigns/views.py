@@ -2,7 +2,7 @@
 import os
 from django.shortcuts import render, redirect, HttpResponse
 from users.permission_validation import PermissionValidation
-from campaigns.business_logic import show_results
+from campaigns.business_logic import show_results, fail_management
 from .models import CampaignForm
 
 
@@ -13,6 +13,7 @@ def get_actions():
         {"name": "listing_campaign", "label": "Pagina del listado de campañas"},
         {"name": "upload_data_campaign", "label": "Pagina para subir datos a la camapaña"},
         {"name": "download_poll_answers", "label": "Descargar datos de campaña"},
+        {"name": "download_fails_polls", "label": "Descargar datos de encuestas fallidas"},
         {"name": "data_campaign", "label": "Pagina ver datos de la campaña"},
     ]
     return actions
@@ -76,6 +77,21 @@ def download_poll_answers(request, campaign_id, start_date, end_date):
     validation = permission_obj.validate('download_poll_answers')
     if validation['status']:
         collected_data = show_results.collect_data(campaign_id, start_date, end_date)
+        file_path = show_results.data_to_csv(collected_data)
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+                return response
+        return render(request, 'maingui/http_error.html', None, status=404)
+    return permission_obj.error_response_view(validation, request)
+
+def download_fails_polls(request, campaign, start_date, end_date):
+    """Creates a csv file which contains the failed consolidations"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('download_fails_polls')
+    if validation['status']:
+        collected_data = fail_management.check_fails(campaign, start_date, end_date)
         file_path = show_results.data_to_csv(collected_data)
         if os.path.exists(file_path):
             with open(file_path, 'rb') as fh:

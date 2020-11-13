@@ -1,3 +1,5 @@
+var urls = {};
+var standard = {};
 
 $('#agentInput').selectpicker(
     {
@@ -5,7 +7,39 @@ $('#agentInput').selectpicker(
     }
 );
 
+function failPrepare(){
+    var start_date = $('#fechaInicioInput').val();
+    var end_date = $('#fechaFinInput').val();
+    if(start_date == "") agent = today();
+    if(end_date == "") agent = today();
+
+    var data = {
+        'start_date': start_date,
+        'end_date': end_date
+    }
+
+    var ajaxFunctions = {
+        'success': function(result){
+            var color;
+            if(result.success) color = "success";
+            else color = "danger";
+            SoftNotification.show(result.message, color);
+        },
+        'error': function(result){
+            SoftNotification.show("Ocurrio un error", "danger");
+        }
+    }
+    standard.makePetition(data, 'fail_prepare_url', ajaxFunctions);
+}
+
 $( document ).ready(function() {
+
+    urls = {
+        'fail_prepare_url': {'url' : fail_prepare_url, 'method':'POST'},
+    }
+    standard = new StandardCrud(urls);
+
+
     FormFunctions.setAjaxLoadPicker(
         '#agentInput', pircker_search_agent_url, FormFunctions.updatePicker, "Ningun agente"
     );
@@ -28,5 +62,22 @@ $( document ).ready(function() {
         url = url.replace("0", agent);
         window.location.href = url;
     });
+
+    $('#downloadFailsButton').click(function(){
+        var start_date = $('#fechaInicioInput').val();
+        var end_date = $('#fechaFinInput').val();
+        var url = download_fails_url;
+        var today = new Date();
+        if(start_date == "") agent = today();
+        if(end_date == "") agent = today();
+        url = url.replace("abc", start_date);
+        url = url.replace("def", end_date);
+        window.location.href = url;
+    });
+
+    $('#reCallButton').click(function(){
+        failPrepare();
+    });
+    
 
 });

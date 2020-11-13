@@ -36,6 +36,8 @@
                 <div class="col">
                     <div class='form-group'>
                         <button type="button" class="btn btn-primary" id="downloadButton">Descargar respuestas</button>
+                        <button type="button" class="btn btn-primary" id="downloadFailsButton">Descargar fallidas</button>
+                        <button type="button" class="btn btn-primary" id="reCallButton">Volver a llamar fallidas</button>
                     </div>
                 </div>
             </div>
@@ -53,13 +55,14 @@
     <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
     
     <script>
-
-        var id = {{ id }};
         var listing_url = "{% url 'listing_campaign' %}";
         var data_chart_campaign_url = "{% url 'data_chart_campaign' %}";
         var get_agent_url = "{% url 'get_agent' user_id=0 %}";
         var pircker_search_agent_url = "{% url 'picker_search_agent' %}";
         var download_consolidaciones_url = "{% url 'download_consolidaciones' agent='0' start_date='abc' end_date='def' %}"
+        var download_fails_url = "{% url 'download_fails' start_date='abc' end_date='def' %}"
+        var fail_prepare_url = "{% url 'fail_prepare' start_date='abc' end_date='def' %}"
+        
         get_agent_url = get_agent_url.slice(0, -1);
 
     </script>

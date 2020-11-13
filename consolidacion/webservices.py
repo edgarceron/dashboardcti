@@ -1,7 +1,8 @@
 """Contains the webservices for the consolidacion app"""
 from rest_framework.decorators import api_view
 from core.crud.standard import Crud
-from consolidacion.business_logic import data_filters, consolidacion_operations, turnero
+from consolidacion.business_logic import (
+    data_filters, consolidacion_operations, turnero)
 from .models import Consolidacion
 from .serializers import ConsolidacionSerializer, ConsolidacionListSerializer
 
@@ -38,7 +39,10 @@ def get_actions():
             "name": "get_closest_turns",
             "label": "Webservice para obtener los turnos en el turnero"
         },
-        
+        {
+            "name": "fail_prepare",
+            "label": "Webservice para renovar llamadas de las consolidaciones fallidas"
+        },
     ]
     return actions
 
@@ -121,3 +125,9 @@ def check_placa(request):
 def get_closest_turns(request):
     """Gets the turns that end after the current datetime for todays date"""
     return turnero.get_closest_turns(request)
+
+@api_view(['POST'])
+def fail_prepare(request):
+    """Create new consolidations for failed consolidations in a given date range"""
+    return consolidacion_operations.fail_prepare(request)
+    
