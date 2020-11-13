@@ -59,7 +59,5 @@ def calls_fail_date_range(start_date, end_date):
         Q(status='Placing') | Q(status='NoAsnwer')
     ))
 
-    consolidaciones = Consolidacion.objects.filter(
-        Q(callconsolidacion__call__in=calls) |
-        Q(callconsolidacion__cita_tall_id__isnull=True))
+    consolidaciones = Consolidacion.objects.filter(Q(callconsolidacion__call__in=calls))
     return consolidaciones

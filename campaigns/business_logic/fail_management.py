@@ -75,10 +75,14 @@ def headers_fail_date_range(campaign, start_date, end_date):
         Q(**criteria), Q(status='Abandoned') | Q(status='Failure') |
         Q(status='Placing') | Q(status='NoAsnwer')
     ))
+
+    success_calls = list(Calls.objects.values_list('id', flat=True).filter(
+        Q(**criteria), Q(status='Success')
+    ))
     
     headers = AnswersHeader.objects.annotate(
         number_of_bodies=Count('answersbody')
     ).filter(
         Q(call_id__in=calls) |
-        Q(number_of_bodies=0))
+        Q(number_of_bodies=0, call_id__in=success_calls))
     return headers
