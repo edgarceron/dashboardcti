@@ -66,6 +66,7 @@ function getColor(index){
 }
 
 function getDataChart(){
+    $('#answerChartContainer').empty();
     var data = {
         'id_campaign': id,
         'start_date': $('#fechaInicioInput').val(),
