@@ -8,7 +8,7 @@ from consolidacion.models import CallConsolidacion, Consolidacion
 from consolidacion.serializers import CallConsolidacionSerializer
 
 def check_fails(start_date, end_date):
-    calls_consolidacion = calls_fail_date_range(start_date, end_date)
+    consolidacion = calls_fail_date_range(start_date, end_date)
     data = []
     row = {}
     row['cedula'] = 'cedula'
@@ -16,9 +16,9 @@ def check_fails(start_date, end_date):
     row['fecha'] = 'fecha'
     row['motivo'] = 'motivo'
     row['sede'] = 'sede'
-    date.append(row)
+    data.append(row)
 
-    for x in calls_consolidacion:
+    for x in consolidacion:
         row = {}
         row['cedula'] = x.consolidacion.cedula
         row['placa'] = x.consolidacion.placa
@@ -29,9 +29,9 @@ def check_fails(start_date, end_date):
     return data
 
 def prepare_to_call(start_date, end_date):
-    calls_consolidacion = calls_fail_date_range(start_date, end_date)
-    for x in calls_consolidacion:
-        old = x.consolidacion
+    consolidacion = calls_fail_date_range(start_date, end_date)
+    for x in consolidacion:
+        old = x
         new = Consolidacion(
             cedula=old.cedula, placa=old.placa, fecha=date.today(), 
             motivo=old.motivo, sede=old.sede)
@@ -59,5 +59,7 @@ def calls_fail_date_range(start_date, end_date):
         Q(status='Placing') | Q(status='NoAsnwer')
     ))
 
-    calls_consolidacion = CallConsolidacion.objects.filter(call__in=calls)
-    return calls_consolidacion
+    consolidaciones = Consolidacion.objects.filter(
+        Q(callconsolidacion__call__in=calls) |
+        Q(callconsolidacion__cita_tall_id__isnull=True))
+    return consolidaciones

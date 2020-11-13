@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Count
 from datetime import timedelta, datetime, date
 from agent_console.models import Calls
 from campaigns.models import CampaignForm, AnswersHeader
@@ -22,7 +22,7 @@ def check_fails(campaign, start_date, end_date):
         row = {}
         row['cedula'] = header_info.data_llamada.cedula
         row['placa'] = header_info.data_llamada.placa
-        row['nombre'] = header_info.data_llamada.nombre
+        row['nombre'] = header_info.data_llamada.name
         row['telefono'] = header_info.data_llamada.telefono
         row['correo'] = header_info.data_llamada.correo
         row['linea_vehiculo'] = header_info.data_llamada.linea_veh
@@ -75,6 +75,10 @@ def headers_fail_date_range(campaign, start_date, end_date):
         Q(**criteria), Q(status='Abandoned') | Q(status='Failure') |
         Q(status='Placing') | Q(status='NoAsnwer')
     ))
-
-    headers = AnswersHeader.objects.filter(call_id__in=calls)
+    
+    headers = AnswersHeader.objects.annotate(
+        number_of_bodies=Count('answersbody')
+    ).filter(
+        Q(call_id__in=calls) |
+        Q(number_of_bodies=0))
     return headers

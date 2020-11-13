@@ -29,6 +29,10 @@ def get_actions():
             "label": "Descargar csv de consolidaciones"
         },
         {
+            "name": "download_fails",
+            "label": "Descargar consolidacioens fallidas"
+        },
+        {
             "name": "datos_consolidacion",
             "label": "Pagina resultados de consolidación"
         },
@@ -136,7 +140,7 @@ def datos_consolidacion(request):
     if validation['status']:
         return render(
             request,
-            'campaigns/datos_consolidacion.html',
+            'consolidacion/datos_consolidacion.html',
             {
                 'username': permission_obj.user.name
             }

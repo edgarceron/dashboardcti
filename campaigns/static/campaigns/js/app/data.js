@@ -130,8 +130,8 @@ $( document ).ready(function() {
         var start_date = $('#fechaInicioInput').val();
         var end_date = $('#fechaFinInput').val();
         var url = download_poll_answers_url;
-        if(start_date == "") agent = today();
-        if(end_date == "") agent = today();
+        if(start_date == "") start_date = today();
+        if(end_date == "") end_date = today();
         url = url.replace("abc", start_date);
         url = url.replace("def", end_date);
         window.location.href = url;
@@ -141,8 +141,8 @@ $( document ).ready(function() {
         var start_date = $('#fechaInicioInput').val();
         var end_date = $('#fechaFinInput').val();
         var url = download_fails_polls_url;
-        if(start_date == "") agent = today();
-        if(end_date == "") agent = today();
+        if(start_date == "") start_date = today();
+        if(end_date == "") end_date = today();
         url = url.replace("abc", start_date);
         url = url.replace("def", end_date);
         window.location.href = url;

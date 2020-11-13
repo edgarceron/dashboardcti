@@ -61,10 +61,10 @@
         var pircker_search_agent_url = "{% url 'picker_search_agent' %}";
         var download_consolidaciones_url = "{% url 'download_consolidaciones' agent='0' start_date='abc' end_date='def' %}"
         var download_fails_url = "{% url 'download_fails' start_date='abc' end_date='def' %}"
-        var fail_prepare_url = "{% url 'fail_prepare' start_date='abc' end_date='def' %}"
+        var fail_prepare_url = "{% url 'fail_prepare' %}"
         
         get_agent_url = get_agent_url.slice(0, -1);
 
     </script>
-    <script src="{% static 'campaigns/js/app/data.js' %}"></script>
+    <script src="{% static 'consolidacion/js/app/datos_consolidacion.js' %}"></script>
 {% endblock %}
