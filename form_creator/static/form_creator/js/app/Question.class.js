@@ -254,7 +254,7 @@ class Question {
                 return $(name).prop('checked');
             case Question.TYPE_TEXT:
                 name = "#textAreaPregunta" + this.id;
-                return $(name).val();
+                return $(name).val() + " ";
             case Question.TYPE_MULTI_ONE:
                 var idPregunta = "pregunta" + this.id;
                 var selector = '[id$='+ idPregunta +']';
