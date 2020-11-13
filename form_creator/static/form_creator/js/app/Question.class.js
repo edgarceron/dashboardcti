@@ -35,7 +35,6 @@ class Question {
         else if (this.type == Question.TYPE_DATE){
             selector = `#datePregunta${this.id}`;
         }
-        console.log($(selector));
         if(!this.isValid()) $(selector).addClass('is-invalid');
         else $(selector).removeClass('is-invalid');
     }
@@ -83,7 +82,7 @@ class Question {
             <div class="row">
                 <div class="col-md-11">
                     <div class="row">
-                        <div class="col-md-12" id="checkPregunta${this.id}">     
+                        <div class="col-md-12" id="checkPreguntaLabel${this.id}">     
                             ${this.text}${ast}
                         </div>
                     </div>
@@ -254,7 +253,7 @@ class Question {
                 return $(name).prop('checked');
             case Question.TYPE_TEXT:
                 name = "#textAreaPregunta" + this.id;
-                return $(name).val() + " ";
+                return $(name).val();
             case Question.TYPE_MULTI_ONE:
                 var idPregunta = "pregunta" + this.id;
                 var selector = '[id$='+ idPregunta +']';

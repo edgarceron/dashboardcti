@@ -114,7 +114,7 @@ def save_answers(request, header_id):
         for question_id in keys:
             question = Question.objects.get(id=question_id)
             answer_data = data[question_id]
-            if check_answers(answer_data):
+            if check_answers(answer_data) and question.question_type != 2:
                 answers = obtain_asnwers(answer_data)
                 store_answers(answers, header, question)
             else:
@@ -166,6 +166,8 @@ def check_answers(data_answers):
     if isinstance(data_answers, str):
         try:
             data = json.loads(data_answers)
+            if isinstance(data, str):
+                return False
             if isinstance(data, int):
                 return True
             elif not isinstance(data, list):

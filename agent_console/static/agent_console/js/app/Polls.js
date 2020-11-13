@@ -40,7 +40,6 @@ class Polls {
                 for(let question of questions){
                     var questionObj = new Question(question.id, question.text, question.question_type, question.empty);
                     questionObj.setAnswers(answers[question.id]);
-                    console.log(questionObj);
                     resultQuestions.push(questionObj);
                 }
             },
@@ -186,7 +185,7 @@ class Polls {
             if(Array.isArray(aux)) aux = JSON.stringify(aux);
             answers[question.id] = aux;
         }
-        console.log(answers);
+
         var ajaxFunctions = {
             'success': function(result){
                 SoftNotification.show("Respuestas guardadas correctamente");
@@ -255,7 +254,6 @@ class Polls {
     }
 
     static selectTercero(){
-        console.log("Yeah");
         var nombre = $( "#selectTercero option:selected").text();
         var nit = $('#selectTercero').val();
         $('#cedulaPollInput').val(nit);
