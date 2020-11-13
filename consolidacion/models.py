@@ -37,3 +37,4 @@ class CallEntryCita(models.Model):
     call_entry = models.IntegerField(null=False, unique=True)
     cita_tall_id = models.IntegerField(null=True, unique=True)
     cita_crm_id = models.IntegerField(null=True, unique=True)
+    aaaaa = models.TextField(null=True)
