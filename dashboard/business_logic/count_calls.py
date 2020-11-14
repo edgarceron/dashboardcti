@@ -1,12 +1,11 @@
 """Functions for calls by status counting"""
-from datetime import timedelta
 from django.db.models import Count
 from agent_console.models import Calls, CallEntry, CurrentCallEntry, CurrentCalls
 from dashboard.business_logic import criteria_conditions
 
 def count_calls(start_date, end_date, agent, campaign):
     """Counts row from Calls by status"""
-    conditions = criteria_conditions.get_call_out_criteria(
+    conditions = criteria_conditions.get_call_criteria(
         start_date, end_date, agent, campaign
     )
 

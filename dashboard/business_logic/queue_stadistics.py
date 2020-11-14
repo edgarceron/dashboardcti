@@ -39,3 +39,19 @@ def get_average_wait(start_date, end_date, agent, campaign):
 
     average_wait = query_avg['duration_wait__avg']
     return average_wait
+
+
+def get_average_duration(start_date, end_date, agent, campaign):
+    """Calculates the average duration of outgoing calls given a criteria"""
+    conditions = criteria_conditions.get_call_criteria(
+        start_date, end_date, agent, campaign
+    )
+
+    conditions['duration__isnull'] = False
+
+    query_avg = CallEntry.objects.filter(
+        **conditions
+    ).aggregate(Avg('duration'))
+
+    average_duration = query_avg['duration__avg']
+    return average_duration

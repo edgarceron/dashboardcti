@@ -22,6 +22,16 @@ function setStatsOperations(consolidacion_count, polls_attended){
     $("#lblPollsMade").html(polls_attended);
 }
 
+function setStatsAverage(average){
+    time = new Date(average * 1000).toISOString().substr(11, 8);
+    $("#lblAverageTimeOut").html(time);
+}
+
+function setStatsAverageEntry(average){
+    time = new Date(average * 1000).toISOString().substr(11, 8);
+    $("#lblAverageTime").html(time);
+}
+
 function setStatsLabelsOut(callsCount){
     var pendientes = callsCount["Placing"] + callsCount[null];
     var fallidas = callsCount["Abandoned"] + callsCount["Failure"] + callsCount["ShortCall"] + callsCount["NoAsnwer"];
@@ -29,4 +39,5 @@ function setStatsLabelsOut(callsCount){
     $("#lblTerminadasOut").html(callsCount["Success"]);
     $("#lblFallidas").html(fallidas);
     $("#lblPending").html(pendientes);
+
 }

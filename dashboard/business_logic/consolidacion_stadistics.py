@@ -12,7 +12,7 @@ def consolidacion_count(start_date, end_date, agent):
     criteria['id_campaign'] = option_campaign.value
     if agent != "":
         criteria['id_agent'] = agent
-    
+
     if start_date != "" and end_date != "":
         start_date = datetime.strptime(end_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
@@ -34,11 +34,11 @@ def consolidacion_count(start_date, end_date, agent):
 def cita_count(start_date, end_date, agent, campaign):
     call_entry_citas = list(
         CallEntryCita.objects.values_list('call_entry', flat=True).all())
-    
+
     criteria = {}
     if agent != '':
         criteria['id_agent'] = agent
-    
+
     if campaign != '':
         criteria['id_campaign'] = campaign
 

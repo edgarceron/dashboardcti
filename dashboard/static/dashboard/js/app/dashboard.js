@@ -1,5 +1,5 @@
 var dashboardType = 1;
-
+var count = 0;
 function getValues(){
     var data = {
         'id_agent': $('#agentInput').val(),
@@ -31,6 +31,8 @@ function getDataOut(){
                 result.consolidacion_count,
                 result.polls_attended
             );
+            alertBreaks(result.alerts);
+            setStatsAverage(result.average_outgoing_duration);
         },
         'error': standard.standardError,
         'complete': function(){
@@ -61,6 +63,9 @@ function getDataEntry(){
                 result.citas_count,
                 result.polls_attended
             );
+            alertBreaks(result.alerts);
+            setStatsAverageEntry(result.average_duration);
+
         },
         'error': standard.standardError,
         'complete': function(){
@@ -73,6 +78,22 @@ function getDataEntry(){
     standard.makePetition(getValues(), 'get_data_dashboard_url', ajaxFunctions);
 }
 
+function alertBreaks(alerts){
+    if(count == 5){
+        count = 0;
+        var message = "";
+        var time = "";
+        for(data of alerts){
+            time = new Date(data['off'] * 1000).toISOString().substr(11, 8)
+            message += `El agente ${data['number']} ${data['agent']} 
+            ha excedido su tiempo de descanso por ${time}\n`;
+        }
+        SoftNotification.show(message,"danger");
+    }
+    else{
+        count++;
+    }
+}
 
 $( document ).ready(function() {
     $('#informe').val(1);

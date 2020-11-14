@@ -1,7 +1,9 @@
 """Data procesing for dashboard requests"""
-from dashboard.business_logic import queue_stadistics, tmo_calls, agent_state_count
-from dashboard.business_logic import calls_per_hour, count_calls, outgoing_stadistics
-from dashboard.business_logic import conversion_rate, consolidacion_stadistics, polls_stadistics
+from dashboard.business_logic import (
+    queue_stadistics, tmo_calls, agent_state_count,
+    calls_per_hour, count_calls, outgoing_stadistics,
+    conversion_rate, consolidacion_stadistics, polls_stadistics,
+    break_time_alert)
 
 def data_outgoing(request):
     """Calls functions to get dashboard data"""
@@ -28,10 +30,10 @@ def data_outgoing(request):
         start_date, end_date, id_agent, id_campaign
     )
 
-    today_consolidacion = conversion_rate.get_today_consolidacion()
-    pending_consolidacion = conversion_rate.get_today_pending_consolidacion()
-    success_consolidacion = conversion_rate.get_success_consolidacion()
-    dialed_consolidacion = conversion_rate.get_dialed_consolidacion()
+    today_consolidacion = conversion_rate.get_today_consolidacion(start_date, end_date)
+    pending_consolidacion = conversion_rate.get_today_pending_consolidacion(start_date, end_date)
+    success_consolidacion = conversion_rate.get_success_consolidacion(start_date, end_date)
+    dialed_consolidacion = conversion_rate.get_dialed_consolidacion(start_date, end_date)
 
     completion_rate = conversion_rate.get_completion_rate(
         pending_consolidacion, today_consolidacion
@@ -45,6 +47,8 @@ def data_outgoing(request):
     polls_attended = polls_stadistics.polls_attended(
         start_date, end_date, id_agent, id_campaign, 1)
 
+    alerts = break_time_alert.get_break_time_alerts()
+
     response = {
         'calls_out_per_hour': calls_out_per_hour,
         'calls_count': calls_count,
@@ -54,6 +58,7 @@ def data_outgoing(request):
         'success_rate': success_rate,
         'consolidacion_count': consolidacion_count,
         'polls_attended': polls_attended,
+        'alerts': alerts
     }
 
     return response
@@ -82,6 +87,10 @@ def data_entry(request):
         start_date, end_date, id_agent, id_campaign
     )
 
+    average_duration = queue_stadistics.get_average_duration(
+        start_date, end_date, id_agent, id_campaign
+    )
+
     answered_befrore, seconds = tmo_calls.get_answered_before(
         start_date, end_date, id_agent, id_campaign
     )
@@ -102,11 +111,14 @@ def data_entry(request):
     polls_attended = polls_stadistics.polls_attended(
         start_date, end_date, id_agent, id_campaign, 2)
 
+    alerts = break_time_alert.get_break_time_alerts()
+
     response = {
         'call_entry_per_hour': call_entry_per_hour,
         'call_entry_count': call_entry_count,
         'longest_wait_queue_call': longest_wait_queue_call,
         'average_queue_wait': average_queue_wait,
+        'average_duration': average_duration,
         'service_level': service_level,
         'tmo': tmo,
         'effectiveness': effectiveness,
@@ -116,6 +128,7 @@ def data_entry(request):
         'agents_in_call': agents_in_call,
         'citas_count': citas_count,
         'polls_attended': polls_attended,
+        'alerts': alerts
     }
 
     return response

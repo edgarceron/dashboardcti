@@ -352,11 +352,12 @@ def save_break_times(request):
                 error_data.append(Crud.error_data(serializer)['Error']['details'])
             
         data = {
-            "succes": True,
+            "success": True,
+            "message": "Tiempos guardados",
             "Error": {
-                "message": "Tiempos guardados",
                 "details": error_data
             }
         }
+        
         return Response(data, status=status.HTTP_200_OK, content_type='application/json')
     return permission_obj.error_response_webservice(validation, request)
