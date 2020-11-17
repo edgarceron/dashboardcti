@@ -47,7 +47,7 @@ function createConfig(question){
                 callbacks: {
                     label: function(tooltipItem, data) {
                         //get the concerned dataset
-                        var label = '';
+                        var label = data.labels[tooltipItem.index];
                         console.log(tooltipItem);
                         var dataset = data.datasets[tooltipItem.datasetIndex];
                         //calculate the total of this data set
