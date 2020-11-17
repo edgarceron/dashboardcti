@@ -42,12 +42,25 @@ function createConfig(question){
                 text: title_text,
                 fontSize: 16,
                 lineHeight: 1.2
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        callback: function(value, index, values) {
+                            var total = values.reduce((a, b) => a + b, 0);
+                            var percent = (value/total).toFixed(2);
+                            return percent + "% (" + value + ")";
+                        }
+                    }
+                }]
             }
         }
     }
 
     return config;
 }
+
+
 
 function getColor(index){
     var choosed = index % 5;
