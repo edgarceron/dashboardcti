@@ -43,17 +43,23 @@ function createConfig(question){
                 fontSize: 16,
                 lineHeight: 1.2
             },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        callback: function(value, index, values) {
-                            var total = values.reduce((a, b) => a + b, 0);
-                            var percent = (value/total).toFixed(2);
-                            return percent + "% (" + value + ")";
-                        }
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        //get the concerned dataset
+                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                        var dataset = data.datasets[tooltipItem.datasetIndex];
+                        //calculate the total of this data set
+                        var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+                        return previousValue + currentValue;
+                        });
+                        //get the current items value
+                        var currentValue = dataset.data[tooltipItem.index];
+                        var percentage = Math.floor(((currentValue/total) * 100)+0.5);
+                        return label + ": " + percentage + "% (" + currentValue + ")";
                     }
-                }]
-            }
+                }
+            } 
         }
     }
 
