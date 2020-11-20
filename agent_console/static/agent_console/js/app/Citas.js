@@ -98,7 +98,7 @@ class Citas {
             'cedula': $('#cedulaInput').val(),
             'placa': $('#placaInput').val()
         }
-        standard.makePetition(data, 'validate_cedula_url', ajaxFunctions);
+        Citas.standard.makePetition(data, 'validate_cedula_url', ajaxFunctions);
     }
 
     static reagendar(){
