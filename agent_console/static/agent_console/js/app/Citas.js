@@ -92,7 +92,7 @@ class Citas {
                     SoftNotification.show(result.message);
                 }
             },
-            'error': standard.standardError
+            'error': SoftNotification.show("Error al intentar validar los datos", "danger")
         }
         var data={
             'cedula': $('#cedulaInput').val(),
