@@ -48,7 +48,7 @@ def update_call_consolidacion(request, tall_cita, crm_cita):
         call_consolidacion.save()
     except CallConsolidacion.DoesNotExist:
         id_call_entry = request.data['id_call_entry']
-        if id_call_entry != 0:
+        if id_call_entry != "0":
             call_entry_cita = CallEntryCita(
                 cita_tall_id=tall_cita,
                 cita_crm_id=crm_cita,
