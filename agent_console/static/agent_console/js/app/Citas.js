@@ -94,9 +94,12 @@ class Citas {
             },
             'error': SoftNotification.show("Error al intentar validar los datos", "danger")
         }
-        var data={
+        var data = {
             'cedula': $('#cedulaInput').val(),
-            'placa': $('#placaInput').val()
+            'placa': $('#placaInput').val(),
+            'fecha': $('#dateReagendarInput').val(),
+            'motivo': $('#motivoReagendadoValid').val(),
+            'sede': $('#sedeInput').val(),
         }
         Citas.standard.makePetition(data, 'validate_cedula_url', ajaxFunctions);
     }
