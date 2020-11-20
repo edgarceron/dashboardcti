@@ -20,6 +20,7 @@ $( document ).ready(function() {
     $('#horaInput').prop('disabled', 'disabled');
     $('#sedeInput').selectpicker({"liveSearch": true});
     $('#motivoInput').selectpicker({"liveSearch": true});
+    $('#motivoReagendadoInput').selectpicker({"liveSearch": true});
     $('#generarCitaButton').click(Citas.createCita);
     $('#gotoCitasTallerButton').click(Citas.goToCitasTaller);
     $('#emailButton').click(Citas.sendConfirmationEmail);
@@ -51,10 +52,12 @@ $( document ).ready(function() {
         var placa = $('#placaInput').val();
         Citas.validatePlaca(placa);
     });
-
+    
     FormFunctions.setAjaxLoadPicker('#sedeInput', picker_search_sede_url, Citas.updatePickerSede, "Escoja una sede");
     FormFunctions.setAjaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "Escoja un motivo");
+    FormFunctions.setAjaxLoadPicker('#motivoReagendadoInput', picker_search_motivo_url, FormFunctions.updatePicker, "Escoja un motivo");
     FormFunctions.ajaxLoadPicker('#sedeInput', picker_search_sede_url, Citas.updatePickerSede, "", "Escoja una sede");
     FormFunctions.ajaxLoadPicker('#motivoInput', picker_search_motivo_url, FormFunctions.updatePicker, "", "Escoja un motivo");
-
+    FormFunctions.ajaxLoadPicker('#motivoReagendadoInput', picker_search_motivo_url, FormFunctions.updatePicker, "", "Escoja un motivo");
+    
 });
