@@ -30,6 +30,7 @@ $( document ).ready(function() {
     $('#noEmailButton').click(Citas.cancel);
     $('#cancelCitaButton').click(Citas.cancel);
     $('#cancelButton').click(Citas.cancel);
+    $('#reagendarButton').click(Citas.validateCedulaPlaca);
 
     urls = {
         'get_motivo_url': {'url' : get_motivo_url, 'method':'POST'},
@@ -39,6 +40,8 @@ $( document ).ready(function() {
         'send_confirmation_mail_url': {'url' : send_confirmation_mail_url, 'method':'POST'},
         'check_placa_url': {'url' : check_placa_url, 'method':'POST'},
         'check_tercero_cedula_url': {'url' : check_tercero_cedula_url, 'method':'POST'},
+        'create_consolidacion_url': {'url' : create_consolidacion_url, 'method':'POST'},
+        'validate_cedula_url': {'url' : validate_cedula_url, 'method':'POST'}
     }
 
     Citas.standard = new StandardCrud(urls);

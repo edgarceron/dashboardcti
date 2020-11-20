@@ -127,9 +127,6 @@ class AgentConsole{
     }
 }
 
-
-
-
 $( document ).ready(function() {
     setTimeout(function(){ 
         AgentConsole.getAgentState(id_agent, -1, "", "");

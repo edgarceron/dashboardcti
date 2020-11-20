@@ -127,7 +127,10 @@ Consola de agente
     get_questions_campaign_url = "{% url 'get_questions_campaign' campaign_id=0 %}";
     check_tercero_cedula_url = "{% url 'check_tercero_cedula' %}";
     check_placa_url = "{% url 'check_placa' %}"
+    validate_cedula_url = "{% url 'validate_cedula' %}";
     get_questions_campaign_url = get_questions_campaign_url.slice(0, -1);
+
+    create_consolidacion_url = "{% url 'create_consolidacion' %}";
 
     add_header_url = "{% url 'add_header' %}";
     replace_header_url = "{% url 'replace_header' header_id=0 %}";

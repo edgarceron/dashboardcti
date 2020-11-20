@@ -82,7 +82,49 @@ class Citas {
         Citas.standard.makePetition(data_email, 'send_confirmation_mail_url', ajaxFunctions);
     }
 
-    
+    static validateCedulaPlaca(){
+        var ajaxFunctions = {
+            'success': function(result){
+                if(result.success){
+                    reagendar();
+                }
+                else {
+                    SoftNotification.show(result.message);
+                }
+            },
+            'error': standard.standardError
+        }
+        var data={
+            'cedula': $('#cedulaInput').val(),
+            'placa': $('#placaInput').val()
+        }
+        standard.makePetition(data, 'validate_cedula_url', ajaxFunctions);
+    }
+
+    static reagendar(){
+        var data = {
+            'cedula': $('#cedulaInput').val(),
+            'placa': $('#placaInput').val(),
+            'fecha': $('#dateReagendarInput').val(),
+            'motivo': $('#motivoReagendadoValid').val(),
+            'sede': $('#sedeInput').val(),
+        }
+
+        var ajaxFunctions = {
+            'success': function(result){
+                if(result.success){
+                    SoftNotification.show("Consolidación reagendada con exito");
+
+                }
+                else{
+                    SoftNotification.show(result.message, "danger");
+                }
+            },
+            'error': SoftNotification.show("Ocurrio un error", "danger")
+        }
+        standard.makePetition(data, 'create_consolidacion_url', ajaxFunctions);
+    }
+
     static cancel(){
         $('#cedulaInput').val('');
         $('#nombreInput').val('');
