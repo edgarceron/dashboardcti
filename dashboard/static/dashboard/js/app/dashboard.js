@@ -95,6 +95,30 @@ function alertBreaks(alerts){
     }
 }
 
+function setLoaderIsabelCampaign(url_picker){
+    $('#campaignInput').siblings().find("input[type='text']").unbind('keydown');
+    FormFunctions.setAjaxLoadPicker(
+        '#campaignInput', url_picker, FormFunctions.updatePicker, "Escoja una campaña"
+    );
+    FormFunctions.ajaxLoadPicker(
+        '#campaignInput', url_picker, FormFunctions.updatePicker, "", "Escoja una campaña"
+    );
+    $('#campaignInput')
+        .val("")
+        .selectpicker('refresh')
+    ;
+}
+
+function changeTypeCampaign(type){
+    console.log(type);
+    if( type == 1){
+        setLoaderIsabelCampaign(picker_search_campaign_entry_url);
+    }
+    else if( type == 2){
+        setLoaderIsabelCampaign(picker_search_campaign_url);
+    }
+}
+
 $( document ).ready(function() {
     $('#informe').val(1);
     $('#dashboardEntry').collapse('show');
@@ -103,11 +127,13 @@ $( document ).ready(function() {
         if(seleccionado == 1){
             $('#dashboardEntry').collapse('show');
             $('#dashboardOut').collapse('hide');
+            changeTypeCampaign(1);
             dashboardType = 1;
         }
         else{
             $('#dashboardEntry').collapse('hide');
             $('#dashboardOut').collapse('show');
+            changeTypeCampaign(2);
             dashboardType = 2;
         }
     });
@@ -119,11 +145,11 @@ $( document ).ready(function() {
     );
 
     FormFunctions.setAjaxLoadPicker(
-        '#campaignInput', picker_search_campaign_url, 
+        '#campaignInput', picker_search_campaign_entry_url, 
         FormFunctions.updatePicker, "Todas las campañas"
     );
     FormFunctions.ajaxLoadPicker(
-        '#campaignInput', picker_search_campaign_url, 
+        '#campaignInput', picker_search_campaign_entry_url, 
         FormFunctions.updatePicker, "", "Todas las campañas"
     );
 
