@@ -92,7 +92,7 @@ class Citas {
                     SoftNotification.show(result.message);
                 }
             },
-            'error': SoftNotification.show("Error al intentar validar los datos", "danger")
+            'error': function() {SoftNotification.show("Error al intentar validar los datos", "danger");}
         }
         var data = {
             'cedula': $('#cedulaInput').val(),
@@ -123,7 +123,7 @@ class Citas {
                     SoftNotification.show(result.message, "danger");
                 }
             },
-            'error': SoftNotification.show("Ocurrio un error", "danger")
+            'error': function() {SoftNotification.show("Ocurrio un error", "danger");}
         }
         standard.makePetition(data, 'create_consolidacion_url', ajaxFunctions);
     }
