@@ -40,7 +40,7 @@ $( document ).ready(function() {
         'send_confirmation_mail_url': {'url' : send_confirmation_mail_url, 'method':'POST'},
         'check_placa_url': {'url' : check_placa_url, 'method':'POST'},
         'check_tercero_cedula_url': {'url' : check_tercero_cedula_url, 'method':'POST'},
-        'create_consolidacion_url': {'url' : create_consolidacion_url, 'method':'POST'},
+        'add_consolidacion_url': {'url' : add_consolidacion_url, 'method':'POST'},
         'validate_cedula_url': {'url' : validate_cedula_url, 'method':'POST'}
     }
 
