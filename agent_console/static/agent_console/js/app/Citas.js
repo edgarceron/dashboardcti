@@ -86,7 +86,7 @@ class Citas {
         var ajaxFunctions = {
             'success': function(result){
                 if(result.success){
-                    reagendar();
+                    Citas.reagendar();
                 }
                 else {
                     SoftNotification.show(result.message);
