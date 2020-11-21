@@ -49,9 +49,8 @@ def get_actions():
 @api_view(['POST'])
 def add_consolidacion(request):
     """Tries to create a consolidacion and returns the result"""
-    operation = consolidacion_operations.add_sede_operation(request)
     after = consolidacion_operations.create_cf_observaciones_consolidacion
-    crud_object = Crud(ConsolidacionSerializer, Consolidacion, operation, after)
+    crud_object = Crud(ConsolidacionSerializer, Consolidacion, None, after)
     return crud_object.add(request, 'add_consolidacion')
 
 @api_view(['PUT'])
