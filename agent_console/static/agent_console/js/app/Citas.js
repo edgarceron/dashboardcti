@@ -125,7 +125,7 @@ class Citas {
             },
             'error': function() {SoftNotification.show("Ocurrio un error", "danger");}
         }
-        standard.makePetition(data, 'create_consolidacion_url', ajaxFunctions);
+        Citas.standard.makePetition(data, 'create_consolidacion_url', ajaxFunctions);
     }
 
     static cancel(){
