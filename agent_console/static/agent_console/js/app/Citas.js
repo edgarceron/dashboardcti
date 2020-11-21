@@ -86,6 +86,7 @@ class Citas {
         var ajaxFunctions = {
             'success': function(result){
                 if(result.success){
+                    singleOperationRestriction = false;
                     Citas.reagendar();
                 }
                 else {
