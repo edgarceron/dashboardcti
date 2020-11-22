@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from core.mailing import mailing
 from core.crud.standard import Crud
 from users.permission_validation import PermissionValidation
+from agent_console.models import UserAgent
 from dms.models import Terceros, ReferenciasImp, TallCitas
 from dms.serializers import CrmCitasSerializer, TallCitasSerializer
 from consolidacion.models import CallConsolidacion, CallEntryCita, CitaNoCall
@@ -18,6 +19,13 @@ from sedes.models import Sede
 def create_cita(request):
     data = {}
     tall_cita = create_tall_cita(request.data)
+    permission_obj = PermissionValidation(request)
+    id_user = permission_obj.user.id
+    try:
+        user_agent = UserAgent.objects.get(user=id_user)
+        id_agent = user_agent.agent
+    except UserAgent.DoesNotExist:
+        id_agent = ""
 
     if not tall_cita.is_valid():
         data['tall_cita_data'] = tall_cita.errors
@@ -36,7 +44,7 @@ def create_cita(request):
         return Response(data, status=status.HTTP_200_OK, content_type='application/json')
     return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
 
-def update_call_consolidacion(request, tall_cita, crm_cita):
+def update_call_consolidacion(request, tall_cita, crm_cita, id_agent=""):
     """Updates a call_consolidacion when a call is registered to it"""
     id_cc = request.data['call_consolidacion_id']
     observaciones = request.data['observaciones']
@@ -59,7 +67,8 @@ def update_call_consolidacion(request, tall_cita, crm_cita):
             cita_no_call = CitaNoCall(
                 date=datetime.now(),
                 cita_tall_id=tall_cita,
-                cita_crm_id=crm_cita)
+                cita_crm_id=crm_cita,
+                agent=id_agent)
             cita_no_call.save()
 
 def create_crm_cita(tall_cita):
@@ -109,7 +118,7 @@ def create_tall_cita(data):
     nombre_encargado = sede.asesor.name
     telefonos = format_telefonos(tercero.telefono_1, tercero.telefono_2)
     motivo = Motivo.objects.get(id=data['motivo'])
-    notas = motivo.name
+    notas = data['observaciones']  + " Motivo: " + motivo.name
     ano_veh = 0
     usuario = 'VOZIP'
     pc = 'DMSSERVER'

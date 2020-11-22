@@ -43,3 +43,4 @@ class CitaNoCall(models.Model):
     date = models.DateTimeField(null=False)
     cita_tall_id = models.IntegerField(null=True, unique=True)
     cita_crm_id = models.IntegerField(null=True, unique=True)
+    agent = models.IntegerField(null=False)
