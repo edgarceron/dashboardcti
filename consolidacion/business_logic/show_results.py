@@ -28,7 +28,7 @@ def put_data_cita(tall_cita):
     row['fecha_hora_ini'] = tall_cita.fecha_hora_ini
     row['telefonos'] = tall_cita.telefonos
     row['mail'] = tall_cita.mail
-    row['observaciones'] = aux.observaciones 
+    row['observaciones'] = tall_cita.notas 
     return row
 
 def put_data_deleted():
@@ -47,19 +47,26 @@ def collect_data(agent="", start_date="", end_date=""):
     calls_consolidacion = calls_date_range(agent, start_date, end_date)
     collected_data = []
     for aux in calls_consolidacion:
-        row['observaciones'] = aux.observaciones
         try:
             tall_cita = TallCitas.objects.get(id=aux.cita_tall_id)
             row = put_data_cita(tall_cita)
         except TallCitas.DoesNotExist:
             row = put_data_deleted()
         collected_data.append(row)
-    citas_no_call = CitaNoCall.
-    
+    citas_no_call = cita_no_call_date_range(agent, start_date, end_date)
+    for aux in citas_no_call:
+        try:
+            tall_cita = TallCitas.objects.get(id=aux.cita_tall_id)
+            row = put_data_cita(tall_cita)
+        except TallCitas.DoesNotExist:
+            row = put_data_deleted()
+        collected_data.append(row)
     return collected_data
 
 
 def cita_no_call_date_range(agent, start_date, end_date):
+    criteria = {}
+    
     if start_date != "" and end_date != "":
         start_date = datetime.strptime(end_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
@@ -72,7 +79,7 @@ def cita_no_call_date_range(agent, start_date, end_date):
     elif end_date != "":
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
         criteria['date__lte'] = end_date
-    
+
     if agent != "":
         criteria['agent'] = agent
 
