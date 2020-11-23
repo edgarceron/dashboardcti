@@ -60,18 +60,18 @@ $( document ).ready(function() {
 
 
     FormFunctions.setAjaxLoadPicker(
-        '#agentInput', pircker_search_agent_url, FormFunctions.updatePicker, "Ningun agente"
+        '#agentInput', pircker_search_agent_url, FormFunctions.updatePicker, "Todos los agentes"
     );
 
     FormFunctions.ajaxLoadPicker(
-        '#agentInput', pircker_search_agent_url, FormFunctions.updatePicker, "", "Ningun agente"
+        '#agentInput', pircker_search_agent_url, FormFunctions.updatePicker, "", "Todos los agentes"
     );
 
     $('#downloadButton').click(function(){
         var start_date = $('#fechaInicioInput').val();
         var end_date = $('#fechaFinInput').val();
         var agent = $('#agentInput').val();
-        var url = download_poll_answers_url;
+        var url = download_consolidaciones_url;
         var today = new Date();
         if(start_date == "") start_date = today_date();
         if(end_date == "") end_date = today_date();

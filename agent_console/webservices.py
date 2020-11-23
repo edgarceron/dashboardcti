@@ -304,12 +304,12 @@ def send_confirmation_mail(request):
     validation = permission_obj.validate('send_confirmation_mail')
     if validation['status']:
         send = citas.create_mail_and_send(request.data)
-        if send:
+        if send['status']:
             success = True
         else:
             success = False
         return Response(
-            {'success':success},
+            {'success':success, 'mail': send['mail']},
             status=status.HTTP_200_OK,
             content_type='application/json'
         )

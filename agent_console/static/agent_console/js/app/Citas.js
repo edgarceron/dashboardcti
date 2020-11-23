@@ -65,10 +65,12 @@ class Citas {
         var ajaxFunctions = {
             'success': function(result){
                 if(result.success){
-                    SoftNotification.show('Correo enviado con exito');
+                    SoftNotification.show('Correo enviado con exito a la direccion' + result.mail);
                 }
                 else{
-                    SoftNotification.show("El cliente no tiene una dirección de correo registrada o no existe");
+                    SoftNotification.show(
+                        "El cliente no tiene una dirección" +
+                        " de correo registrada o no existe" + result.mail);
                 }
             },
             'error': function(request, status, error, result){

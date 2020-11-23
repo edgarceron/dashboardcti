@@ -265,7 +265,8 @@ def create_mail_and_send(data):
         'correo': mail,
         'telefonos': telefonos
     }
-    return mailing.send_confirmacion(to, template, context)
+    send_status = mailing.send_confirmacion(to, template, context)
+    return {'status': send_status, 'mail': mail}
 
 def datacita():
     context = {
