@@ -49,7 +49,7 @@ def collect_data(agent="", start_date="", end_date=""):
     collected_data = []
     for aux in calls_consolidacion:
         try:
-            tall_cita = TallCitas.objects.get(id=aux.cita_tall_id)
+            tall_cita = TallCitas.objects.get(id_cita=aux.cita_tall_id)
             row = put_data_cita(tall_cita)
         except TallCitas.DoesNotExist:
             row = put_data_deleted()

@@ -40,7 +40,7 @@ def create_cita(request):
         model_tall = tall_cita.save()
         data["tall_cita_id"] = model_tall.id_cita
         data["crm_cita_id"] = model_crm.seq
-        update_call_consolidacion(request, model_tall.id_cita, model_crm.seq)
+        update_call_consolidacion(request, model_tall.id_cita, model_crm.seq, id_agent)
         return Response(data, status=status.HTTP_200_OK, content_type='application/json')
     return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
 
