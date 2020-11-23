@@ -68,12 +68,12 @@ def cita_no_call_date_range(agent, start_date, end_date):
     criteria = {}
     
     if start_date != "" and end_date != "":
-        start_date = datetime.strptime(end_date, '%Y-%m-%d')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
         criteria['date__range'] = (start_date, end_date)
 
     elif start_date != "":
-        start_date = datetime.strptime(end_date, '%Y-%m-%d')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
         criteria['date__gte'] = start_date
 
     elif end_date != "":
@@ -91,7 +91,7 @@ def calls_date_range(agent, start_date, end_date):
     criteria = {}
 
     if start_date != "" and end_date != "":
-        start_date = datetime.strptime(end_date, '%Y-%m-%d')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
         criteria['datetime_entry_queue__range'] = (start_date, end_date)
 
