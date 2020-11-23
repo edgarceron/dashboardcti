@@ -28,7 +28,7 @@ def put_data_cita(tall_cita):
     row['fecha_hora_ini'] = tall_cita.fecha_hora_ini
     row['telefonos'] = tall_cita.telefonos
     row['mail'] = tall_cita.mail
-    row['observaciones'] = str(tall_cita.notas).encode('cp1252').decode("utf-8")
+    row['observaciones'] = str(tall_cita.notas).encode('utf-8')
     return row
 
 def put_data_deleted():
