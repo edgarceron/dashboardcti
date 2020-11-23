@@ -16,7 +16,7 @@ def polls_attended(start_date, end_date, agent, campaign, type_campaign):
             criteria['datetime_entry_queue__range'] = (start_date, end_date)
 
         elif start_date != "":
-            start_date = datetime.strptime(end_date, '%Y-%m-%d')
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
             criteria['datetime_entry_queue__gte'] = start_date
 
         elif end_date != "":
@@ -38,7 +38,7 @@ def polls_attended(start_date, end_date, agent, campaign, type_campaign):
             criteria['datetime_entry_queue__range'] = (start_date, end_date)
 
         elif start_date != "":
-            start_date = datetime.strptime(end_date, '%Y-%m-%d')
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
             criteria['datetime_entry_queue__gte'] = start_date
 
         elif end_date != "":

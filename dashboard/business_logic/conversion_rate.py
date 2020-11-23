@@ -44,7 +44,7 @@ def get_filter(start_date, end_date, made=False):
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
         conditions['consolidacion__fecha__range'] = (start_date, end_date)
     elif start_date != "":
-        start_date = datetime.strptime(end_date, '%Y-%m-%d')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
         conditions['consolidacion__fecha__gte'] = start_date
     elif end_date != "":
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
