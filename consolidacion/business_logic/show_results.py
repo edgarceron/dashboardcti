@@ -56,7 +56,7 @@ def collect_data(agent="", start_date="", end_date=""):
     citas_no_call = cita_no_call_date_range(agent, start_date, end_date)
     for aux in citas_no_call:
         try:
-            tall_cita = TallCitas.objects.get(id=aux.cita_tall_id)
+            tall_cita = TallCitas.objects.get(id_cita=aux.cita_tall_id)
             row = put_data_cita(tall_cita)
         except TallCitas.DoesNotExist:
             row = put_data_deleted()
