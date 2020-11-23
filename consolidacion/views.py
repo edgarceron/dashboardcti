@@ -108,11 +108,12 @@ def download_consolidaciones(request, agent, start_date, end_date):
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('download_consolidaciones')
     if validation['status']:
+        agent = "" if agent == 0 else agent
         collected_data = show_results.collect_data(agent, start_date, end_date)
         file_path = show_results.data_to_csv(collected_data)
         if os.path.exists(file_path):
-            with open(file_path, 'rb') as fh:
-                response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+            with open(file_path, 'rb') as opened_file:
+                response = HttpResponse(opened_file.read(), content_type="application/vnd.ms-excel")
                 response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
                 return response
         return render(request, 'maingui/http_error.html', None, status=404)
