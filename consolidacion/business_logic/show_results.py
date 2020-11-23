@@ -32,6 +32,7 @@ def put_data_cita(tall_cita):
     return row
 
 def put_data_deleted():
+    row = {}
     row['cedula'] = "Datos borrados del dms"
     row['placa'] = "Datos borrados del dms"
     row['sede'] = "Datos borrados del dms"
