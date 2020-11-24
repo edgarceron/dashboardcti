@@ -164,7 +164,7 @@ function tallCitaDatatable(columns){
         }
     });
 
-    console.log(table.ajax);
+    console.log(table.api().ajax);
 
     $('#listing tbody').on( 'click', 'tr', function () {
         $(this).toggleClass('selected');
@@ -218,7 +218,7 @@ $( document ).ready(function() {
     });
 
     $('#filterButton').click(function(){
-        table.ajax.reload();
+        table.api().ajax.reload();
     });
 
     $('#reCallButton').click(function(){
