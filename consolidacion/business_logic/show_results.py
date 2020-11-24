@@ -192,9 +192,11 @@ def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
         ).values_list('cita_tall_id', flat=True))
 
         citas_no_call = list(
-            CitaNoCall.objects.filter(cita_tall_id__in=citas_id, agent=agent).values_list(
-                'cita_tall_id', flat=True
-            )
+            cita_no_call_date_range(
+                agent, "", ""
+            ).filter(
+                cita_tall_id__in=citas_id
+            ).values_list('cita_tall_id', flat=True)
         )
         citas_buscar = citas_no_call + citas_call
 
