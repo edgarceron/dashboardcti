@@ -126,7 +126,7 @@ function tallCitaDatatable(columns){
         "ajax": {
             "type": "POST",
             "processing": true,
-            "url": this.urls['data_list_url'].url,
+            "url": listing_citas_taller_url,
             "dataSrc": "data",
             "data": function ( d ) {
                 d.agent = $('#agentInput').val();
