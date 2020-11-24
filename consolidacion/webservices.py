@@ -134,6 +134,7 @@ def fail_prepare(request):
     """Create new consolidations for failed consolidations in a given date range"""
     return consolidacion_operations.fail_prepare(request)
 
+@api_view(['POST'])
 def listing_citas_taller(request):
     """Lists tall_citas for a datatable"""
     return consolidacion_operations.listing_citas_taller(request)
