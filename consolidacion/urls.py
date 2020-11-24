@@ -41,4 +41,5 @@ urlpatterns = [
     path('check_placa', webservices.check_placa, name='check_placa'),
     path('get_closest_turns', webservices.get_closest_turns, name='get_closest_turns'),
     path('fail_prepare', webservices.fail_prepare, name='fail_prepare'),
+    path('listing_citas_taller', webservices.listing_citas_taller, name='listing_citas_taller'),
 ]

@@ -10,8 +10,8 @@ $('#agentInput').selectpicker(
 function failPrepare(){
     var start_date = $('#fechaInicioInput').val();
     var end_date = $('#fechaFinInput').val();
-    if(start_date == "") agent = today_date();
-    if(end_date == "") agent = today_date();
+    if(start_date == "") start_date = today_date();
+    if(end_date == "") end_date = today_date();
 
     var data = {
         'start_date': start_date,
@@ -30,6 +30,34 @@ function failPrepare(){
         }
     }
     standard.makePetition(data, 'fail_prepare_url', ajaxFunctions);
+}
+
+function deleteCita(tall_cita_id){
+    urls['delete_url'] = {'url' : delete_url + tall_cita_id, 'method':'DELETE'};
+    standard = new StandardCrud(urls);
+    var ajaxFunctions = {
+        'success': function(result){
+            standard.standardDeleteSuccess("Cita de taller");
+        },
+        'error': function(result){
+            SoftNotification.show(result.responseJSON.message,"danger");
+        }
+    }
+    standard.makePetition(null, 'delete_url', ajaxFunctions);
+}
+
+function cancelCita(tall_cita_id){
+    urls['cancel_url'] = {'url' : cancel_url + tall_cita_id, 'method':'DELETE'};
+    standard = new StandardCrud(urls);
+    var ajaxFunctions = {
+        'success': function(result){
+            SoftNotification.show("Cita cancelada con exito");
+        },
+        'error': function(result){
+            SoftNotification.show(result.responseJSON.message,"danger");
+        }
+    }
+    standard.makePetition(null, 'cancel_url', ajaxFunctions);
 }
 
 function today_date(){
@@ -51,10 +79,99 @@ function today_date(){
     return yyyy + "-" + mm + "-" + dd;
 }
 
+function listingButtonsFunction(event){
+    var target = event.target;
+    var parent = target.parentElement;
+    parent = $(parent);
+    target = $(target);
+    var model_id = parent.attr('model_id');
+    if(target.hasClass('fa-trash')){
+        $('#messageModal').html("¿Esta seguro de que quiere eliminar la cita con id");
+        StandardCrud.standardDeleteConfirmation(model_id, deleteCita);
+    }
+    else if(target.hasClass('fa-calendar-times')){
+        $('#messageModal').html("¿Esta seguro de que quiere cancelar la cita con id");
+        StandardCrud.standardDeleteConfirmation(model_id, cancelCita);
+    }
+}
+
+function createdRow(row, data, index){
+    var count = row.cells.length 
+    var data_rows = count - 2;
+    var options_row = count -1;
+    for(var i = 0;i < data_rows;i++){
+        $('td', row).eq(i).addClass("row_object_id");
+        $('td', row).eq(i).attr('model_id', data.id_cita);
+    }
+    $('td', row).eq(options_row).attr('model_id', data.id_cita);
+    
+    if(data.active){
+        $('.fa-square', row).addClass('fa-check-square');
+        $('.fa-square', row).removeClass('fa-square');
+    }
+}
+
+function tallCitaDatatable(columns){
+
+    columns.push({ "data": function(){
+        var options = "";
+        options += '<i class="fas fa-fw fa-trash text-danger"></i>';
+        options += '<i class="far fa-fw fa-calendar-times text-danger"></i>';
+        return options;
+    }});
+
+    var table = $('#listing').dataTable( {
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "type": "POST",
+            "processing": true,
+            "url": this.urls['data_list_url'].url,
+            "dataSrc": "data",
+            "data": function ( d ) {
+                d.agent = $('#agentInput').val();
+                d.start_date = $('#fechaInicioInput').val();;
+                d.end_date = $('#fechaFinInput').val();
+            }
+        },
+
+        "createdRow": function ( row, data, index ) {
+            createdRow(row, data, index)
+        },
+
+        "columns": columns, 
+
+        "lengthMenu": [[10, 25, 50], [10, 25, 50]],
+
+        "drawCallback": function( settings ) {
+            $('.row_object_id').dblclick(function(event){
+                var target = $(event.delegateTarget);
+                var id = target.attr('model_id');
+                window.location = update_url + id;
+            });
+
+            $('.fa-trash, .fa-calendar-times').click(function(event){
+                listingButtonsFunction(event);
+            });
+
+            $('.row_object_id').css('cursor', 'pointer'); 
+
+            $(function () {
+                $('[data-toggle="popover"]').popover()
+            });
+        }
+    });
+
+    $('#listing tbody').on( 'click', 'tr', function () {
+        $(this).toggleClass('selected');
+    });
+}
+
 $( document ).ready(function() {
 
     urls = {
         'fail_prepare_url': {'url' : fail_prepare_url, 'method':'POST'},
+        'listing_citas_taller_url': {'url' : listing_citas_taller_url, 'method':'POST'},
     }
     standard = new StandardCrud(urls);
 
@@ -98,5 +215,16 @@ $( document ).ready(function() {
         failPrepare();
     });
     
+    var columns = [
+        { "data": "cedula"},
+        { "data": "placa"},
+        { "data": "bodega"},
+        { "data": "nombre_cliente"},
+        { "data": "nombre_encargado"},
+        { "data": "fecha_hora_ini"},
+        { "data": "telefonos"},
+        { "data": "mail"}
+    ];
 
+    tallCitaDatatable(columns);
 });

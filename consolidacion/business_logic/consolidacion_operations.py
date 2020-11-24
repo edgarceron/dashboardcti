@@ -9,7 +9,7 @@ from agent_console.models import UserSede
 from dms.serializers import CrmCitasSerializer
 from consolidacion.business_logic.list_class import ConsolidacionList
 from consolidacion.serializers import ConsolidacionFileUploadsSerializer, ConsolidacionSerializer
-from consolidacion.business_logic import citas, fail_management
+from consolidacion.business_logic import citas, fail_management, show_results
 
 def check_tercero_cedula(request):
     """Checks if the given nit belongs to a database tercero row and returns the name"""
@@ -256,4 +256,30 @@ def fail_prepare(request):
             status=status.HTTP_400_BAD_REQUEST,
             content_type='application/json'
         )
+    return permission_obj.error_response_webservice(validation, request)
+
+def listing_citas_taller(request):
+    """Lists tall_citas for a datatable"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('listing_citas_taller')
+    if validation['status']:
+        sent_data = request.data
+        draw = int(sent_data['draw'])
+        start = int(sent_data['start'])
+        length = int(sent_data['length'])
+        agent = sent_data['agent']
+        start_date = sent_data['start_date']
+        end_date = sent_data['end_date']
+
+        records_total = show_results.get_count_tall_citas()
+        data, records_filtered = show_results.get_citas_manticore(
+            agent, start_date, end_date, start, length)
+
+        result = {
+            'draw': draw,
+            'recordsTotal': records_total,
+            'recordsFiltered': records_filtered,
+            'data': data
+        }
+        return Response(result, status=status.HTTP_200_OK, content_type='application/json')
     return permission_obj.error_response_webservice(validation, request)

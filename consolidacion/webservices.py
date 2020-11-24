@@ -43,6 +43,10 @@ def get_actions():
             "name": "fail_prepare",
             "label": "Webservice para renovar llamadas de las consolidaciones fallidas"
         },
+        {
+            "name": "listing_citas_taller",
+            "label": "Webservice para listar citas de taller en datos de consolidación"
+        },
     ]
     return actions
 
@@ -129,4 +133,7 @@ def get_closest_turns(request):
 def fail_prepare(request):
     """Create new consolidations for failed consolidations in a given date range"""
     return consolidacion_operations.fail_prepare(request)
-    
+
+def listing_citas_taller(request):
+    """Lists tall_citas for a datatable"""
+    return consolidacion_operations.listing_citas_taller(request)

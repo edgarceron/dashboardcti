@@ -43,8 +43,47 @@
             </div>
         </form>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table id="listing" class="table table-striped table-bordered w-100" style="width:100%">
+                <thead>
+                    <tr>
+                        <td>Cedula</td>
+                        <td>Placa</td>
+                        <td>Sede</td>
+                        <td>Nombre cliente</td>
+                        <td>Asesor</td>
+                        <td>Fecha y hora</td>
+                        <td>Telefonos</td>
+                        <td>Correo</td>
+                        <td>Opciones</td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="row" id="answerChartContainer">
 
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="cautionModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Atención</h5>
+                </div>
+                <div class="modal-body">
+                        <span id="messageModal">¿Esta seguro de que quiere eliminar el formulario con id</span> <i id="idi"></i>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm_button">Si</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -62,6 +101,7 @@
         var download_consolidaciones_url = "{% url 'download_consolidaciones' agent='0' start_date='abc' end_date='def' %}"
         var download_fails_url = "{% url 'download_fails' start_date='abc' end_date='def' %}"
         var fail_prepare_url = "{% url 'fail_prepare' %}"
+        var listing_citas_taller_url = "{% url 'listing_citas_taller' %}"
         
         get_agent_url = get_agent_url.slice(0, -1);
 

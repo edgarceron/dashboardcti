@@ -2,6 +2,7 @@ import csv
 from datetime import timedelta, datetime
 from django.conf import settings
 from dms.models import TallCitas
+from dms.serializers import TallCitasSerializer
 from sedes.models import Sede
 from agent_console.models import Calls
 from consolidacion.models import CallConsolidacion, CitaNoCall
@@ -16,7 +17,7 @@ def data_to_csv(collected_data):
     return settings.STATIC_ROOT + 'result.csv'
 
 def put_data_cita(tall_cita):
-    row = {}
+    row = put_headers()
     row['cedula'] = tall_cita.nit.nit
     row['placa'] = tall_cita.placa
     try:
@@ -32,7 +33,7 @@ def put_data_cita(tall_cita):
     return row
 
 def put_data_deleted():
-    row = {}
+    row = put_headers()
     row['cedula'] = "Datos borrados del dms"
     row['placa'] = "Datos borrados del dms"
     row['sede'] = "Datos borrados del dms"
@@ -42,6 +43,19 @@ def put_data_deleted():
     row['telefonos'] = "Datos borrados del dms"
     row['mail'] = "Datos borrados del dms"
     row['observaciones'] = "Datos borrados del dms"
+    return row
+
+def put_headers():
+    row = {}
+    row['cedula'] = "Cedula"
+    row['placa'] = "Placa"
+    row['sede'] = "Sede"
+    row['nombre_cliente'] = "Nombre cliente"
+    row['nombre_encargado'] = "Nombre asesor"
+    row['fecha_hora_ini'] = "Fecha hora"
+    row['telefonos'] = "Teléfonos"
+    row['mail'] = "Correo"
+    row['observaciones'] = "Observaciones"
     return row
 
 def collect_data(agent="", start_date="", end_date=""):    
@@ -111,3 +125,20 @@ def calls_date_range(agent, start_date, end_date):
 
     calls_consolidacion = CallConsolidacion.objects.filter(call__in=calls)
     return calls_consolidacion
+
+def get_citas_manticore(agent, start_date, end_date, start, length):
+    citas_call = calls_date_range(
+        agent, start_date, end_date
+    ).values_list('cita_tall_id', flat=True)
+    citas_no_call = cita_no_call_date_range(
+        agent, start_date, end_date
+    ).values_list('cita_tall_id', flat=True)
+    citas_buscar = citas_no_call + citas_call
+    citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)[start:start + length]
+
+    result = TallCitasSerializer(citas_taller, many=True)
+    data = result.data
+    return data, citas_taller.count()
+
+def get_count_tall_citas():
+    return TallCitas.objects.count()
