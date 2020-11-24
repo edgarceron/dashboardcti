@@ -2,7 +2,7 @@ import csv
 from datetime import timedelta, datetime
 from django.conf import settings
 from dms.models import TallCitas
-from dms.serializers import TallCitasSerializer
+from dms.serializers import TallCitasSerializer, TallCitasSerializerSimple
 from sedes.models import Sede
 from agent_console.models import Calls
 from consolidacion.models import CallConsolidacion, CitaNoCall
@@ -136,7 +136,7 @@ def get_citas_manticore(agent, start_date, end_date, start, length):
     citas_buscar = list(citas_no_call) + list(citas_call)
     citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)[start:start + length]
 
-    result = TallCitasSerializer(citas_taller, many=True)
+    result = TallCitasSerializerSimple(citas_taller, many=True)
     data = result.data
     return data, citas_taller.count()
 

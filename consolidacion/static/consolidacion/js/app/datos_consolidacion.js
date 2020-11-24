@@ -216,7 +216,7 @@ $( document ).ready(function() {
     });
     
     var columns = [
-        { "data": "cedula"},
+        { "data": "nit"},
         { "data": "placa"},
         { "data": "bodega"},
         { "data": "nombre_cliente"},

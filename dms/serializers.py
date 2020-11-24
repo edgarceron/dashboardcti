@@ -56,6 +56,23 @@ class TallCitasSerializer(serializers.ModelSerializer):
         obj.save()
         return obj
 
+class TallCitasSerializerSimple(serializers.ModelSerializer):
+    """Serializer for TallCitas model"""
+    class Meta:
+        model = TallCitas
+        fields = [
+            'bodega',
+            'fecha_hora_ini',
+            'placa',
+            'nit',
+            'nombre_cliente',
+            'nombre_encargado',
+            'telefonos',
+            'notas',
+            'mail',
+            'asesor'
+        ]
+
 class TercerosSerializer(serializers.ModelSerializer):
     """Serializer for Terceros model"""
     class Meta:
