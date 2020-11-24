@@ -133,7 +133,7 @@ def get_citas_manticore(agent, start_date, end_date, start, length):
     citas_no_call = cita_no_call_date_range(
         agent, start_date, end_date
     ).values_list('cita_tall_id', flat=True)
-    citas_buscar = citas_no_call + citas_call
+    citas_buscar = list(citas_no_call) + list(citas_call)
     citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)[start:start + length]
 
     result = TallCitasSerializer(citas_taller, many=True)
