@@ -4,3 +4,7 @@
     padding: 15px;
     margin: auto;
 }
+
+.cursor-pointer{
+    cursor: pointer;
+}

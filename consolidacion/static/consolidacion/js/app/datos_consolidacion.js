@@ -116,8 +116,8 @@ function tallCitaDatatable(columns){
 
     columns.push({ "data": function(){
         var options = "";
-        options += '<i class="fas fa-fw fa-trash text-danger"></i>';
-        options += '<i class="far fa-fw fa-calendar-times text-danger"></i>';
+        options += '<i class="fas fa-fw fa-trash text-danger cursor-pointer"></i>';
+        options += '<i class="far fa-fw fa-calendar-times text-danger cursor-pointer"></i>';
         return options;
     }});
 
