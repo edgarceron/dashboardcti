@@ -58,30 +58,73 @@ def put_headers():
     row['observaciones'] = "Observaciones"
     return row
 
-def collect_data(agent="", start_date="", end_date=""):    
+def get_tall_cita_row(data, collected_data):
+    """Gets a row for csv with TallCitas data"""
+    for aux in data:
+        try:
+            tall_cita = TallCitas.objects.get(id_cita=aux.cita_tall_id)
+            row = put_data_cita(tall_cita)
+        except TallCitas.DoesNotExist:
+            row = put_data_deleted()
+        collected_data.append(row)
+    return collect_data
+
+def by_date_created(agent="", start_date="", end_date=""):
+    """Gets citas tall info for csv by date created"""
     calls_consolidacion = calls_date_range(agent, start_date, end_date)
-    collected_data = []
-    for aux in calls_consolidacion:
-        try:
-            tall_cita = TallCitas.objects.get(id_cita=aux.cita_tall_id)
-            row = put_data_cita(tall_cita)
-        except TallCitas.DoesNotExist:
-            row = put_data_deleted()
-        collected_data.append(row)
+    collected_data = get_tall_cita_row(calls_consolidacion, [])
     citas_no_call = cita_no_call_date_range(agent, start_date, end_date)
-    for aux in citas_no_call:
-        try:
-            tall_cita = TallCitas.objects.get(id_cita=aux.cita_tall_id)
-            row = put_data_cita(tall_cita)
-        except TallCitas.DoesNotExist:
-            row = put_data_deleted()
-        collected_data.append(row)
+    collected_data = get_tall_cita_row(citas_no_call, collected_data)
     return collected_data
 
+def by_date_cita(agent="", start_date="", end_date=""):
+    """Gets citas tall info for csv by date"""
+    tall_cita_objects = tall_cita_date_range(start_date, end_date)
+    id_citas = tall_cita_objects.values_list('id_cita', flat=True)
+
+    calls_consolidacion = CallConsolidacion.objects.filter(cita_tall_id__in=id_citas)
+    id_calls = calls_consolidacion.values_list('call', flat=True)
+    calls = Calls.objects.filter(id__in=id_calls, id_agent=agent)
+    id_calls = calls.values_list('id', flat=True)
+    calls_consolidacion.filter(call__in=id_calls)
+    collected_data = get_tall_cita_row(calls_consolidacion, [])
+
+    citas_no_call = CitaNoCall.objects.filter(cita_tall_id__in=id_citas, agent=agent)
+    collected_data = get_tall_cita_row(citas_no_call, collected_data)
+    return collect_data
+
+def tall_cita_date_range(start_date, end_date):
+    """Gets the CitaNoCalls in the specified date range"""
+    criteria = {}
+    if start_date != "" and end_date != "":
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
+        criteria['fecha_hora_ini__range'] = (start_date, end_date)
+
+    elif start_date != "":
+        start_date = datetime.strptime(end_date, '%Y-%m-%d')
+        criteria['fecha_hora_ini__gte'] = start_date
+
+    elif end_date != "":
+        end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
+        criteria['fecha_hora_ini__lte'] = end_date
+
+    tall_cita_objects = TallCitas.objects.filter(**criteria)
+    return tall_cita_objects
+
+def collect_data(agent="", start_date="", end_date="", date_type=1):
+    """Collects data from citas taller"""
+    start_date = "" if start_date == "empty" else start_date
+    end_date = "" if end_date == "empty" else end_date
+    if date_type == 2:
+        collected_data = by_date_created(agent, start_date, end_date)
+    else:
+        collected_data = by_date_cita(agent, start_date, end_date)
+    return collected_data
 
 def cita_no_call_date_range(agent, start_date, end_date):
+    """Gets the CitaNoCalls in the specified date range for the specified agent"""
     criteria = {}
-    
     if start_date != "" and end_date != "":
         start_date = datetime.strptime(start_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
@@ -102,7 +145,7 @@ def cita_no_call_date_range(agent, start_date, end_date):
     return no_calls_consolidacion
 
 def calls_date_range(agent, start_date, end_date):
-
+    """Gets the calls in the specified date range for the specified agent"""
     criteria = {}
 
     if start_date != "" and end_date != "":
@@ -117,7 +160,7 @@ def calls_date_range(agent, start_date, end_date):
     elif end_date != "":
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
         criteria['datetime_entry_queue__lte'] = end_date
-    
+
     if agent != "":
         criteria['id_agent'] = agent
 
@@ -126,16 +169,34 @@ def calls_date_range(agent, start_date, end_date):
     calls_consolidacion = CallConsolidacion.objects.filter(call__in=calls)
     return calls_consolidacion
 
-def get_citas_manticore(agent, start_date, end_date, start, length):
-    citas_call = calls_date_range(
-        agent, start_date, end_date
-    ).values_list('cita_tall_id', flat=True)
-    citas_no_call = cita_no_call_date_range(
-        agent, start_date, end_date
-    ).values_list('cita_tall_id', flat=True)
-    citas_buscar = list(citas_no_call) + list(citas_call)
-    citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)[start:start + length]
+def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
+    """Gets the citas tall for a datatable"""
+    if date_type == 2:
+        citas_call = calls_date_range(
+            agent, start_date, end_date
+        ).values_list('cita_tall_id', flat=True)
+        citas_no_call = cita_no_call_date_range(
+            agent, start_date, end_date
+        ).values_list('cita_tall_id', flat=True)
+        citas_buscar = list(citas_no_call) + list(citas_call)
+    
+    else:
+        tall_cita_objects = tall_cita_date_range(start_date, end_date)
+        citas_id = tall_cita_objects.values_list('id_cita', flat=True)
+        citas_call = CallConsolidacion.objects.filter(cita_tall_id__in=citas_id)
+        id_calls = citas_call.values_list('call', flat=True)
+        calls = Calls.objects.filter(agent=agent, id__in=id_calls)
+        id_calls = calls.values_list('id', flat=True)
+        citas_call = citas_call.filter(
+            call__in=id_calls
+        ).values_list('cita_tall_id', flat=True)
 
+        citas_no_call = cita_no_call_date_range(
+            agent, start_date, end_date
+        ).values_list('cita_tall_id', flat=True)
+        citas_buscar = list(citas_no_call) + list(citas_call)
+
+    citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)[start:start + length]
     result = TallCitasSerializerSimple(citas_taller, many=True)
     data = result.data
     return data, citas_taller.count()

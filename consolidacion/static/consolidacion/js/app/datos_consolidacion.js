@@ -1,5 +1,6 @@
 var urls = {};
 var standard = {};
+var table = null;
 
 $('#agentInput').selectpicker(
     {
@@ -120,7 +121,7 @@ function tallCitaDatatable(columns){
         return options;
     }});
 
-    var table = $('#listing').dataTable( {
+    table = $('#listing').dataTable( {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -130,8 +131,9 @@ function tallCitaDatatable(columns){
             "dataSrc": "data",
             "data": function ( d ) {
                 d.agent = $('#agentInput').val();
-                d.start_date = $('#fechaInicioInput').val();;
+                d.start_date = $('#fechaInicioInput').val();
                 d.end_date = $('#fechaFinInput').val();
+                d.date_type = $('#selectTypeDate').val();
             }
         },
 
@@ -186,16 +188,18 @@ $( document ).ready(function() {
 
     $('#downloadButton').click(function(){
         var start_date = $('#fechaInicioInput').val();
-        var end_date = $('#fechaFinInput').val();
+        var end_date = $('#fechaFinInput').val();  
         var agent = $('#agentInput').val();
+        var date_type = $('#selectTypeDate').val();
         var url = download_consolidaciones_url;
         var today = new Date();
-        if(start_date == "") start_date = today_date();
-        if(end_date == "") end_date = today_date();
+        if(start_date == "") start_date = "empty";
+        if(end_date == "") end_date = "empty";
         if(agent == "") agent = "0";
         url = url.replace("abc", start_date);
         url = url.replace("def", end_date);
-        url = url.replace("0", agent);
+        url = url.replace("ghi", start_date2);
+        url = url.replace("123", date_type);
         window.location.href = url;
     });
 
@@ -209,6 +213,10 @@ $( document ).ready(function() {
         url = url.replace("abc", start_date);
         url = url.replace("def", end_date);
         window.location.href = url;
+    });
+
+    $('#filterButton').click(function(){
+        table.ajax.reload();
     });
 
     $('#reCallButton').click(function(){

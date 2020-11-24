@@ -103,13 +103,13 @@ def turnero(request):
         )
     return permission_obj.error_response_view(validation, request)
 
-def download_consolidaciones(request, agent, start_date, end_date):
+def download_consolidaciones(request, agent, start_date, end_date, date_type):
     """Creates a csv file which contains the consolidations with a tall_cita"""
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('download_consolidaciones')
     if validation['status']:
         agent = "" if agent == 0 else agent
-        collected_data = show_results.collect_data(agent, start_date, end_date)
+        collected_data = show_results.collect_data(agent, start_date, end_date, date_type)
         file_path = show_results.data_to_csv(collected_data)
         if os.path.exists(file_path):
             with open(file_path, 'rb') as opened_file:
