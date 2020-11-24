@@ -83,10 +83,10 @@ def by_date_cita(agent="", start_date="", end_date=""):
     id_citas = tall_cita_objects.values_list('id_cita', flat=True)
 
     calls_consolidacion = CallConsolidacion.objects.filter(cita_tall_id__in=id_citas)
-    id_calls = calls_consolidacion.values_list('call', flat=True)
+    id_calls = list(calls_consolidacion.values_list('call', flat=True))
     calls = Calls.objects.filter(id__in=id_calls, id_agent=agent)
-    id_calls = calls.values_list('id', flat=True)
-    calls_consolidacion.filter(call__in=id_calls)
+    id_calls = list(calls.values_list('id', flat=True))
+    calls_consolidacion = calls_consolidacion.filter(call__in=id_calls)
     collected_data = get_tall_cita_row(calls_consolidacion, [])
 
     citas_no_call = CitaNoCall.objects.filter(cita_tall_id__in=id_citas, agent=agent)
@@ -182,19 +182,19 @@ def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
     
     else:
         tall_cita_objects = tall_cita_date_range(start_date, end_date)
-        citas_id = tall_cita_objects.values_list('id_cita', flat=True)
+        citas_id = list(tall_cita_objects.values_list('id_cita', flat=True))
         citas_call = CallConsolidacion.objects.filter(cita_tall_id__in=citas_id)
-        id_calls = citas_call.values_list('call', flat=True)
+        id_calls = list(citas_call.values_list('call', flat=True))
         calls = Calls.objects.filter(agent=agent, id__in=id_calls)
-        id_calls = calls.values_list('id', flat=True)
-        citas_call = citas_call.filter(
+        id_calls = list(calls.values_list('id', flat=True))
+        citas_call = list(citas_call.filter(
             call__in=id_calls
-        ).values_list('cita_tall_id', flat=True)
+        ).values_list('cita_tall_id', flat=True))
 
-        citas_no_call = cita_no_call_date_range(
+        citas_no_call = list(cita_no_call_date_range(
             agent, start_date, end_date
-        ).values_list('cita_tall_id', flat=True)
-        citas_buscar = list(citas_no_call) + list(citas_call)
+        ).values_list('cita_tall_id', flat=True))
+        citas_buscar = citas_no_call + citas_call
 
     citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)[start:start + length]
     result = TallCitasSerializerSimple(citas_taller, many=True)
