@@ -164,7 +164,7 @@ def calls_date_range(agent, start_date, end_date):
     if agent != "":
         criteria['id_agent'] = agent
 
-    calls = list(Calls.objects.values_list('id', flat=True).filter(**criteria))
+    calls = list(Calls.objects.filter(**criteria).values_list('id', flat=True))
 
     calls_consolidacion = CallConsolidacion.objects.filter(call__in=calls)
     return calls_consolidacion
