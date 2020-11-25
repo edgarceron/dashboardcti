@@ -97,7 +97,7 @@ def by_date_cita(agent="", start_date="", end_date=""):
     if agent != "":
         criteria['id_agent'] = agent
     criteria['cita_tall_id__in'] = id_citas
-    citas_no_call = CitaNoCall.objects.filter(cita_tall_id__in=id_citas, agent=agent)
+    citas_no_call = CitaNoCall.objects.filter(**criteria)
     collected_data = get_tall_cita_row(citas_no_call, collected_data)
     return collect_data
 
