@@ -93,6 +93,10 @@ def by_date_cita(agent="", start_date="", end_date=""):
     calls_consolidacion = calls_consolidacion.filter(call__in=id_calls)
     collected_data = get_tall_cita_row(calls_consolidacion, [])
 
+    criteria = {}
+    if agent != "":
+        criteria['id_agent'] = agent
+    criteria['cita_tall_id__in'] = id_citas
     citas_no_call = CitaNoCall.objects.filter(cita_tall_id__in=id_citas, agent=agent)
     collected_data = get_tall_cita_row(citas_no_call, collected_data)
     return collect_data
