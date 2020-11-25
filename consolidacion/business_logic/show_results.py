@@ -67,7 +67,7 @@ def get_tall_cita_row(data, collected_data):
         except TallCitas.DoesNotExist:
             row = put_data_deleted()
         collected_data.append(row)
-    return collect_data
+    return collected_data
 
 def by_date_created(agent="", start_date="", end_date=""):
     """Gets citas tall info for csv by date created"""
