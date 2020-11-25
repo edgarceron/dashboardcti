@@ -200,7 +200,6 @@ $( document ).ready(function() {
         if(agent == "") agent = "0";
         url = url.replace("abc", start_date);
         url = url.replace("def", end_date);
-        url = url.replace("ghi", start_date2);
         url = url.replace("123", date_type);
         window.location.href = url;
     });
