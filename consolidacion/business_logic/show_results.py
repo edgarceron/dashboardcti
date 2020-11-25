@@ -80,7 +80,7 @@ def by_date_created(agent="", start_date="", end_date=""):
 def by_date_cita(agent="", start_date="", end_date=""):
     """Gets citas tall info for csv by date"""
     tall_cita_objects = tall_cita_date_range(start_date, end_date)
-    id_citas = tall_cita_objects.values_list('id_cita', flat=True)
+    id_citas = list(tall_cita_objects.values_list('id_cita', flat=True))
 
     calls_consolidacion = CallConsolidacion.objects.filter(cita_tall_id__in=id_citas)
     id_calls = list(calls_consolidacion.values_list('call', flat=True))
@@ -190,7 +190,7 @@ def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
         if agent != "":
             criteria['id_agent'] = agent
         criteria['id__in'] = id_calls
-        
+
         calls = Calls.objects.filter(**criteria)
         id_calls = list(calls.values_list('id', flat=True))
         citas_call = list(citas_call.filter(
