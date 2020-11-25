@@ -99,7 +99,7 @@ def by_date_cita(agent="", start_date="", end_date=""):
     criteria['cita_tall_id__in'] = id_citas
     citas_no_call = CitaNoCall.objects.filter(**criteria)
     collected_data = get_tall_cita_row(citas_no_call, collected_data)
-    return collect_data
+    return collected_data
 
 def tall_cita_date_range(start_date, end_date):
     """Gets the CitaNoCalls in the specified date range"""
