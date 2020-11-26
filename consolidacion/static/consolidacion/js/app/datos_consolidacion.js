@@ -34,7 +34,7 @@ function failPrepare(){
 }
 
 function cancelCita(tall_cita_id){
-    urls['cancel_cita_url'] = {'url' : cancel_cita_url + tall_cita_id, 'method':'DELETE'};
+    urls['cancel_cita_url'] = {'url' : cancel_cita_url + tall_cita_id, 'method':'POST'};
     standard = new StandardCrud(urls);
     var ajaxFunctions = {
         'success': function(result){
@@ -44,7 +44,8 @@ function cancelCita(tall_cita_id){
             SoftNotification.show(result.responseJSON.message,"danger");
         }
     }
-    standard.makePetition(null, 'cancel_cita_url', ajaxFunctions);
+    standard.makePetition({'motivo': $('#motivoInput').val()}, 'cancel_cita_url', ajaxFunctions);
+    urls['cancel_cita_url'] = {'url' : cancel_cita_url, 'method':'POST'};
 }
 
 function today_date(){

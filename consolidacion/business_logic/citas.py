@@ -305,7 +305,7 @@ def cancel_cita(id_cita, motivo):
     try:
         tall_cita = TallCitas.objects.get(id_cita=id_cita)
         succes, message = validate_cita(tall_cita)
-        if succes: 
+        if succes:
             tall_cita.estado_cita = 'C'
             tall_cita.save()
             operaciones = TallCitasOperaciones.objects.filter(id_cita=id_cita)
@@ -321,7 +321,7 @@ def cancel_cita(id_cita, motivo):
             result['message'] = "Cita cancelada con exito"
         else:
             result['success'] = succes
-            result['message'] = message        
+            result['message'] = message
     except TallCitas.DoesNotExist:
         result['success'] = False
         result['message'] = "La cita fue borrada del dms"
