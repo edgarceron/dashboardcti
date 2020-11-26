@@ -37,7 +37,7 @@ function cancelCita(tall_cita_id){
     standard = new StandardCrud(urls);
     var ajaxFunctions = {
         'success': function(result){
-            SoftNotification.show("Cita cancelada con exito");
+            SoftNotification.show(result.message);
         },
         'error': function(result){
             SoftNotification.show(result.responseJSON.message,"danger");
