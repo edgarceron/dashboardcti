@@ -61,6 +61,7 @@ class TallCitasSerializerSimple(serializers.ModelSerializer):
     class Meta:
         model = TallCitas
         fields = [
+            'id_cita',
             'bodega',
             'fecha_hora_ini',
             'placa',
@@ -70,7 +71,8 @@ class TallCitasSerializerSimple(serializers.ModelSerializer):
             'telefonos',
             'notas',
             'mail',
-            'asesor'
+            'asesor',
+            'estado_cita'
         ]
 
     def to_representation(self, instance):
