@@ -7,7 +7,7 @@ def send_confirmacion(to, template, context):
     html_message = render_to_string(template, context)
     plain_message = strip_tags(html_message)
     return send_mail(
-        subject='That’s your subject',
+        subject='Su cita en concesionario caribe renault',
         message=plain_message,
         html_message=html_message,
         from_email='Concesionario Caribe Renault<notificaciones@caribecali.com>',

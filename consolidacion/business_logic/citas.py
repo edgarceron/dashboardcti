@@ -5,7 +5,7 @@ from core.mailing import mailing
 from core.crud.standard import Crud
 from users.permission_validation import PermissionValidation
 from agent_console.models import UserAgent
-from dms.models import Terceros, ReferenciasImp, TallCitas
+from dms.models import Terceros, ReferenciasImp, TallCitas, TallCitasOperaciones, TallCitasAuditoria
 from dms.serializers import CrmCitasSerializer, TallCitasSerializer
 from consolidacion.models import CallConsolidacion, CallEntryCita, CitaNoCall
 from motivos.models import Motivo
@@ -26,6 +26,8 @@ def create_cita(request):
         id_agent = user_agent.agent
     except UserAgent.DoesNotExist:
         id_agent = ""
+        data["message"] = "Debe ser un agente para poder agendar citas"
+        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
 
     if not tall_cita.is_valid():
         data['tall_cita_data'] = tall_cita.errors
@@ -284,3 +286,43 @@ def datacita():
         'telefonos': "3176483290"
     }
     return context
+
+def validate_cita(tall_cita):
+    """Validates if tall_cita is cancelable"""
+    message = ""
+    succes = True
+    if tall_cita.estado_cita != 'C': 
+        message = "La cita ya esta cancelada"
+        succes = False
+    if tall_cita.fecha_hora_ini > datetime.now():
+        message = "No se puede cancelar una cita del pasado"
+        succes = False
+    return succes, message
+
+def cancel_cita(id_cita, motivo):
+    """Cancels the cita_tall in DMS"""
+    result = {}
+    try:
+        tall_cita = TallCitas.objects.get(id_cita=id_cita)
+        succes, message = validate_cita(tall_cita)
+        if succes: 
+            tall_cita.estado_cita = 'C'
+            tall_cita.save()
+            operaciones = TallCitasOperaciones.objects.filter(id_cita=id_cita)
+            for operacion in operaciones:
+                operacion.delete()
+
+            auditoria = TallCitasAuditoria(
+                id_cita=id_cita, usuario='IPRADA', pc='DMSSERVER',
+                fecha_hora=datetime.now(),
+                notas='Cita cancelada en manticore, motivo: ' + motivo)
+            auditoria.save()
+            result['success'] = succes
+            result['message'] = "Cita cancelada con exito"
+        else:
+            result['success'] = succes
+            result['message'] = message        
+    except TallCitas.DoesNotExist:
+        result['success'] = False
+        result['message'] = "La cita fue borrada del dms"
+    return result

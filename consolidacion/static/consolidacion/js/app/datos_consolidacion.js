@@ -33,22 +33,8 @@ function failPrepare(){
     standard.makePetition(data, 'fail_prepare_url', ajaxFunctions);
 }
 
-function deleteCita(tall_cita_id){
-    urls['delete_url'] = {'url' : delete_url + tall_cita_id, 'method':'DELETE'};
-    standard = new StandardCrud(urls);
-    var ajaxFunctions = {
-        'success': function(result){
-            standard.standardDeleteSuccess("Cita de taller");
-        },
-        'error': function(result){
-            SoftNotification.show(result.responseJSON.message,"danger");
-        }
-    }
-    standard.makePetition(null, 'delete_url', ajaxFunctions);
-}
-
 function cancelCita(tall_cita_id){
-    urls['cancel_url'] = {'url' : cancel_url + tall_cita_id, 'method':'DELETE'};
+    urls['cancel_cita_url'] = {'url' : cancel_cita_url + tall_cita_id, 'method':'DELETE'};
     standard = new StandardCrud(urls);
     var ajaxFunctions = {
         'success': function(result){
@@ -58,7 +44,7 @@ function cancelCita(tall_cita_id){
             SoftNotification.show(result.responseJSON.message,"danger");
         }
     }
-    standard.makePetition(null, 'cancel_url', ajaxFunctions);
+    standard.makePetition(null, 'cancel_cita_url', ajaxFunctions);
 }
 
 function today_date(){
@@ -116,7 +102,6 @@ function tallCitaDatatable(columns){
 
     columns.push({ "data": function(){
         var options = "";
-        options += '<i class="fas fa-fw fa-trash text-danger cursor-pointer" data-toggle="tooltip" data-placement="bottom" title="Eliminar cita"></i>';
         options += '<i class="far fa-fw fa-calendar-times text-danger cursor-pointer" data-toggle="tooltip" data-placement="bottom" title="Cancelar cita"></i>';
         return options;
     }});
@@ -176,6 +161,7 @@ $( document ).ready(function() {
     urls = {
         'fail_prepare_url': {'url' : fail_prepare_url, 'method':'POST'},
         'listing_citas_taller_url': {'url' : listing_citas_taller_url, 'method':'POST'},
+        'cancel_cita_url': {'url' : cancel_cita_url, 'method':'POST'},   
     }
     standard = new StandardCrud(urls);
 

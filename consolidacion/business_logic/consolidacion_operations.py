@@ -284,3 +284,15 @@ def listing_citas_taller(request):
         }
         return Response(result, status=status.HTTP_200_OK, content_type='application/json')
     return permission_obj.error_response_webservice(validation, request)
+
+def cancel_cita(request):
+    """Cancels the cita_tall in DMS"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('cancel_cita')
+    if validation['status']:
+        data = request.data
+        id_cita = data['id_cita']
+        motivo = data['motivo']
+        result = citas.cancel_cita(id_cita, motivo)
+        return Response(result, status=status.HTTP_200_OK, content_type='application/json')
+    return permission_obj.error_response_webservice(validation, request)

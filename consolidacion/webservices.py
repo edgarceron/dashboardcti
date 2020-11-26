@@ -47,6 +47,10 @@ def get_actions():
             "name": "listing_citas_taller",
             "label": "Webservice para listar citas de taller en datos de consolidación"
         },
+        {
+            "name": "cancel_cita",
+            "label": "Webservice para cancelar la cita en el dms"
+        }, 
     ]
     return actions
 
@@ -138,3 +142,8 @@ def fail_prepare(request):
 def listing_citas_taller(request):
     """Lists tall_citas for a datatable"""
     return consolidacion_operations.listing_citas_taller(request)
+
+@api_view(['POST'])
+def cancel_cita(request):
+    """Cancels the cita_tall in DMS"""
+    return consolidacion_operations.cancel_cita(request)
