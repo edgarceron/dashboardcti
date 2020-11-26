@@ -87,6 +87,7 @@ function createdRow(row, data, index){
     var count = row.cells.length 
     var data_rows = count - 2;
     var options_row = count -1;
+    console.log(data);
     for(var i = 0;i < data_rows;i++){
         $('td', row).eq(i).addClass("row_object_id");
         $('td', row).eq(i).attr('model_id', data.id_cita);
