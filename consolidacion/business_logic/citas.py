@@ -318,7 +318,7 @@ def cancel_cita(id_cita, motivo):
                 operacion.delete()
 
             auditoria = TallCitasAuditoria(
-                id_cita=id_cita, usuario='IPRADA', pc='DMSSERVER',
+                id_cita=tall_cita, usuario='IPRADA', pc='DMSSERVER',
                 fecha_hora=datetime.now(),
                 notas='Cita cancelada en manticore, motivo: ' + motivo)
             auditoria.save()
