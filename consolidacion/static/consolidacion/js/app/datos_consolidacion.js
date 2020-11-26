@@ -34,7 +34,6 @@ function failPrepare(){
 }
 
 function cancelCita(tall_cita_id){
-    urls['cancel_cita_url'] = {'url' : cancel_cita_url + tall_cita_id, 'method':'POST'};
     standard = new StandardCrud(urls);
     var ajaxFunctions = {
         'success': function(result){
@@ -44,8 +43,8 @@ function cancelCita(tall_cita_id){
             SoftNotification.show(result.responseJSON.message,"danger");
         }
     }
-    standard.makePetition({'motivo': $('#motivoInput').val()}, 'cancel_cita_url', ajaxFunctions);
-    urls['cancel_cita_url'] = {'url' : cancel_cita_url, 'method':'POST'};
+    data = {'motivo': $('#motivoInput').val(), 'id_cita': tall_cita_id}
+    standard.makePetition(data, 'cancel_cita_url', ajaxFunctions);
 }
 
 function today_date(){
@@ -165,7 +164,6 @@ $( document ).ready(function() {
         'cancel_cita_url': {'url' : cancel_cita_url, 'method':'POST'},   
     }
     standard = new StandardCrud(urls);
-
 
     FormFunctions.setAjaxLoadPicker(
         '#agentInput', pircker_search_agent_url, FormFunctions.updatePicker, "Todos los agentes"
