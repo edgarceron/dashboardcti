@@ -1,8 +1,9 @@
+"""Manages tall cita and crm cita operations"""
+from datetime import datetime, timedelta
+import pytz
 from rest_framework import status
 from rest_framework.response import Response
-from datetime import datetime, timedelta
 from core.mailing import mailing
-from core.crud.standard import Crud
 from users.permission_validation import PermissionValidation
 from agent_console.models import UserAgent
 from dms.models import Terceros, ReferenciasImp, TallCitas, TallCitasOperaciones, TallCitasAuditoria
@@ -291,10 +292,14 @@ def validate_cita(tall_cita):
     """Validates if tall_cita is cancelable"""
     message = ""
     succes = True
+
+    timezone = pytz.timezone("America/Bogota")
+    date_aware = timezone.localize(datetime.now())
+
     if tall_cita.estado_cita != 'C': 
         message = "La cita ya esta cancelada"
         succes = False
-    if tall_cita.fecha_hora_ini > datetime.now():
+    if tall_cita.fecha_hora_ini > date_aware:
         message = "No se puede cancelar una cita del pasado"
         succes = False
     return succes, message
