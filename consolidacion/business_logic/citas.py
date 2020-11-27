@@ -127,7 +127,7 @@ def create_tall_cita(data):
     pc = 'DMSSERVER'
     modulo = ''
     mail = tercero.mail
-    asesor = sede.asesor.name
+    asesor = sede.asesor.name[0:20]
     numerocomfrimaciones = 0
     numeroespacios = 0
     facturado = 'NA'
