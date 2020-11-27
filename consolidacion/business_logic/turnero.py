@@ -1,4 +1,5 @@
 """Contains functions for the turnero webservices"""
+import pytz
 from datetime import datetime, timedelta, date
 from rest_framework import status
 from django.db.models import Q
@@ -45,7 +46,8 @@ def get_tall_citas_order(calls_consolidacion, citas_no_call):
 def tall_cita_date_range(bodega):
     """Gets the CitaNoCalls in the specified date range"""
     criteria = {}
-    start_date = datetime.now()
+    local_tz = pytz.timezone("America/Bogota")
+    start_date = local_tz.localize(datetime.now())
     end_date = date.today() + timedelta(seconds=86399)
     criteria['fecha_hora_ini__range'] = (start_date, end_date)
     criteria['bodega'] = bodega
