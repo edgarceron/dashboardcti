@@ -46,9 +46,10 @@ def get_tall_citas_order(calls_consolidacion, citas_no_call):
 def tall_cita_date_range(bodega):
     """Gets the CitaNoCalls in the specified date range"""
     criteria = {}
-    local_tz = pytz.timezone("America/Bogota")
-    start_date = local_tz.localize(datetime.now())
-    end_date = date.today() + timedelta(seconds=86399)
+    start_date = datetime.now()
+    start_date = start_date.astimezone(pytz.timezone('America/Bogota'))
+
+    end_date = datetime(date.today().year, date.today().month, date.today().day) + timedelta(seconds=86399)
     criteria['fecha_hora_ini__range'] = (start_date, end_date)
     criteria['bodega'] = bodega
 
