@@ -1,4 +1,5 @@
 """Manages tall cita and crm cita operations"""
+from django.db.models import Q
 from datetime import datetime, timedelta
 import pytz
 from rest_framework import status
@@ -205,9 +206,24 @@ def verificar_horarios(sede, fecha):
             'bodega': bodega
         }
 
-        datetime_ocupados = list(
-            TallCitas.objects.filter(**criteria).values_list('fecha_hora_ini', flat=True)
+        tall_citas = TallCitas.objects.filter(**criteria)
+
+        cita_ids = list(
+            tall_citas.values_list('id_cita', flat=True)
         )
+
+        citas_call = list(
+            CallConsolidacion.objects.filter(cita_tall_id__in=cita_ids).values_list(
+                'cita_tall_id', flat=True))
+
+        citas_no_call = list(
+            CitaNoCall.objects.filter(cita_tall_id__in=cita_ids).values_list(
+                'cita_tall_id', flat=True))
+
+        datetime_ocupados = list(
+            tall_citas.filter(Q(id_cita__in=citas_call) | Q(id_cita__in=citas_no_call)).values_list(
+                'fecha_hora_ini', flat=True))
+
         horarios_ocupados = []
         for x in datetime_ocupados:
             horarios_ocupados.append(x.strftime('%H:%M'))
