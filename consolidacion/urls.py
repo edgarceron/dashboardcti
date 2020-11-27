@@ -26,7 +26,7 @@ urlpatterns = [
         views.datos_consolidacion, 
         name='datos_consolidacion'
     ),
-    path('turnero', views.turnero, name='turnero'),
+    path('turnero/<int:sede_id>', views.turnero, name='turnero'),
     path('update/<int:consolidacion_id>', views.form_consolidacion, name='update_consolidacion'),
     path('add', webservices.add_consolidacion, name='add_consolidacion'),
     path('replace/<int:consolidacion_id>', webservices.replace_consolidacion, name='replace_consolidacion'),

@@ -19,52 +19,27 @@
 <body>
     <br>
     <div class="container">
-        <div class="row">
-            <div class='form-group'>
-                <label for='sedeInput'>Sede</label>
-                <select class='form-control appform' id='sedeInput'>
-                    <option value="">Ninguna sede</option>
-                </select>
-                <div class="valid-feedback" id='sedeValid'>Valid.</div>
-                <div class="invalid-feedback" id = 'sedeInvalid'>Please fill out this field.</div>
-            </div>
-        </div>
         <div class="row justify-content-center">
             <div class="col-12">
                 <div class="row">
-                    <div class="col-3 border">
-                        <h3>Posición en la fila</h3>
-                    </div>
                     <div class="col-6 border">
                         <h3>Nombre</h3>
                     </div>
-                    <div class="col-3 border">
+                    <div class="col-6 border">
                         <h3>Hora de la cita</h3>
                     </div>
                 </div>
                 <div id="turnosContainer">
+                    {% for cita in citas_tall %}
                     <div class="row">
-                        <div class="col-3 bg-primary text-white text-center">
-                            <h1>1</h1>
+                        <div class="col-6 border">
+                            <h3>{{cita.fecha_hora_ini}}</h3>
                         </div>
                         <div class="col-6 border">
-                            <h3>Edgar Mauricio Ceron Florez</h3>
-                        </div>
-                        <div class="col-3 border">
-                            <h3>10:30 a.m.</h3>
+                            <h3>{{cita.nombre_cliente}}</h3>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-3 bg-primary text-white text-center">
-                            <h1>2</h1>
-                        </div>
-                        <div class="col-6 border align-middle">
-                            <h3>Kristhian David Ceron Florez</h3>
-                        </div>
-                        <div class="col-3 border align-middle">
-                            <h3>10:45 a.m.</h3>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -76,10 +51,7 @@
 <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
 <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
 <script>
-
-    var picker_search_sede_url = "{% url 'picker_search_sede' %}";
     var get_closest_turns_url = "{% url 'get_closest_turns' %}";
-
 </script>
 <script src="{% static 'consolidacion/js/app/turnero.js' %}"></script>
 

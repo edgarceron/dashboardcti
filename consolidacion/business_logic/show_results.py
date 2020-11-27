@@ -17,7 +17,7 @@ def data_to_csv(collected_data):
     return settings.STATIC_ROOT + 'result.csv'
 
 def put_data_cita(tall_cita):
-    row = put_headers()
+    row = {}
     row['cedula'] = tall_cita.nit.nit
     row['placa'] = tall_cita.placa
     try:
@@ -33,7 +33,7 @@ def put_data_cita(tall_cita):
     return row
 
 def put_data_deleted():
-    row = put_headers()
+    row = {}
     row['cedula'] = "Datos borrados del dms"
     row['placa'] = "Datos borrados del dms"
     row['sede'] = "Datos borrados del dms"

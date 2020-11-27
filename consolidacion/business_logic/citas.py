@@ -218,7 +218,6 @@ def verificar_horarios(sede, fecha):
             horarios.add(start.strftime('%H:%M'))
             start += timedelta(minutes=15)
 
-        print(horarios_ocupados)
         horarios = horarios.difference(horarios_ocupados)
         horarios = list(horarios)
         horarios.sort()
@@ -250,7 +249,6 @@ def create_mail_and_send(data):
     motivo = Motivo.objects.get(id=data['motivo'])
     #mail = "maurinin@yahoo.com"
     asesor = sede.asesor.name
-    print(mail)
 
     template = 'agent_console_mail/confirmacion.html'
     to = mail

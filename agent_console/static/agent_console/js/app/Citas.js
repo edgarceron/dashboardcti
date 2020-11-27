@@ -32,7 +32,8 @@ class Citas {
     static createCita(){
         var ajaxFunctions = {
             'success': function(result){
-                SoftNotification.show('Cita creada con exito');
+                if (result.message) SoftNotification.show(result.message);
+                else SoftNotification.show('Cita creada con exito');
                 $('#successModal').modal('hide');
                 setTimeout(function(){ 
                     $('#contentTeceros').addClass('d-none');

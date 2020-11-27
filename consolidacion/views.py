@@ -3,6 +3,7 @@ import os
 from django.shortcuts import render, HttpResponse
 from consolidacion.business_logic import show_results, fail_management
 from users.permission_validation import PermissionValidation
+from consolidacion.business_logic import turnero as gestion_turnos
 
 # Create your views here.
 def get_actions():
@@ -89,19 +90,16 @@ def listing_consolidacion(request):
         )
     return permission_obj.error_response_view(validation, request)
 
-def turnero(request):
+def turnero(request, sede_id):
     """Return the template for the turnero"""
-    permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('turnero')
-    if validation['status']:
-        return render(
-            request,
-            'consolidacion/turnero.html',
-            {
-                'username': permission_obj.user.name
-            }
-        )
-    return permission_obj.error_response_view(validation, request)
+    turnos = gestion_turnos.get_closest_turns(sede_id)
+    return render(
+        request,
+        'consolidacion/turnero.html',
+        {
+            'turnos': turnos
+        }
+    )
 
 def download_consolidaciones(request, agent, start_date, end_date, date_type):
     """Creates a csv file which contains the consolidations with a tall_cita"""
