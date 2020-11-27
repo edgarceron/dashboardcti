@@ -12,7 +12,7 @@ from consolidacion.models import CallConsolidacion, CitaNoCall
 def get_closest_turns(sede):
     """Gets the turns that end after the current datetime for todays date"""
     collected_data = citas_hoy(sede)
-    return Response(collected_data, status.HTTP_200_OK, content_type='application/json')
+    return collected_data
 
 def citas_hoy(sede):
     """Gets citas tall info for csv by date"""
