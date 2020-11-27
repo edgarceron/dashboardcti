@@ -72,6 +72,7 @@ def get_tall_cita_row(data, collected_data):
 def by_date_created(agent="", start_date="", end_date=""):
     """Gets citas tall info for csv by date created"""
     calls_consolidacion = calls_date_range(agent, start_date, end_date)
+    collected_data = [put_headers()]
     collected_data = get_tall_cita_row(calls_consolidacion, [])
     citas_no_call = cita_no_call_date_range(agent, start_date, end_date)
     collected_data = get_tall_cita_row(citas_no_call, collected_data)
@@ -91,7 +92,7 @@ def by_date_cita(agent="", start_date="", end_date=""):
     calls = Calls.objects.filter(**criteria)
     id_calls = list(calls.values_list('id', flat=True))
     calls_consolidacion = calls_consolidacion.filter(call__in=id_calls)
-    collected_data = get_tall_cita_row(calls_consolidacion, [])
+    collected_data = get_tall_cita_row(calls_consolidacion, [put_headers()])
 
     criteria = {}
     if agent != "":

@@ -1,12 +1,6 @@
 var urls;
 var standard;
 
-$('#sedeInput').selectpicker(
-    {
-        "liveSearch": true
-    }
-);
-
 function getTurnoHtml(pos, nombre, hora){
     var html = 
     `
@@ -56,18 +50,6 @@ $( document ).ready(function() {
     }
 
     standard = new StandardCrud(urls);
-
-    FormFunctions.setAjaxLoadPicker(
-        '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, ""
-    );
-
-    FormFunctions.ajaxLoadPicker(
-        '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "", ""
-    );
-
-    $('#sedeInput').change(function(){
-        getTurnos();
-    });
 
     setInterval(function(){
         getTurnos();
