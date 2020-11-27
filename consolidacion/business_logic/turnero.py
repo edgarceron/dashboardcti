@@ -46,6 +46,7 @@ def tall_cita_date_range(bodega):
     criteria = {}
     start_date = datetime.now()
     start_date = start_date.astimezone(pytz.timezone('America/Bogota'))
+    start_date = datetime(start_date.year, start_date.month, start_date.day, start_date.hour, start_date.minute)
 
     end_date = datetime(date.today().year, date.today().month, date.today().day) + timedelta(seconds=86399)
     criteria['fecha_hora_ini__range'] = (start_date, end_date)
