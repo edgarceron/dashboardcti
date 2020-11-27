@@ -217,8 +217,8 @@ $( document ).ready(function() {
         { "data": "nombre_encargado"},
         { "data": "fecha_hora_ini"},
         { "data": "telefonos"},
-        { "data": "estado_cita"},
         { "data": "mail"},
+        { "data": "estado_cita"},
     ];
 
     tallCitaDatatable(columns);
