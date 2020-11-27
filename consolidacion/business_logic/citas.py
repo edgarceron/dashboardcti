@@ -297,9 +297,6 @@ def validate_cita(tall_cita):
     if tall_cita.estado_cita == 'C': 
         message = "La cita ya esta cancelada"
         succes = False
-    if tall_cita.fecha_hora_ini > date_aware:
-        message = "No se puede cancelar una cita del pasado"
-        succes = False
     return succes, message
 
 def cancel_cita(id_cita, motivo):
