@@ -9,3 +9,4 @@ class Asesor(models.Model):
     active = models.BooleanField(verbose_name="Activo/Inactivo", null=False, default=True)
     sede = models.ForeignKey(Sede, on_delete=models.CASCADE)
     asesor_dms = models.IntegerField(null=True, default=0)
+    test = models.TextField(null=True)
