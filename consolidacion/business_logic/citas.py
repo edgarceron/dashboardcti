@@ -294,7 +294,7 @@ def validate_cita(tall_cita):
     timezone = pytz.timezone("America/Bogota")
     date_aware = timezone.localize(datetime.now())
 
-    if tall_cita.estado_cita != 'C': 
+    if tall_cita.estado_cita == 'C': 
         message = "La cita ya esta cancelada"
         succes = False
     if tall_cita.fecha_hora_ini > date_aware:

@@ -28,9 +28,7 @@ def citas_hoy(sede):
     id_calls = list(calls.values_list('id', flat=True))
     calls_consolidacion = calls_consolidacion.filter(call__in=id_calls)
 
-    criteria = {}
-    criteria['cita_tall_id__in'] = id_citas
-    citas_no_call = CitaNoCall.objects.filter(**criteria)
+    citas_no_call = CitaNoCall.objects.filter(cita_tall_id__in=id_citas)
 
     citas_tall = get_tall_citas_order(calls_consolidacion, citas_no_call)
     collected_data = get_tall_cita_row(citas_tall, [])
