@@ -37,8 +37,8 @@ def citas_hoy(sede):
     return collected_data
 
 def get_tall_citas_order(calls_consolidacion, citas_no_call):
-    cita_tall_id_call = calls_consolidacion.values_list('cita_tall_id', flat=True)
-    cita_tall_id_no_call = citas_no_call.values_list('cita_tall_id', flat=True)
+    cita_tall_id_call = list(calls_consolidacion.values_list('cita_tall_id', flat=True))
+    cita_tall_id_no_call = list(citas_no_call.values_list('cita_tall_id', flat=True))
     citas_tall = TallCitas.objects.filter(
         Q(id_cita__in=cita_tall_id_call) | Q(id_cita__in=cita_tall_id_no_call)).order_by('-fecha_hora_ini')
     return citas_tall
