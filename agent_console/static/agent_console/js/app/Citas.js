@@ -238,14 +238,15 @@ class Citas {
         }
         var ajaxFunctions = {
             'success': function(result){
-                $('#divCitasHorario').html('');
+                if(result.citas.length > 0)
+                    $('#divCitasHorario').html('<h4>Citas agendadas</h4>');
                 var html;
                 for(let cita of result.citas){
                     html = `
                     <div class="row">
-                        <div class="col-md-3">${cita.nit}</div>
-                        <div class="col-md-3">${cita.nombre_cliente}</div>
-                        <div class="col-md-3">${cita.asesor}</div>
+                        <div class="col-md-3 border">${cita.nit}</div>
+                        <div class="col-md-3 border">${cita.nombre_cliente}</div>
+                        <div class="col-md-3 border">${cita.asesor}</div>
                     </div>
                     `;
                     $('#divCitasHorario').append(html);
