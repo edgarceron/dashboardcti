@@ -214,7 +214,7 @@ $( document ).ready(function() {
         { "data": "placa"},
         { "data": "bodega"},
         { "data": "nombre_cliente"},
-        { "data": "nombre_encargado"},
+        { "data": "asesor"},
         { "data": "fecha_hora_ini"},
         { "data": "telefonos"},
         { "data": "mail"},
