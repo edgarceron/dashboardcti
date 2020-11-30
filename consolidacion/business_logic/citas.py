@@ -109,7 +109,7 @@ def create_tall_cita(data):
 
     tercero = get_tercero(data['cedula'])
     sede = get_sede(data['sede'])
-    asesores = Asesor.models.filter(sede=sede)
+    asesores = Asesor.objects.filter(sede=sede)
     bodega = sede.bodega_dms
     fecha_hora_creacion = datetime.now()
     estado_cita = 'P'
