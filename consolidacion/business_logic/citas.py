@@ -66,7 +66,8 @@ def update_call_consolidacion(request, tall_cita, crm_cita, id_agent=""):
             call_entry_cita = CallEntryCita(
                 cita_tall_id=tall_cita,
                 cita_crm_id=crm_cita,
-                call_entry=id_call_entry
+                call_entry=id_call_entry,
+                observaciones=observaciones
             )
             call_entry_cita.save()
         else:
@@ -74,7 +75,8 @@ def update_call_consolidacion(request, tall_cita, crm_cita, id_agent=""):
                 date=datetime.now(),
                 cita_tall_id=tall_cita,
                 cita_crm_id=crm_cita,
-                agent=id_agent)
+                agent=id_agent,
+                observaciones=observaciones)
             cita_no_call.save()
 
 def create_crm_cita(tall_cita):
@@ -126,6 +128,7 @@ def create_tall_cita(data):
     telefonos = format_telefonos(tercero.telefono_1, tercero.telefono_2)
     motivo = Motivo.objects.get(id=data['motivo'])
     notas = data['observaciones']  + " Motivo: " + motivo.name
+    notas = notas[:400]
     ano_veh = 0
     usuario = 'VOZIP'
     pc = 'DMSSERVER'

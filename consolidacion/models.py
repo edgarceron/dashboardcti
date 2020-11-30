@@ -37,6 +37,8 @@ class CallEntryCita(models.Model):
     call_entry = models.IntegerField(null=False, unique=True)
     cita_tall_id = models.IntegerField(null=True, unique=True)
     cita_crm_id = models.IntegerField(null=True, unique=True)
+    observaciones = models.TextField(null=True)
+
 
 class CitaNoCall(models.Model):
     """Class used to store information about citas without call"""
@@ -44,3 +46,4 @@ class CitaNoCall(models.Model):
     cita_tall_id = models.IntegerField(null=True, unique=True)
     cita_crm_id = models.IntegerField(null=True, unique=True)
     agent = models.IntegerField(null=False)
+    observaciones = models.TextField(null=True)

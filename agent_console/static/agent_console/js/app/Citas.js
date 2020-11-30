@@ -238,7 +238,18 @@ class Citas {
         }
         var ajaxFunctions = {
             'success': function(result){
-                
+                //$('#divCitasHorario').html('');
+                var html;
+                for(cita of result.citas){
+                    html = `
+                    <div class="row">
+                        <div class="col-md-3">${cita.nit}</div>
+                        <div class="col-md-3">${cita.nombre_cliente}</div>
+                        <div class="col-md-3">${cita.asesor}</div>
+                    </div>
+                    `;
+                //    $('#divCitasHorario').append(html);
+                }
             },
             'error': function(request, status, error){
                 SoftNotification.show("Sucedio un error al intentar verificar citas en el horario", "danger");
