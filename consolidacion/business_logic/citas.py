@@ -161,7 +161,7 @@ def create_tall_cita(data):
         'pc': pc,
         'modulo': modulo,
         'mail': mail,
-        'asesor': asesor,
+        'asesor': asesor[:20],
         'numerocomfrimaciones': numerocomfrimaciones,
         'numeroespacios': numeroespacios,
         'facturado': facturado,
