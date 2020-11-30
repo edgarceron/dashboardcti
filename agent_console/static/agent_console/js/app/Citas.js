@@ -238,7 +238,7 @@ class Citas {
         }
         var ajaxFunctions = {
             'success': function(result){
-                //$('#divCitasHorario').html('');
+                $('#divCitasHorario').html('');
                 var html;
                 for(cita of result.citas){
                     html = `
@@ -248,7 +248,7 @@ class Citas {
                         <div class="col-md-3">${cita.asesor}</div>
                     </div>
                     `;
-                //    $('#divCitasHorario').append(html);
+                    $('#divCitasHorario').append(html);
                 }
             },
             'error': function(request, status, error){
