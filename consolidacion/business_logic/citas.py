@@ -284,11 +284,12 @@ def verificar_horarios(sede, fecha):
         horarios_ocupados = set(horarios_ocupados)
         start = fecha.replace(hour = 7, minute=0)
         horarios = set({})
+
         while not (start.hour == 16 and start.minute == 00):
             horarios.add(start.strftime('%H:%M'))
             start += timedelta(minutes=15)
 
-        horarios = horarios.difference(horarios_ocupados)
+        #horarios = horarios.difference(horarios_ocupados)
         horarios = list(horarios)
         horarios.sort()
         data = {
