@@ -181,7 +181,7 @@ def get_sede(sede):
     return Sede.objects.get(id=sede)
 
 def get_asesor(asesor):
-    return Asesor.objects.get(id=asesor)
+    return Asesor.objects.get(id=asesor).name
 
 def get_veh(placa):
     try:
