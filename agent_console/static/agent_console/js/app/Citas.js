@@ -240,6 +240,7 @@ class Citas {
             'success': function(result){
                 if(result.citas.length > 0)
                     $('#divCitasHorario').html('<h4>Citas agendadas</h4>');
+                else $('#divCitasHorario').html('');
                 var html;
                 for(let cita of result.citas){
                     html = `
