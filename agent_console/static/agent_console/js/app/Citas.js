@@ -219,4 +219,31 @@ class Citas {
         }
         Citas.standard.makePetition(data, 'check_placa_url', ajaxFunctions);
     }
+
+    static getAsesoresSede(){
+        var sede = $('#sedeInput').val();
+        FormFunctions.ajaxLoadPicker(
+            '#sedeInput', picker_search_asesor_by_sede_url, 
+            FormFunctions.updatePicker, sede);
+    }
+
+    static getCitasHorario(){
+        var sede = $('#sedeInput').val();
+        var fecha = $('#fechaInput').val();
+        var hora = $('#horaInput').val();
+        data = {
+            'sede': sede,
+            'fecha': fecha,
+            'hora': hora,
+        }
+        var ajaxFunctions = {
+            'success': function(result){
+                
+            },
+            'error': function(request, status, error){
+                SoftNotification.show("Sucedio un error al intentar verificar citas en el horario", "danger");
+            }
+        }
+        Citas.standard.makePetition(data, 'check_citas_horario_url', ajaxFunctions);
+    }
 }

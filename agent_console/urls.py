@@ -39,6 +39,7 @@ urlpatterns = [
     path('get_campaign_entry/<int:campaign_id>', webservices.get_campaign_entry, name='get_campaign_entry'),
     path('create_cita', webservices.create_cita, name='create_cita'),
     path('check_horarios', webservices.check_horarios, name='check_horarios'),
+    path('check_citas_horario', webservices.check_citas_horario, name='check_citas_horario'),
     path('create_calls_asterisk', webservices.create_calls_asterisk, name='create_calls_asterisk'),
     path('send_confirmation_mail', webservices.send_confirmation_mail, name='send_confirmation_mail'),
     path('save_break_times', webservices.save_break_times, name='save_break_times'),

@@ -73,6 +73,10 @@ def get_actions():
             "name": "add_break2",
             "label": "Webservice para guardar breaks"
         },
+        {
+            "name": "check_citas_horario",
+            "label": "Webservice para mostrar las citas agendadas para una sede en el horario dado"
+        },
     ]
     return actions
 
@@ -289,12 +293,38 @@ def create_cita(request):
 def check_horarios(request):
     """Validates that the given request contains a cedula for """
     permission_obj = PermissionValidation(request)
-    validation = permission_obj.validate('create_cita')
+    validation = permission_obj.validate('check_horarios')
     if validation['status']:
         data = request.data
         sede = data['sede']
         fecha = data['fecha']
         return citas.verificar_horarios(sede, fecha)
+    return permission_obj.error_response_webservice(validation, request)
+
+
+@api_view(['POST'])
+def check_horarios(request):
+    """Validates that the given request contains a cedula for """
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('check_horarios')
+    if validation['status']:
+        data = request.data
+        sede = data['sede']
+        fecha = data['fecha']
+        return citas.verificar_horarios(sede, fecha)
+    return permission_obj.error_response_webservice(validation, request)
+
+@api_view(['POST'])
+def check_citas_horario(request):
+    """Validates that the given request contains a cedula for """
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('check_citas_horario')
+    if validation['status']:
+        data = request.data
+        sede = data['sede']
+        fecha = data['fecha']
+        hora = data['hora']
+        return citas.citas_en_horario(sede, fecha, hora)
     return permission_obj.error_response_webservice(validation, request)
 
 @api_view(['POST'])

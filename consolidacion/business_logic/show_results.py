@@ -215,8 +215,9 @@ def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
         )
         citas_buscar = citas_no_call + citas_call
 
-    citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)[start:start + length]
-    result = TallCitasSerializerSimple(citas_taller, many=True)
+    citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)
+    filtered = citas_taller[start:start + length]
+    result = TallCitasSerializerSimple(filtered, many=True)
     data = result.data
     return data, citas_taller.count()
 

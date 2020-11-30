@@ -9,6 +9,12 @@ def asesor_picker_filter(value):
         Q(name__icontains=value)
     )[:10])
 
+def asesor_picker_filter_by_sede(value):
+    """Given a value, filters asesores for a select picker"""
+    return list(Asesor.objects.filter(
+        Q(sede=int(value))
+    )[:10])
+
 def asesor_listing_filter(search, start, length, count=False):
     """Filters the corresponding models given a search string"""
     if count:

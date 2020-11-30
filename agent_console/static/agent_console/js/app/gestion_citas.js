@@ -8,6 +8,7 @@ function getValues(){
         'fecha': $('#fechaInput').val(),
         'hora': $('#horaInput').val(),
         'motivo': $('#motivoInput').val(),
+        'asesor': $('#asesorInput').val(),
         'observaciones': $('#observacionesInput').val(),
         'call_consolidacion_id': $('#call_consolidacion_idInput').val(),
         'id_call_entry': AgentConsole.llamada_id,
@@ -25,13 +26,14 @@ $( document ).ready(function() {
     $('#gotoCitasTallerButton').click(Citas.goToCitasTaller);
     $('#emailButton').click(Citas.sendConfirmationEmail);
     $('#sedeInput').change(Citas.getHorariosDisponibles);
+    $('#sedeInput').change(Citas.getAsesoresSede);
     $('#fechaInput').change(Citas.getHorariosDisponibles);
-    $('#fechaInput').change(Citas.getHorariosDisponibles);
+    $('#horaInput').change(Citas.getCitasHorario);
     $('#noEmailButton').click(Citas.cancel);
     $('#cancelCitaButton').click(Citas.cancel);
     $('#cancelButton').click(Citas.cancel);
     $('#reagendarButton').click(Citas.validateCedulaPlaca);
-
+    
     urls = {
         'get_motivo_url': {'url' : get_motivo_url, 'method':'POST'},
         'get_sede_url': {'url' : get_sede_url, 'method':'POST'},
@@ -41,7 +43,8 @@ $( document ).ready(function() {
         'check_placa_url': {'url' : check_placa_url, 'method':'POST'},
         'check_tercero_cedula_url': {'url' : check_tercero_cedula_url, 'method':'POST'},
         'add_consolidacion_url': {'url' : add_consolidacion_url, 'method':'POST'},
-        'validate_cedula_url': {'url' : validate_cedula_url, 'method':'POST'}
+        'validate_cedula_url': {'url' : validate_cedula_url, 'method':'POST'},
+        'check_citas_horario_url': {'url' : check_citas_horario_url, 'method':'POST'},
     }
 
     Citas.standard = new StandardCrud(urls);

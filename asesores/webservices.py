@@ -15,6 +15,7 @@ def get_actions():
         {"name": "picker_search_asesor", "label": "Webservice picker de asesores"},
         {"name": "list_asesor", "label": "Webservice del listado de asesores"},
         {"name": "toggle_asesor", "label": "Webservice para cambiar estado del asesor"},
+        {"name": "picker_search_asesor_by_sede", "label": "Webservice picker de asesores por sede"},
     ]
     return actions
 
@@ -53,6 +54,12 @@ def picker_search_asesor(request):
     "Returns a JSON response with asesor data for a selectpicker."
     crud_object = Crud(AsesorSerializer, Asesor, data_filters.asesor_picker_filter)
     return crud_object.picker_search(request, 'picker_search_asesor')
+
+@api_view(['POST'])
+def picker_search_asesor_by_sede(request):
+    "Returns a JSON response with asesor data for a selectpicker."
+    crud_object = Crud(AsesorSerializer, Asesor, data_filters.asesor_picker_filter_by_sede)
+    return crud_object.picker_search(request, 'picker_search_asesor_by_sede')
 
 @api_view(['POST'])
 def list_asesor(request):

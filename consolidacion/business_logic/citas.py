@@ -21,7 +21,6 @@ from asesores.models import Asesor
 # tall_cita.errors
 def create_cita(request):
     data = {}
-    tall_cita = create_tall_cita(request.data)
     permission_obj = PermissionValidation(request)
     id_user = permission_obj.user.id
     try:
@@ -31,6 +30,8 @@ def create_cita(request):
         id_agent = ""
         data["message"] = "Debe ser un agente para poder agendar citas"
         return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+
+    tall_cita = create_tall_cita(request.data)
 
     if not tall_cita.is_valid():
         data['tall_cita_data'] = tall_cita.errors
@@ -109,7 +110,6 @@ def create_tall_cita(data):
 
     tercero = get_tercero(data['cedula'])
     sede = get_sede(data['sede'])
-    asesores = Asesor.objects.filter(sede=sede)
     bodega = sede.bodega_dms
     fecha_hora_creacion = datetime.now()
     estado_cita = 'P'
@@ -122,7 +122,7 @@ def create_tall_cita(data):
     nit = int(data['cedula'])
     nombre_cliente = tercero.nombres
     nit_nuevo = 0
-    nombre_encargado = asesores[0].name[0:20]
+    nombre_encargado = get_asesor(data['asesor'])
     telefonos = format_telefonos(tercero.telefono_1, tercero.telefono_2)
     motivo = Motivo.objects.get(id=data['motivo'])
     notas = data['observaciones']  + " Motivo: " + motivo.name
@@ -131,7 +131,7 @@ def create_tall_cita(data):
     pc = 'DMSSERVER'
     modulo = ''
     mail = tercero.mail
-    asesor = asesores[0].name[0:20]
+    asesor = get_asesor(data['asesor'])
     numerocomfrimaciones = 0
     numeroespacios = 0
     facturado = 'NA'
@@ -180,6 +180,9 @@ def get_tercero(cedula):
 def get_sede(sede):
     return Sede.objects.get(id=sede)
 
+def get_asesor(asesor):
+    return Asesor.objects.get(id=asesor)
+
 def get_veh(placa):
     try:
         ref = ReferenciasImp.objects.get(placa=placa)
@@ -196,6 +199,54 @@ def format_telefonos(tel1, tel2):
         return tel2
     else:
         return tel1 + "    " + tel2
+
+def citas_en_horario(sede, fecha, hora):
+    """Shows citas in the given sede, date and time"""
+    try: 
+        sede = Sede.objects.get(pk=sede)
+        bodega = sede.bodega_dms
+        fecha_hora = fecha + " " + hora
+        fecha = datetime.strptime(fecha_hora, '%Y-%m-%d %H:%M')
+        criteria = {
+            'estado_cita': 'P',
+            'fecha_hora_ini': fecha_hora,
+            'bodega': bodega
+        }
+
+        tall_citas = TallCitas.objects.filter(**criteria)
+
+        cita_ids = list(
+            tall_citas.values_list('id_cita', flat=True)
+        )
+
+        citas_call = list(
+            CallConsolidacion.objects.filter(cita_tall_id__in=cita_ids).values_list(
+                'cita_tall_id', flat=True))
+
+        citas_no_call = list(
+            CitaNoCall.objects.filter(cita_tall_id__in=cita_ids).values_list(
+                'cita_tall_id', flat=True))
+
+        datetime_ocupados = list(
+            tall_citas.filter(Q(id_cita__in=citas_call) | Q(id_cita__in=citas_no_call)).values_list(
+                'fecha_hora_ini', flat=True))
+
+        citas = TallCitasSerializer(datetime_ocupados, many=True)
+
+        data = {
+            'citas': citas.data
+        }
+        return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+    except Sede.DoesNotExist:
+        data = {
+            'message':"La sede solicitada no existe o fue borrada"
+        }
+        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+    except ValueError:
+        data = {
+            'message':"Proporcine una fecha y una sede adecuados para mostrar las citas en el horario"
+        }
+        return Response(data, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
 
 def verificar_horarios(sede, fecha):
     """Verifies avaible time for a date given a sede and a date"""
@@ -262,13 +313,12 @@ def create_mail_and_send(data):
     if mail == "":
         return 0
     sede = get_sede(data['sede'])
-    asesores = Asesor.objects.filter(sede=sede)
     fecha_hora_creacion = datetime.now()
     placa = data['placa']
     telefonos = format_telefonos(tercero.telefono_1, tercero.telefono_2)
     motivo = Motivo.objects.get(id=data['motivo'])
     #mail = "maurinin@yahoo.com"
-    asesor = asesores[0].name
+    asesor = get_asesor(data['asesor'])
 
     template = 'agent_console_mail/confirmacion.html'
     to = mail
