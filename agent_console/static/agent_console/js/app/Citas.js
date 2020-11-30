@@ -223,7 +223,7 @@ class Citas {
     static getAsesoresSede(){
         var sede = $('#sedeInput').val();
         FormFunctions.ajaxLoadPicker(
-            '#sedeInput', picker_search_asesor_by_sede_url, 
+            '#asesorInput', picker_search_asesor_by_sede_url, 
             FormFunctions.updatePicker, sede);
     }
 
