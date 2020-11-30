@@ -262,12 +262,13 @@ def create_mail_and_send(data):
     if mail == "":
         return 0
     sede = get_sede(data['sede'])
+    asesores = Asesor.objects.filter(sede=sede)
     fecha_hora_creacion = datetime.now()
     placa = data['placa']
     telefonos = format_telefonos(tercero.telefono_1, tercero.telefono_2)
     motivo = Motivo.objects.get(id=data['motivo'])
     #mail = "maurinin@yahoo.com"
-    asesor = sede.asesor.name
+    asesor = asesores[0].name
 
     template = 'agent_console_mail/confirmacion.html'
     to = mail
