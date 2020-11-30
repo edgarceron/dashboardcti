@@ -12,6 +12,7 @@ from dms.serializers import CrmCitasSerializer, TallCitasSerializer
 from consolidacion.models import CallConsolidacion, CallEntryCita, CitaNoCall
 from motivos.models import Motivo
 from sedes.models import Sede
+from asesores.models import Asesor
 
 # from consolidacion.business_logic import citas
 # data = {'cedula':'1005783261', 'placa':'IPZ286','sede':1, 'motivo':'1', 'fecha':'2020-08-02','hora':'10:00'}
@@ -105,8 +106,10 @@ def create_crm_cita(tall_cita):
     return crm_cita
 
 def create_tall_cita(data):
+
     tercero = get_tercero(data['cedula'])
     sede = get_sede(data['sede'])
+    asesores = Asesor.models.filter(sede=sede)
     bodega = sede.bodega_dms
     fecha_hora_creacion = datetime.now()
     estado_cita = 'P'
@@ -128,7 +131,7 @@ def create_tall_cita(data):
     pc = 'DMSSERVER'
     modulo = ''
     mail = tercero.mail
-    asesor = sede.asesor.name[0:20]
+    asesor = asesores[0].name[0:20]
     numerocomfrimaciones = 0
     numeroespacios = 0
     facturado = 'NA'
