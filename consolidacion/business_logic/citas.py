@@ -122,7 +122,7 @@ def create_tall_cita(data):
     nit = int(data['cedula'])
     nombre_cliente = tercero.nombres
     nit_nuevo = 0
-    nombre_encargado = sede.asesor.name[0:20]
+    nombre_encargado = asesores[0].name[0:20]
     telefonos = format_telefonos(tercero.telefono_1, tercero.telefono_2)
     motivo = Motivo.objects.get(id=data['motivo'])
     notas = data['observaciones']  + " Motivo: " + motivo.name
