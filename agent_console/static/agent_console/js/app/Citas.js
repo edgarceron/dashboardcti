@@ -240,7 +240,7 @@ class Citas {
             'success': function(result){
                 $('#divCitasHorario').html('');
                 var html;
-                for(cita of result.citas){
+                for(let cita of result.citas){
                     html = `
                     <div class="row">
                         <div class="col-md-3">${cita.nit}</div>
