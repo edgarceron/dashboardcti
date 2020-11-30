@@ -227,9 +227,8 @@ def citas_en_horario(sede, fecha, hora):
             CitaNoCall.objects.filter(cita_tall_id__in=cita_ids).values_list(
                 'cita_tall_id', flat=True))
 
-        datetime_ocupados = list(
-            tall_citas.filter(Q(id_cita__in=citas_call) | Q(id_cita__in=citas_no_call)).values_list(
-                'fecha_hora_ini', flat=True))
+        datetime_ocupados = 
+            tall_citas.filter(Q(id_cita__in=citas_call) | Q(id_cita__in=citas_no_call))
 
         citas = TallCitasSerializer(datetime_ocupados, many=True)
 
