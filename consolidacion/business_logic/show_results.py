@@ -126,7 +126,7 @@ def tall_cita_date_range(start_date, end_date):
         criteria['fecha_hora_ini__range'] = (start_date, end_date)
 
     elif start_date != "":
-        start_date = datetime.strptime(end_date, '%Y-%m-%d')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
         criteria['fecha_hora_ini__gte'] = start_date
 
     elif end_date != "":
@@ -178,7 +178,7 @@ def calls_date_range(agent, start_date, end_date):
         criteria['datetime_entry_queue__range'] = (start_date, end_date)
 
     elif start_date != "":
-        start_date = datetime.strptime(end_date, '%Y-%m-%d')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
         criteria['datetime_entry_queue__gte'] = start_date
 
     elif end_date != "":
@@ -203,7 +203,7 @@ def call_entry_date_range(agent, start_date, end_date):
         criteria['datetime_entry_queue__range'] = (start_date, end_date)
 
     elif start_date != "":
-        start_date = datetime.strptime(end_date, '%Y-%m-%d')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
         criteria['datetime_entry_queue__gte'] = start_date
 
     elif end_date != "":
@@ -312,6 +312,3 @@ def recover_asesor():
         asesor = Asesor.objects.filter(sede=sede.id)[0]
         x.asesor = asesor.name
         x.save()
-
-
-   
