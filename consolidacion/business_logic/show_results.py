@@ -226,7 +226,7 @@ def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
         ).values_list('cita_tall_id', flat=True)
         citas_call_entry = call_entry_date_range(
             agent, start_date, end_date
-        )
+        ).values_list('cita_tall_id', flat=True)
         citas_no_call = cita_no_call_date_range(
             agent, start_date, end_date
         ).values_list('cita_tall_id', flat=True)
