@@ -286,29 +286,31 @@ from sedes.models import Sede
 
 def recover_asesor():
     citas_call = calls_date_range(
-        "", "2020-11-20", ""
-    ).values_list('cita_tall_id', flat=True)
+        "", "", ""
+    )
     citas_call_entry = call_entry_date_range(
-        "", "2020-11-20", ""
+        "", "", ""
     )
     citas_no_call = cita_no_call_date_range(
-        "", "2020-11-20", ""
-    ).values_list('cita_tall_id', flat=True)
-    citas_buscar = list(citas_no_call) + list(citas_call) + list(citas_call_entry)
-    citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)
+        "", "", ""
+    )
 
-    mal_asesor = citas_taller.filter(asesor="ANGELICA SILVA").exclude(bodega=4)
+    for c in citas_call:
+        if c.observaciones is None or c.observaciones == "":
+            c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
+            c.save()
+    
+    for c in citas_call_entry:
+        if c.observaciones is None or c.observaciones == "":
+            c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
+            c.save()
 
-    for x in mal_asesor:
-        sede = Sede.objects.get(bodega_dms=x.bodega)
-        asesor = Asesor.objects.filter(sede=sede.id)[0]
-        x.asesor = asesor.name
-        x.save()
-
-    mal_asesor = citas_taller.filter(asesor="EYDER BALANTA").exclude(bodega=18)
-
-    for x in mal_asesor:
-        sede = Sede.objects.get(bodega_dms=x.bodega)
-        asesor = Asesor.objects.filter(sede=sede.id)[0]
-        x.asesor = asesor.name
-        x.save()
+    for c in citas_no_call:
+        if c.observaciones is None or c.observaciones == "":
+            c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
+            c.save()
+    
+    print("Realizado")
+    print(citas_call.count())
+    print(citas_call_entry.count())
+    print(citas_no_call.count())
