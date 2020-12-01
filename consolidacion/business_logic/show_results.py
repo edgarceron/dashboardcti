@@ -297,18 +297,27 @@ def recover_asesor():
 
     for c in citas_call:
         if c.observaciones is None or c.observaciones == "":
-            c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
-            c.save()
+            try:
+                c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
+                c.save()
+            except:
+                pass
     
     for c in citas_call_entry:
         if c.observaciones is None or c.observaciones == "":
-            c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
-            c.save()
+            try:
+                c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
+                c.save()
+            except:
+                pass
 
     for c in citas_no_call:
         if c.observaciones is None or c.observaciones == "":
-            c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
-            c.save()
+            try:
+                c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
+                c.save()
+            except:
+                pass
     
     print("Realizado")
     print(citas_call.count())
