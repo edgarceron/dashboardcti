@@ -86,35 +86,25 @@ def by_date_created(agent="", start_date="", end_date=""):
     """Gets citas tall info for csv by date created"""
     calls_consolidacion = calls_date_range(agent, start_date, end_date)
     call_entry_consolidacion = call_entry_date_range(agent, start_date, end_date)
+    citas_no_call = cita_no_call_date_range(agent, start_date, end_date)
+
     collected_data = [put_headers()]
     collected_data = get_tall_cita_row(calls_consolidacion, collected_data)
     collected_data = get_tall_cita_row(call_entry_consolidacion, collected_data)
-    citas_no_call = cita_no_call_date_range(agent, start_date, end_date)
     collected_data = get_tall_cita_row(citas_no_call, collected_data)
     return collected_data
 
 def by_date_cita(agent="", start_date="", end_date=""):
     """Gets citas tall info for csv by date"""
-    tall_cita_objects = tall_cita_date_range(start_date, end_date)
-    id_citas = list(tall_cita_objects.values_list('id_cita', flat=True))
-
-    calls_consolidacion = CallConsolidacion.objects.filter(cita_tall_id__in=id_citas)
-    id_calls = list(calls_consolidacion.values_list('call', flat=True))
-    criteria = {}
-    if agent != "":
-        criteria['id_agent'] = agent
-    criteria['id__in'] = id_calls
-    calls = Calls.objects.filter(**criteria)
-    id_calls = list(calls.values_list('id', flat=True))
-    calls_consolidacion = calls_consolidacion.filter(call__in=id_calls)
-    collected_data = get_tall_cita_row(calls_consolidacion, [put_headers()])
-
-    criteria = {}
-    if agent != "":
-        criteria['id_agent'] = agent
-    criteria['cita_tall_id__in'] = id_citas
-    citas_no_call = CitaNoCall.objects.filter(**criteria)
-    collected_data = get_tall_cita_row(citas_no_call, collected_data)
+    citas_buscar = filter_citas_tall(agent, start_date, end_date)
+    collected_data = [put_headers()]
+    for id_cita in citas_buscar:
+        try:
+            tall_cita = TallCitas.objects.get(id_cita)
+            row = put_data_cita(tall_cita)
+        except TallCitas.DoesNotExist:
+            row = put_data_deleted()
+        collected_data.append(row)
     return collected_data
 
 def tall_cita_date_range(start_date, end_date):
@@ -218,6 +208,47 @@ def call_entry_date_range(agent, start_date, end_date):
     call_entry_consolidacion = CallEntryCita.objects.filter(call_entry__in=calls)
     return call_entry_consolidacion
 
+def filter_citas_tall(agent, start_date, end_date):
+    tall_cita_objects = tall_cita_date_range(start_date, end_date)
+    citas_id = list(tall_cita_objects.values_list('id_cita', flat=True))
+    citas_call = CallConsolidacion.objects.filter(cita_tall_id__in=citas_id)
+    id_calls = list(citas_call.values_list('call', flat=True))
+    citas_call_entry = CallEntryCita.objects.filter(cita_tall_id__in=citas_id)
+    ids_call_entry = list(citas_call_entry.values_list('call_entry', flat=True))
+
+    criteria = {}
+    if agent != "":
+        criteria['id_agent'] = agent
+    criteria['id__in'] = id_calls
+
+    calls = Calls.objects.filter(**criteria)
+    id_calls = list(calls.values_list('id', flat=True))
+    citas_call_ids = list(citas_call.filter(
+        call__in=id_calls
+    ).values_list('cita_tall_id', flat=True))
+
+    criteria = {}
+    if agent != "":
+        criteria['id_agent'] = agent
+    criteria['id__in'] = ids_call_entry
+
+    call_entry = CallEntry.objects.filter(**criteria)
+    ids_call_entry = list(call_entry.values_list('id', flat=True))
+    citas_call_entry_ids = list(citas_call_entry.filter(
+        call_entry__in=ids_call_entry
+    ).values_list('cita_tall_id', flat=True))
+
+
+    citas_no_call_ids = list(
+        cita_no_call_date_range(
+            agent, "", ""
+        ).filter(
+            cita_tall_id__in=citas_id
+        ).values_list('cita_tall_id', flat=True)
+    )
+    citas_buscar = citas_no_call_ids + citas_call_ids + citas_call_entry_ids
+    return citas_buscar
+
 def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
     """Gets the citas tall for a datatable"""
     if date_type == 2:
@@ -231,46 +262,9 @@ def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
             agent, start_date, end_date
         ).values_list('cita_tall_id', flat=True)
         citas_buscar = list(citas_no_call) + list(citas_call) + list(citas_call_entry)
-    
+
     else:
-        tall_cita_objects = tall_cita_date_range(start_date, end_date)
-        citas_id = list(tall_cita_objects.values_list('id_cita', flat=True))
-        citas_call = CallConsolidacion.objects.filter(cita_tall_id__in=citas_id)
-        id_calls = list(citas_call.values_list('call', flat=True))
-        citas_call_entry = CallEntryCita.objects.filter(cita_tall_id__in=citas_id)
-        ids_call_entry = list(citas_call_entry.values_list('call_entry', flat=True))
-
-        criteria = {}
-        if agent != "":
-            criteria['id_agent'] = agent
-        criteria['id__in'] = id_calls
-
-        calls = Calls.objects.filter(**criteria)
-        id_calls = list(calls.values_list('id', flat=True))
-        citas_call_ids = list(citas_call.filter(
-            call__in=id_calls
-        ).values_list('cita_tall_id', flat=True))
-
-        criteria = {}
-        if agent != "":
-            criteria['id_agent'] = agent
-        criteria['id__in'] = ids_call_entry
-
-        call_entry = CallEntry.objects.filter(**criteria)
-        ids_call_entry = list(call_entry.values_list('id', flat=True))
-        citas_call_entry_ids = list(citas_call_entry.filter(
-            call_entry__in=ids_call_entry
-        ).values_list('cita_tall_id', flat=True))
-
-
-        citas_no_call_ids = list(
-            cita_no_call_date_range(
-                agent, "", ""
-            ).filter(
-                cita_tall_id__in=citas_id
-            ).values_list('cita_tall_id', flat=True)
-        )
-        citas_buscar = citas_no_call_ids + citas_call_ids + citas_call_entry_ids
+        citas_buscar = filter_citas_tall(agent, start_date, end_date)
 
     citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)
     filtered = citas_taller[start:start + length]
