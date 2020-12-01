@@ -66,7 +66,7 @@ def update_call_consolidacion(request, tall_cita, crm_cita, id_agent=""):
             id_call_entry = CallEntry.objects.get(uniqueid=uniqueid_call_entry).id
         except CallEntry.DoesNotExist:
             id_call_entry = 0
-      
+
         if id_call_entry != 0:
             call_entry_cita = CallEntryCita(
                 cita_tall_id=tall_cita,

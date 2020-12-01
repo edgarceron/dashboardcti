@@ -247,7 +247,7 @@ def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
 
         calls = Calls.objects.filter(**criteria)
         id_calls = list(calls.values_list('id', flat=True))
-        citas_call = list(citas_call.filter(
+        citas_call_ids = list(citas_call.filter(
             call__in=id_calls
         ).values_list('cita_tall_id', flat=True))
 
@@ -258,19 +258,19 @@ def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
 
         call_entry = CallEntry.objects.filter(**criteria)
         ids_call_entry = list(call_entry.values_list('id', flat=True))
-        citas_call_entry = list(citas_call_entry.filter(
+        citas_call_entry_ids = list(citas_call_entry.filter(
             call_entry__in=ids_call_entry
         ).values_list('cita_tall_id', flat=True))
 
 
-        citas_no_call = list(
+        citas_no_call_ids = list(
             cita_no_call_date_range(
                 agent, "", ""
             ).filter(
                 cita_tall_id__in=citas_id
             ).values_list('cita_tall_id', flat=True)
         )
-        citas_buscar = citas_no_call + citas_call + citas_call_entry
+        citas_buscar = citas_no_call_ids + citas_call_ids + citas_call_entry_ids
 
     citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)
     filtered = citas_taller[start:start + length]
