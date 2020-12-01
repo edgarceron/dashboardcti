@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from core.mailing import mailing
 from users.permission_validation import PermissionValidation
-from agent_console.models import UserAgent
+from agent_console.models import UserAgent, CallEntry
 from dms.models import Terceros, ReferenciasImp, TallCitas, TallCitasOperaciones, TallCitasAuditoria
 from dms.serializers import CrmCitasSerializer, TallCitasSerializer
 from consolidacion.models import CallConsolidacion, CallEntryCita, CitaNoCall
@@ -61,8 +61,13 @@ def update_call_consolidacion(request, tall_cita, crm_cita, id_agent=""):
         call_consolidacion.observaciones = observaciones
         call_consolidacion.save()
     except CallConsolidacion.DoesNotExist:
-        id_call_entry = request.data['id_call_entry']
-        if id_call_entry != "0":
+        uniqueid_call_entry = request.data['id_call_entry']
+        try:
+            id_call_entry = CallEntry.objects.get(uniqueid=uniqueid_call_entry).id
+        except CallEntry.DoesNotExist:
+            id_call_entry = 0
+      
+        if id_call_entry != 0:
             call_entry_cita = CallEntryCita(
                 cita_tall_id=tall_cita,
                 cita_crm_id=crm_cita,

@@ -40,7 +40,10 @@ class AgentConsole{
                         if(result.call) {
                             previous_call = result.llamada_id;
                             AgentConsole.llamada_id = result.llamada_id;
-                        };
+                        }
+                        else {
+                            AgentConsole.llamada_id = 0;
+                        }
                     }
                     if(result.update) AgentConsole.stateChanged = true;
                 },

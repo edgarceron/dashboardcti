@@ -318,7 +318,7 @@ def recover_asesor():
                 c.save()
             except:
                 pass
-    
+
     print("Realizado")
     print(citas_call.count())
     print(citas_call_entry.count())
