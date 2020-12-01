@@ -42,7 +42,8 @@ def put_data_cita(tall_cita):
     row['fecha_hora_ini'] = tall_cita.fecha_hora_ini
     row['telefonos'] = tall_cita.telefonos
     row['mail'] = tall_cita.mail
-    row['observaciones'] = get_observaciones(tall_cita.id_cita)
+    row['estado'] = tall_cita.estado_cita
+    row['observaciones'] = get_observaciones(tall_cita.id_cita).replace('\n'," ")
     return row
 
 def put_data_deleted():
@@ -55,6 +56,7 @@ def put_data_deleted():
     row['fecha_hora_ini'] = "Datos borrados del dms"
     row['telefonos'] = "Datos borrados del dms"
     row['mail'] = "Datos borrados del dms"
+    row['estado'] = "Datos borrados del dms"
     row['observaciones'] = "Datos borrados del dms"
     return row
 
@@ -68,6 +70,7 @@ def put_headers():
     row['fecha_hora_ini'] = "Fecha hora"
     row['telefonos'] = "Teléfonos"
     row['mail'] = "Correo"
+    row['estado'] = "Estado"
     row['observaciones'] = "Observaciones"
     return row
 
