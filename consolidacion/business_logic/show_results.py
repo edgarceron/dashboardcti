@@ -103,7 +103,7 @@ def by_date_cita(agent="", start_date="", end_date=""):
     collected_data = [put_headers()]
     for id_cita in citas_buscar:
         try:
-            tall_cita = TallCitas.objects.get(id_cita)
+            tall_cita = TallCitas.objects.get(id_cita=id_cita)
             row = put_data_cita(tall_cita)
         except TallCitas.DoesNotExist:
             row = put_data_deleted()
