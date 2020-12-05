@@ -292,6 +292,8 @@ def get_bodega(sede):
         return sede.bodega_dms
     except Sede.DoesNotExist:
         return ""
+    except ValueError:
+        return ""
 
 def get_count_tall_citas():
     """Gets count call of tall citas"""
