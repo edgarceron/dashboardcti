@@ -288,7 +288,7 @@ def get_citas_manticore(agent, start_date, end_date, date_type, sede, estado, st
 def get_bodega(sede):
     """Gets the bodega_dms fot the given sede"""
     try:
-        sede = Sede.objects.get(id=sede)
+        sede = Sede.objects.get(id=int(sede))
         return sede.bodega_dms
     except Sede.DoesNotExist:
         return ""
