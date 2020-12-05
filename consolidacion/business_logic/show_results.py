@@ -279,7 +279,7 @@ def get_citas_manticore(agent, start_date, end_date, date_type, sede, estado, st
     if estado != "":
         criteria['estado'] = estado
 
-    citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)
+    citas_taller = TallCitas.objects.filter(**criteria)
     filtered = citas_taller[start:start + length]
     result = TallCitasSerializerSimple(filtered, many=True)
     data = result.data
