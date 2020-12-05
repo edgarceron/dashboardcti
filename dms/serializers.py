@@ -1,7 +1,19 @@
 """Contains the serializers for the dms module"""
 from rest_framework import serializers
 from .models import CrmCitas, TallCitas, Terceros
-from consolidacion.business_logic import show_results
+
+def get_observaciones(id_cita):
+    try:
+        observaciones = CallConsolidacion.objects.get(cita_tall_id=id_cita).observaciones
+    except CallConsolidacion.DoesNotExist:
+        try:
+            observaciones = CallEntryCita.objects.get(cita_tall_id=id_cita).observaciones
+        except CallEntryCita.DoesNotExist:
+            try:
+                observaciones = CitaNoCall.objects.get(cita_tall_id=id_cita).observaciones
+            except CitaNoCall.DoesNotExist:
+                observaciones = ""
+    return observaciones
 
 class CrmCitasSerializer(serializers.ModelSerializer):
     """Serializer for CrmCitas model"""
@@ -79,7 +91,7 @@ class TallCitasSerializerSimple(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super(TallCitasSerializerSimple, self).to_representation(instance)
         representation['fecha_hora_ini'] = instance.fecha_hora_ini.strftime("%Y-%m-%d %I:%M:%S %p")
-        representation['notas'] = show_results.get_observaciones(representation['id_cita'])
+        representation['notas'] = get_observaciones(representation['id_cita'])
         return representation
 
 class TercerosSerializer(serializers.ModelSerializer):
