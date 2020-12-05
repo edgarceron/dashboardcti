@@ -85,31 +85,6 @@ def get_tall_cita_row(data, collected_data):
         collected_data.append(row)
     return collected_data
 
-def by_date_created(agent="", start_date="", end_date=""):
-    """Gets citas tall info for csv by date created"""
-    calls_consolidacion = calls_date_range(agent, start_date, end_date)
-    call_entry_consolidacion = call_entry_date_range(agent, start_date, end_date)
-    citas_no_call = cita_no_call_date_range(agent, start_date, end_date)
-
-    collected_data = [put_headers()]
-    collected_data = get_tall_cita_row(calls_consolidacion, collected_data)
-    collected_data = get_tall_cita_row(call_entry_consolidacion, collected_data)
-    collected_data = get_tall_cita_row(citas_no_call, collected_data)
-    return collected_data
-
-def by_date_cita(agent="", start_date="", end_date=""):
-    """Gets citas tall info for csv by date"""
-    citas_buscar = filter_citas_tall(agent, start_date, end_date)
-    collected_data = [put_headers()]
-    for id_cita in citas_buscar:
-        try:
-            tall_cita = TallCitas.objects.get(id_cita=id_cita)
-            row = put_data_cita(tall_cita)
-        except TallCitas.DoesNotExist:
-            row = put_data_deleted()
-        collected_data.append(row)
-    return collected_data
-
 def tall_cita_date_range(start_date, end_date):
     """Gets the CitaNoCalls in the specified date range"""
     criteria = {}
@@ -129,14 +104,12 @@ def tall_cita_date_range(start_date, end_date):
     tall_cita_objects = TallCitas.objects.filter(**criteria)
     return tall_cita_objects
 
-def collect_data(agent="", start_date="", end_date="", date_type=1):
+def collect_data(agent="", start_date="", end_date="", date_type=1, sede="", estado=""):
     """Collects data from citas taller"""
     start_date = "" if start_date == "empty" else start_date
     end_date = "" if end_date == "empty" else end_date
-    if date_type == 2:
-        collected_data = by_date_created(agent, start_date, end_date)
-    else:
-        collected_data = by_date_cita(agent, start_date, end_date)
+    collected_data = get_citas_manticore(
+        agent, start_date, end_date, date_type, sede, estado, "", "")
     return collected_data
 
 def cita_no_call_date_range(agent, start_date, end_date):
@@ -280,7 +253,10 @@ def get_citas_manticore(agent, start_date, end_date, date_type, sede, estado, st
         criteria['estado_cita'] = estado
 
     citas_taller = TallCitas.objects.filter(**criteria)
-    filtered = citas_taller[start:start + length]
+    if start != "":
+        filtered = citas_taller[start:start + length]
+    else:
+        filtered = citas_taller
     result = TallCitasSerializerSimple(filtered, many=True)
     data = result.data
     return data, citas_taller.count()

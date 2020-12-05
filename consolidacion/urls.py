@@ -7,7 +7,7 @@ urlpatterns = [
     path('create', views.form_consolidacion, name='create_consolidacion'),
     path('listing', views.listing_consolidacion, name='listing_consolidacion'),
     path(
-        'download_consolidaciones/<int:agent>/<str:start_date>/<str:end_date>/<int:date_type>',
+        'download_consolidaciones/<int:agent>/<str:start_date>/<str:end_date>/<int:date_type>/<int:sede>/<str:estado>',
         views.download_consolidaciones,
         name='download_consolidaciones'
     ),
