@@ -1,5 +1,6 @@
 """Contains the serializers for the dms module"""
 from rest_framework import serializers
+from consolidacion.models import CallConsolidacion, CallEntryCita, CitaNoCall
 from .models import CrmCitas, TallCitas, Terceros
 
 def get_observaciones(id_cita):
