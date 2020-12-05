@@ -277,7 +277,7 @@ def get_citas_manticore(agent, start_date, end_date, date_type, sede, estado, st
         criteria['bodega'] = bodega
 
     if estado != "":
-        criteria['estado'] = estado
+        criteria['estado_cita'] = estado
 
     citas_taller = TallCitas.objects.filter(**criteria)
     filtered = citas_taller[start:start + length]
