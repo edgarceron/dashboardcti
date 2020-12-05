@@ -119,6 +119,8 @@ function tallCitaDatatable(columns){
                 d.start_date = $('#fechaInicioInput').val();
                 d.end_date = $('#fechaFinInput').val();
                 d.date_type = $('#selectTypeDate').val();
+                d.sede = $('#sedeInput').val();
+                d.estado = $('#estadoInput').val();
             }
         },
 
@@ -171,6 +173,14 @@ $( document ).ready(function() {
 
     FormFunctions.ajaxLoadPicker(
         '#agentInput', pircker_search_agent_url, FormFunctions.updatePicker, "", "Todos los agentes"
+    );
+
+    FormFunctions.setAjaxLoadPicker(
+        '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "Todas las sedes"
+    );
+
+    FormFunctions.ajaxLoadPicker(
+        '#sedeInput', picker_search_sede_url, FormFunctions.updatePicker, "", "Todas las sedes"
     );
 
     $('#downloadButton').click(function(){

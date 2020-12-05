@@ -45,6 +45,31 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <label for='sedeInput'>Sede</label>
+                        <select class='form-control appform' id='sedeInput'>
+                            <option value="">Todas las sedes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <label for='estadoInput'>Estado</label>
+                        <select class='form-control appform' id='estadoInput'>
+                            <option value="">Todas</option>
+                            <option value="P">Programada</option>
+                            <option value="C">Cancelada</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <br>
             <div class='row'>
                 <div class="col">
@@ -120,6 +145,7 @@
         var data_chart_campaign_url = "{% url 'data_chart_campaign' %}";
         var get_agent_url = "{% url 'get_agent' user_id=0 %}";
         var pircker_search_agent_url = "{% url 'picker_search_agent' %}";
+        var picker_search_sede_url = "{% url 'picker_search_sede' %}";
         var download_consolidaciones_url = "{% url 'download_consolidaciones' agent='0' start_date='abc' end_date='def' date_type='123' %}"
         var download_fails_url = "{% url 'download_fails' start_date='abc' end_date='def' %}"
         var fail_prepare_url = "{% url 'fail_prepare' %}"

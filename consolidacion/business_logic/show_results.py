@@ -252,7 +252,7 @@ def filter_citas_tall(agent, start_date, end_date):
     citas_buscar = citas_no_call_ids + citas_call_ids + citas_call_entry_ids
     return citas_buscar
 
-def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
+def get_citas_manticore(agent, start_date, end_date, date_type, sede, estado, start, length):
     """Gets the citas tall for a datatable"""
     if date_type == 2:
         citas_call = calls_date_range(
@@ -269,54 +269,30 @@ def get_citas_manticore(agent, start_date, end_date, date_type, start, length):
     else:
         citas_buscar = filter_citas_tall(agent, start_date, end_date)
 
+    criteria = {}
+    criteria["id_cita__in"] = citas_buscar
+
+    bodega = get_bodega(sede)
+    if bodega != "":
+        criteria['bodega'] = bodega
+
+    if estado != "":
+        criteria['estado'] = estado
+
     citas_taller = TallCitas.objects.filter(id_cita__in=citas_buscar)
     filtered = citas_taller[start:start + length]
     result = TallCitasSerializerSimple(filtered, many=True)
     data = result.data
     return data, citas_taller.count()
 
+def get_bodega(sede):
+    """Gets the bodega_dms fot the given sede"""
+    try:
+        sede = Sede.objects.get(id=sede)
+        return sede.bodega_dms
+    except Sede.DoesNotExist:
+        return ""
+
 def get_count_tall_citas():
+    """Gets count call of tall citas"""
     return TallCitas.objects.count()
-
-from asesores.models import Asesor
-from sedes.models import Sede
-
-def recover_asesor():
-    citas_call = calls_date_range(
-        "", "", ""
-    )
-    citas_call_entry = call_entry_date_range(
-        "", "", ""
-    )
-    citas_no_call = cita_no_call_date_range(
-        "", "", ""
-    )
-
-    for c in citas_call:
-        if c.observaciones is None or c.observaciones == "":
-            try:
-                c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
-                c.save()
-            except:
-                pass
-    
-    for c in citas_call_entry:
-        if c.observaciones is None or c.observaciones == "":
-            try:
-                c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
-                c.save()
-            except:
-                pass
-
-    for c in citas_no_call:
-        if c.observaciones is None or c.observaciones == "":
-            try:
-                c.observaciones = TallCitas.objects.get(id_cita=c.cita_tall_id).notas
-                c.save()
-            except:
-                pass
-
-    print("Realizado")
-    print(citas_call.count())
-    print(citas_call_entry.count())
-    print(citas_no_call.count())

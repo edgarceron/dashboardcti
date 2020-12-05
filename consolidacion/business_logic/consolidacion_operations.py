@@ -270,11 +270,13 @@ def listing_citas_taller(request):
         agent = sent_data['agent']
         start_date = sent_data['start_date']
         end_date = sent_data['end_date']
+        estado = sent_data['estado']
+        sede = sent_data['sede']
         date_type = int(sent_data['date_type'])
 
         records_total = show_results.get_count_tall_citas()
         data, records_filtered = show_results.get_citas_manticore(
-            agent, start_date, end_date, date_type, start, length)
+            agent, start_date, end_date, date_type, sede, estado, start, length)
 
         result = {
             'draw': draw,
