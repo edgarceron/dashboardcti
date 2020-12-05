@@ -13,8 +13,11 @@ def data_to_csv(collected_data):
     writer = csv.writer(
         csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator = '\n')
     for row in collected_data:
-        writer.writerow(list(row))
+        writer.writerow(to_dict(row))
     return settings.STATIC_ROOT + 'result.csv'
+
+def to_dict(row):
+    return dict(list(row.items()))
 
 def get_observaciones(id_cita):
     try:
