@@ -113,7 +113,7 @@ def collect_data(agent="", start_date="", end_date="", date_type=1, sede="", est
     end_date = "" if end_date == "empty" else end_date
     estado = "" if estado == "empty" else estado
     sede = "" if sede == 0 else sede
-    collected_data = get_citas_manticore(
+    collected_data, count = get_citas_manticore(
         agent, start_date, end_date, date_type, sede, estado, "", "")
     return collected_data
 
