@@ -219,6 +219,7 @@ $( document ).ready(function() {
         { "data": "telefonos"},
         { "data": "mail"},
         { "data": "estado_cita"},
+        { "data": "notas"},
     ];
 
     tallCitaDatatable(columns);
