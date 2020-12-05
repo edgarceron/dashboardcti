@@ -188,14 +188,20 @@ $( document ).ready(function() {
         var end_date = $('#fechaFinInput').val();  
         var agent = $('#agentInput').val();
         var date_type = $('#selectTypeDate').val();
+        var sede = $('#sedeInput').val();
+        var estado = $('#estadoInput').val();
         var url = download_consolidaciones_url;
         var today = new Date();
         if(start_date == "") start_date = "empty";
         if(end_date == "") end_date = "empty";
         if(agent == "") agent = "0";
+        if(sede == "") sede = "0";
+        if(estado == "") sede = "empty";
         url = url.replace("abc", start_date);
         url = url.replace("def", end_date);
         url = url.replace("123", date_type);
+        url = url.replace("456", sede);
+        url = url.replace("ghi", estado);
         window.location.href = url;
     });
 
