@@ -17,7 +17,7 @@ def data_to_csv(collected_data):
     return settings.STATIC_ROOT + 'result.csv'
 
 def to_dict(row):
-    return dict(list(row.items()))
+    return dict(list(row.items())).values()
 
 def get_observaciones(id_cita):
     try:
