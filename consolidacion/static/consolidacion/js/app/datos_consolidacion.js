@@ -200,9 +200,13 @@ $( document ).ready(function() {
         console.log(sede);
         console.log(url);
         url = url.replace("0", agent);
+        console.log(url);
         url = url.replace("abc", start_date);
+        console.log(url);
         url = url.replace("def", end_date);
+        console.log(url);
         url = url.replace("123", date_type);
+        console.log(url);
         url = url.replace("456", sede);
         console.log(url);
         url = url.replace("ghi", estado);
