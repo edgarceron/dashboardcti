@@ -196,7 +196,7 @@ $( document ).ready(function() {
         if(end_date == "") end_date = "empty";
         if(agent == "") agent = "0";
         if(sede == "") sede = "0";
-        if(estado == "") sede = "empty";
+        if(estado == "") estado = "empty";
         console.log(sede);
         console.log(url);
         url = url.replace("0", agent);
