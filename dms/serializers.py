@@ -14,7 +14,7 @@ def get_observaciones(id_cita):
                 observaciones = CitaNoCall.objects.get(cita_tall_id=id_cita).observaciones
             except CitaNoCall.DoesNotExist:
                 observaciones = ""
-    observaciones.replace('\n', " ").replace('\r', " ")
+    observaciones.replace('\r\n', " ").replace('\n', " ")
     return observaciones
 
 class CrmCitasSerializer(serializers.ModelSerializer):
