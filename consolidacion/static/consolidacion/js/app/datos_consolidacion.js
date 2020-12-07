@@ -197,14 +197,15 @@ $( document ).ready(function() {
         if(agent == "") agent = "0";
         if(sede == "") sede = "0";
         if(estado == "") sede = "empty";
+        console.log(sede);
         console.log(url);
         url = url.replace("0", agent);
         url = url.replace("abc", start_date);
         url = url.replace("def", end_date);
         url = url.replace("123", date_type);
         url = url.replace("456", sede);
-        url = url.replace("ghi", estado);
         console.log(url);
+        url = url.replace("ghi", estado);
         window.location.href = url;
     });
 
