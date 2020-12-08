@@ -12,6 +12,7 @@ def data_to_csv(collected_data):
     csvfile = open(settings.STATIC_ROOT + 'result.csv', 'w')
     writer = csv.writer(
         csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator = '\n')
+    writer.writerow(put_headers())
     for row in collected_data:
         writer.writerow(to_dict(row))
     return settings.STATIC_ROOT + 'result.csv'
