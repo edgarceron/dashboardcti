@@ -66,16 +66,18 @@ def put_data_deleted():
 
 def put_headers():
     row = {}
-    row['cedula'] = "Cedula"
+    row['id_cita'] = "ID Cita"
+    row['bodega'] = "Sede"
+    row['fecha_hora_ini'] = "Fecha y hora"
     row['placa'] = "Placa"
-    row['sede'] = "Sede"
+    row['nit'] = "Nit"
     row['nombre_cliente'] = "Nombre cliente"
-    row['nombre_encargado'] = "Nombre asesor"
-    row['fecha_hora_ini'] = "Fecha hora"
-    row['telefonos'] = "Teléfonos"
+    row['nombre_encargado'] = "Nombre encargado"
+    row['telefonos'] = "Telefonos"
+    row['notas'] = "Observaciones"
     row['mail'] = "Correo"
-    row['estado'] = "Estado"
-    row['observaciones'] = "Observaciones"
+    row['asesor'] = "Asesor"
+    row['estado_cita'] = "Estado cita"
     return row
 
 def get_tall_cita_row(data, collected_data):
