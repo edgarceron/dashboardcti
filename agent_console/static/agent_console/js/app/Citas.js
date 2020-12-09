@@ -16,6 +16,7 @@ class Citas {
                     $('#horaInput').append($('<option>').val(element).text(element));
                 });
                 $('#horaInput').prop('disabled', false);
+                getCitasHorario();
             },
             'error': function(request, status, error){
                 var result = request.responseJSON
