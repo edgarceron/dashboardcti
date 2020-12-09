@@ -234,9 +234,9 @@ def citas_en_horario(sede, fecha, hora):
         citas_no_call = list(
             CitaNoCall.objects.filter(cita_tall_id__in=cita_ids).values_list(
                 'cita_tall_id', flat=True))
-
+  
         citas_call_entry = list(
-            CallEntryCita.objects.filter(cita_tall_id=cita_ids).values_list(
+            CallEntryCita.objects.filter(cita_tall_id__in=cita_ids).values_list(
                 'cita_tall_id', flat=True))
 
         datetime_ocupados = tall_citas.filter(
