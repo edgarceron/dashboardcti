@@ -137,7 +137,7 @@ def sql_call_entry():
     poll_call = list( 
         AnswersHeader.objects.filter(campaign__type_campaign=2).values_list('call_id',flat=True)
     )
-    calls = CallEntry.objects.filter(Q(id__in=cita_calls) | Q(id_in=poll_call))
+    calls = CallEntry.objects.filter(Q(id__in=cita_calls) | Q(id__in=poll_call))
     sql = """INSERT INTO call_entry (id, id_agent, id_queue_call_entry, id_contact, 
         callerid, datetime_init, datetime_end, duration, status, transfer, 
         datetime_entry_queue, duration_wait, uniqueid, id_campaign, trunk)"""
