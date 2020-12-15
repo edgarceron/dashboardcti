@@ -38,6 +38,7 @@ def sql_agents():
         sql += "'" + str(agent.eccp_password) + "', "
         sql += "),"
     sql = sql[:-1]
+    sql.replace('None', 'NULL')
     return sql
 
 def sql_campaign():
@@ -66,6 +67,7 @@ def sql_campaign():
         sql += str(camp.id_url) + ", "
         sql += "),"
     sql = sql[:-1]
+    sql.replace('None', 'NULL')
     return sql
 
 def sql_calls():
@@ -81,7 +83,7 @@ def sql_calls():
     for call in filtered:
         sql += "\n ("
         sql += str(call.id) + ", "
-        sql += "'" + str(call.id_campaign) + "', "
+        sql += "'" + str(call.id_campaign.id) + "', "
         sql += "'" + str(call.phone) + "', "
         sql += "'" + str(call.status) + "', "
         sql += "'" + str(call.uniqueid) + "', "
@@ -90,7 +92,7 @@ def sql_calls():
         sql += "'" + str(call.end_time) + "', "
         sql += str(call.retries) + ", "
         sql += str(call.duration) + ", "
-        sql += str(call.id_agent) + ", "
+        sql += str(call.id_agent.id) + ", "
         sql += "'" + str(call.transfer) + "', "
         sql += "'" + str(call.datetime_entry_queue) + "', "
         sql += str(call.duration_wait) + ", "
@@ -107,6 +109,7 @@ def sql_calls():
         sql += str(call.scheduled) + ", "
         sql += "),"
     sql = sql[:-1]
+    sql.replace('None', 'NULL')
     return sql
 
 def sql_campaign_entry():
@@ -119,7 +122,7 @@ def sql_campaign_entry():
         sql += "\n ("
         sql += str(camp.id) + ", "
         sql += "'" + str(camp.name) + "', "
-        sql += str(camp.id_queue_call_entry) + ", "
+        sql += str(camp.id_queue_call_entry.id) + ", "
         sql += str(camp.id_form) + ", "
         sql += "'" + str(camp.datetime_init) + "', "
         sql += "'" + str(camp.datetime_end) + "', "
@@ -130,6 +133,7 @@ def sql_campaign_entry():
         sql += str(camp.id_url) + ", "
         sql += "),"
     sql = sql[:-1]
+    sql.replace('None', 'NULL')
     return sql
 
 def sql_call_entry():
@@ -145,8 +149,8 @@ def sql_call_entry():
     for entry in calls:
         sql += "\n ("
         sql += str(entry.id) + ", "
-        sql += str(entry.id_agent) + ", "
-        sql += str(entry.id_queue_call_entry) + ", "
+        sql += str(entry.id_agent.id) + ", "
+        sql += str(entry.id_queue_call_entry.id) + ", "
         sql += str(entry.id_contact) + ", "
         sql += "'" + str(entry.callerid) + "', "
         sql += "'" + str(entry.datetime_init) + "', "
@@ -157,10 +161,11 @@ def sql_call_entry():
         sql += "'" + str(entry.datetime_entry_queue) + "', "
         sql += str(entry.duration_wait) + ", "
         sql += "'" + str(entry.uniqueid) + "', "
-        sql += str(entry.id_campaign) + ", "
+        sql += str(entry.id_campaign.id) + ", "
         sql += "'" + str(entry.trunk) + "', "
         sql += "),"
     sql = sql[:-1]
+    sql.replace('None', 'NULL')
     return sql
 
 def sql_queue_call_entry():
@@ -179,4 +184,5 @@ def sql_queue_call_entry():
         sql += "'" + str(queue.script) + "', "
         sql += "),"
     sql = sql[:-1]
+    sql.replace('None', 'NULL')
     return sql
