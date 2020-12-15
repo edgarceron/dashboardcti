@@ -38,7 +38,7 @@ def sql_agents():
         sql += "'" + str(agent.eccp_password) + "', "
         sql += "),"
     sql = sql[:-1]
-    sql.replace('None', 'NULL')
+    sql = sql.replace('None', 'NULL')
     return sql
 
 def sql_campaign():
@@ -67,7 +67,7 @@ def sql_campaign():
         sql += str(camp.id_url) + ", "
         sql += "),"
     sql = sql[:-1]
-    sql.replace('None', 'NULL')
+    sql = sql.replace('None', 'NULL')
     return sql
 
 def sql_calls():
@@ -112,7 +112,7 @@ def sql_calls():
         sql += str(call.scheduled) + ", "
         sql += "),"
     sql = sql[:-1]
-    sql.replace('None', 'NULL')
+    sql = sql.replace('None', 'NULL')
     return sql
 
 def sql_campaign_entry():
@@ -136,7 +136,7 @@ def sql_campaign_entry():
         sql += str(camp.id_url) + ", "
         sql += "),"
     sql = sql[:-1]
-    sql.replace('None', 'NULL')
+    sql = sql.replace('None', 'NULL')
     return sql
 
 def sql_call_entry():
@@ -168,7 +168,7 @@ def sql_call_entry():
         sql += "'" + str(entry.trunk) + "', "
         sql += "),"
     sql = sql[:-1]
-    sql.replace('None', 'NULL')
+    sql = sql.replace('None', 'NULL')
     return sql
 
 def sql_queue_call_entry():
@@ -187,5 +187,5 @@ def sql_queue_call_entry():
         sql += "'" + str(queue.script) + "', "
         sql += "),"
     sql = sql[:-1]
-    sql.replace('None', 'NULL')
+    sql = sql.replace('None', 'NULL')
     return sql
