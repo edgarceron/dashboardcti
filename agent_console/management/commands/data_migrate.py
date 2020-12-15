@@ -92,7 +92,10 @@ def sql_calls():
         sql += "'" + str(call.end_time) + "', "
         sql += str(call.retries) + ", "
         sql += str(call.duration) + ", "
-        sql += str(call.id_agent.id) + ", "
+        if(call.id_agent != None):
+            sql += str(call.id_agent.id) + ", "
+        else:
+            sql += "NULL, "
         sql += "'" + str(call.transfer) + "', "
         sql += "'" + str(call.datetime_entry_queue) + "', "
         sql += str(call.duration_wait) + ", "
