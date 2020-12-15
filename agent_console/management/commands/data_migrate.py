@@ -39,6 +39,7 @@ def sql_agents():
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
+    sql = sql.replace('\'NULL\'', 'NULL')
     return sql
 
 def sql_campaign():
@@ -62,12 +63,13 @@ def sql_campaign():
         sql += str(camp.num_completadas) + ", "
         sql += str(camp.promedio) + ", "
         sql += str(camp.desviacion) + ", "
-        sql += "'" + str(camp.script) + "', "
+        sql += "'<p></p>', "
         sql += "'" + str(camp.estatus) + "', "
         sql += str(camp.id_url) + ", "
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
+    sql = sql.replace('\'NULL\'', 'NULL')
     return sql
 
 def sql_calls():
@@ -113,6 +115,7 @@ def sql_calls():
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
+    sql = sql.replace('\'NULL\'', 'NULL')
     return sql
 
 def sql_campaign_entry():
@@ -132,11 +135,12 @@ def sql_campaign_entry():
         sql += "'" + str(camp.daytime_init) + "', "
         sql += "'" + str(camp.daytime_end) + "', "
         sql += "'" + str(camp.estatus) + "', "
-        sql += "'" + str(camp.script) + "', "
+        sql += "'<p></p>', "
         sql += str(camp.id_url) + ", "
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
+    sql = sql.replace('\'NULL\'', 'NULL')
     return sql
 
 def sql_call_entry():
@@ -160,7 +164,10 @@ def sql_call_entry():
         sql += "'" + str(entry.datetime_end) + "', "
         sql += str(entry.duration) + ", "
         sql += "'" + str(entry.status) + "', "
-        sql += "'" + str(entry.transfer) + "', "
+        if entry.transfer is None:
+            sql += "NULL, "
+        else:
+            sql += "'" + str(entry.transfer) + "', "
         sql += "'" + str(entry.datetime_entry_queue) + "', "
         sql += str(entry.duration_wait) + ", "
         sql += "'" + str(entry.uniqueid) + "', "
@@ -169,6 +176,7 @@ def sql_call_entry():
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
+    sql = sql.replace('\'NULL\'', 'NULL')
     return sql
 
 def sql_queue_call_entry():
@@ -184,8 +192,9 @@ def sql_queue_call_entry():
         sql += "'" + str(queue.date_end) + "', "
         sql += "'" + str(queue.time_end) + "', "
         sql += "'" + str(queue.estatus) + "', "
-        sql += "'" + str(queue.script) + "', "
+        sql += "'<p></p>', "
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
+    sql = sql.replace('\'NULL\'', 'NULL')
     return sql
