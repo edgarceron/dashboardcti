@@ -35,7 +35,7 @@ def sql_agents():
         sql += "'" + str(agent.name) + "', "
         sql += "'" + str(agent.password) + "', "
         sql += "'" + str(agent.estatus) + "', "
-        sql += "'" + str(agent.eccp_password) + "', "
+        sql += "'" + str(agent.eccp_password) + "'"
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
@@ -65,7 +65,7 @@ def sql_campaign():
         sql += str(camp.desviacion) + ", "
         sql += "'<p></p>', "
         sql += "'" + str(camp.estatus) + "', "
-        sql += str(camp.id_url) + ", "
+        sql += str(camp.id_url)
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
@@ -111,7 +111,7 @@ def sql_calls():
         sql += "'" + str(call.failure_cause_txt) + "', "
         sql += "'" + str(call.datetime_originate) + "', "
         sql += "'" + str(call.trunk) + "', "
-        sql += str(call.scheduled) + ", "
+        sql += str(call.scheduled)
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
@@ -136,7 +136,7 @@ def sql_campaign_entry():
         sql += "'" + str(camp.daytime_end) + "', "
         sql += "'" + str(camp.estatus) + "', "
         sql += "'<p></p>', "
-        sql += str(camp.id_url) + ", "
+        sql += str(camp.id_url)
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
@@ -172,7 +172,7 @@ def sql_call_entry():
         sql += str(entry.duration_wait) + ", "
         sql += "'" + str(entry.uniqueid) + "', "
         sql += str(entry.id_campaign.id) + ", "
-        sql += "'" + str(entry.trunk) + "', "
+        sql += "'" + str(entry.trunk) + "'"
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
@@ -192,7 +192,7 @@ def sql_queue_call_entry():
         sql += "'" + str(queue.date_end) + "', "
         sql += "'" + str(queue.time_end) + "', "
         sql += "'" + str(queue.estatus) + "', "
-        sql += "'<p></p>', "
+        sql += "'<p></p>'"
         sql += "),"
     sql = sql[:-1]
     sql = sql.replace('None', 'NULL')
