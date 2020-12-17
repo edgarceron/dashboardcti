@@ -13,6 +13,8 @@ class Consolidacion(models.Model):
     fecha = models.DateField(null=False)
     motivo = models.ForeignKey(Motivo, on_delete=models.DO_NOTHING, null=False)
     sede = models.ForeignKey(Sede, on_delete=models.CASCADE, null=True)
+    observaciones = models.TextField(null=True, default="")
+
 
 def upload_to(instance, filename):
     now = timezone.now()

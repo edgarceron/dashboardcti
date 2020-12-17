@@ -9,6 +9,7 @@ function getValues(){
         'fecha': $('#fechaInput').val(),
         'motivo': $('#motivoInput').val(),
         'sede': $('#sedeInput').val(),
+        'observaciones': $('#observacionesInput').val(),
     }
     return data;
 }

@@ -7,7 +7,7 @@ class ConsolidacionSerializer(serializers.ModelSerializer):
     """Serializer for consolidacion model"""
     class Meta:
         model = Consolidacion
-        fields = ['id', 'cedula', 'placa', 'fecha', 'motivo', 'sede']
+        fields = ['id', 'cedula', 'placa', 'fecha', 'motivo', 'sede', 'observaciones']
 
     def create(self, validated_data):
         obj = Consolidacion(**validated_data)

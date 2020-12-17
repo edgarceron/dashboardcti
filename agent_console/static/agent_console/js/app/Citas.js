@@ -106,6 +106,7 @@ class Citas {
             'fecha': $('#dateReagendarInput').val(),
             'motivo': $('#motivoReagendadoInput').val(),
             'sede': $('#sedeInput').val(),
+            'observaciones': $('#observaciones2Input').val(),
         }
         Citas.standard.makePetition(data, 'validate_cedula_url', ajaxFunctions);
     }
@@ -117,6 +118,7 @@ class Citas {
             'fecha': $('#dateReagendarInput').val(),
             'motivo': $('#motivoReagendadoInput').val(),
             'sede': $('#sedeInput').val(),
+            'observaciones': $('#observaciones2Input').val(),
         }
 
         var ajaxFunctions = {

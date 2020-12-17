@@ -46,7 +46,7 @@ def sql_campaign():
     list_campaign = Campaign.objects.all()
     sql = """INSERT INTO campaign (id, name, datetime_init, datetime_end, daytime_init, 
         daytime_end, retries, trunk, context, queue, max_canales, num_completadas, 
-        promedio, desviacion, script, estatus, id_url)"""
+        promedio, desviacion, script, estatus, id_url) VALUES """
     for camp in list_campaign:
         sql += "\n ("
         sql += str(camp.id) + ", "
@@ -81,7 +81,7 @@ def sql_calls():
     sql = """INSERT INTO calls (id, id_campaign, phone, status, uniqueid, fecha_llamada, 
         start_time, end_time, retries, duration, id_agent, transfer, datetime_entry_queue, 
         duration_wait, dnc, date_init, date_end, time_init, time_end, agent, failure_cause, 
-        failure_cause_txt, datetime_originate, trunk, scheduled)"""
+        failure_cause_txt, datetime_originate, trunk, scheduled) VALUES """
     for call in filtered:
         sql += "\n ("
         sql += str(call.id) + ", "
@@ -151,7 +151,7 @@ def sql_call_entry():
     calls = CallEntry.objects.filter(Q(id__in=cita_calls) | Q(id__in=poll_call))
     sql = """INSERT INTO call_entry (id, id_agent, id_queue_call_entry, id_contact, 
         callerid, datetime_init, datetime_end, duration, status, transfer, 
-        datetime_entry_queue, duration_wait, uniqueid, id_campaign, trunk)"""
+        datetime_entry_queue, duration_wait, uniqueid, id_campaign, trunk) VALUES"""
 
     for entry in calls:
         sql += "\n ("
@@ -181,7 +181,7 @@ def sql_call_entry():
 
 def sql_queue_call_entry():
     queues = QueueCallEntry.objects.all()
-    sql = """INSERT INTO query_call_entry (id, queue, date_init, time_init, 
+    sql = """INSERT INTO queue_call_entry (id, queue, date_init, time_init, 
         date_end, time_end, estatus, script) VALUES """
     for queue in queues:
         sql += "\n ("
