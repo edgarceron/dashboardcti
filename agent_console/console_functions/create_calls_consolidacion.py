@@ -18,10 +18,12 @@ def create_calls_consolidacion():
         campaign_obj = Campaign.objects.get(id=pk_campaign)
         for consolidacion in to_create:
             cedula = consolidacion.cedula
-            if phones[cedula][0] is not None:
+            if 2 in phones and phones[cedula][2] is not None:
+                phone = phones[cedula][2]
+            elif 0 in phones and phones[cedula][0] is not None:
                 phone = phones[cedula][0]
-            elif 1 in phones and phones[cedula][0] is not None:
-                phone = phones[cedula][0]
+            elif 1 in phones and phones[cedula][1] is not None:
+                phone = phones[cedula][1]
             else:
                 phone = None
 
@@ -74,9 +76,9 @@ def get_campaign():
 def get_phones(cedulas):
     """Get the phones for the consolidacion calls"""
     numbers = Terceros.objects.filter(nit__in=cedulas)
-    numbers = numbers.values_list('nit', 'telefono_1', 'telefono_2')
+    numbers = numbers.values_list('nit', 'telefono_1', 'telefono_2', 'celular')
     phones = {}
     for x in range (0, len(numbers)):
-        phones[str(numbers[x][0]).strip()] = [str(numbers[x][1]).strip(), str(numbers[x][2]).strip()]
+        phones[str(numbers[x][0]).strip()] = [str(numbers[x][1]).strip(), str(numbers[x][2]).strip(), str(numbers[x][3]).strip()]
         #phones[str(numbers[x][0])] = ['3176483290']
     return phones
