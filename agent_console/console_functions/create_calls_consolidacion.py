@@ -21,11 +21,11 @@ def create_calls_consolidacion():
             phone = None
             print(phones[cedula])
             print(2 in phones and phones[cedula][2] is not None)
-            if 2 in phones and phones[cedula][2] is not None:
+            if phones[cedula][2] != "None":
                 phone = phones[cedula][2]
-            if (phone is None or phone == "None") and 0 in phones and phones[cedula][0] is not None:
+            elif phones[cedula][0] != "None":
                 phone = phones[cedula][0]
-            if (phone is None or phone == "None") and 1 in phones and phones[cedula][1] is not None:
+            elif phones[cedula][1] != "None":
                 phone = phones[cedula][1]
 
             if phone is not None and phone != "None":
