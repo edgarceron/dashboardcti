@@ -53,6 +53,8 @@ def create_calls_consolidacion():
                 else:
                     print(call.errors)
                     print('Error')
+            else:
+                print('Error')
 
         campaign_obj.estatus = 'A'
         campaign_obj.save()
