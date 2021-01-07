@@ -19,6 +19,7 @@ def create_calls_consolidacion():
         for consolidacion in to_create:
             cedula = consolidacion.cedula
             phone = None
+            print(phones[cedula])
             if 2 in phones and phones[cedula][2] is not None:
                 phone = phones[cedula][2]
             if (phone is None or phone == "None") and 0 in phones and phones[cedula][0] is not None:
@@ -82,5 +83,4 @@ def get_phones(cedulas):
     for x in range (0, len(numbers)):
         phones[str(numbers[x][0]).strip()] = [str(numbers[x][1]).strip(), str(numbers[x][2]).strip(), str(numbers[x][3]).strip()]
         #phones[str(numbers[x][0])] = ['3176483290']
-    print(phones)
     return phones
