@@ -83,4 +83,5 @@ def get_phones(cedulas):
     for x in range (0, len(numbers)):
         phones[str(numbers[x][0]).strip()] = [str(numbers[x][1]).strip(), str(numbers[x][2]).strip(), str(numbers[x][3]).strip()]
         #phones[str(numbers[x][0])] = ['3176483290']
+    print(phones)
     return phones
