@@ -18,16 +18,16 @@ def create_calls_consolidacion():
         campaign_obj = Campaign.objects.get(id=pk_campaign)
         for consolidacion in to_create:
             cedula = consolidacion.cedula
+            phone = None
             if 2 in phones and phones[cedula][2] is not None:
                 phone = phones[cedula][2]
-            elif 0 in phones and phones[cedula][0] is not None:
+            if phone is None and in phones and phones[cedula][0] is not None:
                 phone = phones[cedula][0]
-            elif 1 in phones and phones[cedula][1] is not None:
+            if phone is None and 1 in phones and phones[cedula][1] is not None:
                 phone = phones[cedula][1]
-            else:
-                phone = None
 
-            if phone is not None and phone != "None":    
+
+            if phone is not None and phone != "None":
                 data = {
                     'phone': phones[cedula][0],
                     'id_campaign': pk_campaign,
