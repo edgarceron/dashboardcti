@@ -20,11 +20,11 @@ def check_fails(start_date, end_date):
 
     for x in consolidacion:
         row = {}
-        row['cedula'] = x.consolidacion.cedula
-        row['placa'] = x.consolidacion.placa
-        row['fecha'] = x.consolidacion.fecha
-        row['motivo'] = x.consolidacion.motivo.name
-        row['sede'] = x.consolidacion.sede.name
+        row['cedula'] = x.cedula
+        row['placa'] = x.placa
+        row['fecha'] = x.fecha
+        row['motivo'] = x.motivo.name
+        row['sede'] = x.sede.name
         data.append(row)
     return data
 
@@ -44,15 +44,15 @@ def calls_fail_date_range(start_date, end_date):
     if start_date != "" and end_date != "":
         start_date = datetime.strptime(end_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
-        criteria['datetime_entry_queue__range'] = (start_date, end_date)
+        criteria['fecha_llamada__range'] = (start_date, end_date)
 
     elif start_date != "":
         start_date = datetime.strptime(end_date, '%Y-%m-%d')
-        criteria['datetime_entry_queue__gte'] = start_date
+        criteria['fecha_llamada__gte'] = start_date
 
     elif end_date != "":
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
-        criteria['datetime_entry_queue__lte'] = end_date
+        criteria['fecha_llamada__lte'] = end_date
 
     calls = list(Calls.objects.values_list('id', flat=True).filter(
         Q(**criteria), Q(status='Abandoned') | Q(status='Failure') |

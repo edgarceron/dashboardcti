@@ -58,15 +58,15 @@ def headers_fail_date_range(campaign, start_date, end_date):
     if start_date != "" and end_date != "":
         start_date = datetime.strptime(end_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
-        criteria['datetime_entry_queue__range'] = (start_date, end_date)
+        criteria['fecha_llamada__range'] = (start_date, end_date)
 
     elif start_date != "":
         start_date = datetime.strptime(end_date, '%Y-%m-%d')
-        criteria['datetime_entry_queue__gte'] = start_date
+        criteria['fecha_llamada__gte'] = start_date
 
     elif end_date != "":
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
-        criteria['datetime_entry_queue__lte'] = end_date
+        criteria['fecha_llamada__lte'] = end_date
 
     if campaign != "":
         criteria['id_campaign'] = campaign
