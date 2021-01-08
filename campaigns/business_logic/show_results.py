@@ -10,7 +10,7 @@ ENTRANTE = 2
 
 def data_to_csv(collected_data):
     """Transforms the collected data into a csv file a return"""
-    csvfile = open(settings.STATIC_ROOT + 'result.csv', 'w', encoding="latin-1")
+    csvfile = open(settings.STATIC_ROOT + 'result.csv', 'w', encoding="utf-8-sig")
     writer = csv.writer(
         csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator = '\n')
     for row in collected_data:
