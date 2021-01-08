@@ -10,7 +10,7 @@ ENTRANTE = 2
 
 def data_to_csv(collected_data):
     """Transforms the collected data into a csv file a return"""
-    csvfile = open(settings.STATIC_ROOT + 'result.csv', 'w')
+    csvfile = open(settings.STATIC_ROOT + 'result.csv', 'w', encoding="iso-8859-1")
     writer = csv.writer(
         csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator = '\n')
     for row in collected_data:
@@ -112,13 +112,13 @@ def data_chart(id_campaign, start_date, end_date):
                     data[body.question.id]['answers'][txt]['count'] += 1
     return json.dumps(data)
 
-def headers_csv(questions):
+def headers_csv(quesitons):
     """Creates the headers for the csv file"""
     row = {}
     for header in DATA_LLAMADA_HEADER:
         row[header] = header
-    for header in questions:
-        row[header.id] = header.text.encode('utf-8')
+    for header in quesitons:
+        row[header.id] = header.text #.encode('utf-8').decode('iso-8859-1')
     return row
 
 def collect_data(id_campaign, start_date="", end_date=""):
