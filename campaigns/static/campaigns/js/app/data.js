@@ -70,7 +70,7 @@ function createConfig(question){
 
 
 function getColor(index){
-    var choosed = index % 5;
+    var choosed = index % 10;
     switch(choosed){
         case 0:
             return window.chartColors.red;
@@ -82,6 +82,16 @@ function getColor(index){
             return window.chartColors.green;
         case 4:
             return window.chartColors.blue;
+        case 5:
+            return window.chartColors.lightblue;
+        case 6:
+            return window.chartColors.lightred;
+        case 7:
+            return window.chartColors.lightorange;
+        case 8:
+            return window.chartColors.lightyellow;
+        case 9:
+            return window.chartColors.lightgreen;
     }
 }
 
