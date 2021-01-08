@@ -30,7 +30,7 @@ def upload_calls_campaign(request):
             file_serializer.save()
             file_name = file_serializer.data['file']
             fails = []
-            with open(file_name, newline='') as csvfile:
+            with open(file_name, newline='', encoding='utf-8') as csvfile:
                 spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
                 line = 1
                 for row in spamreader:
