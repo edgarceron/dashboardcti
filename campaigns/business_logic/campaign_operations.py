@@ -20,7 +20,9 @@ def upload_calls_campaign(request):
         campaign = get_campaign(id_campaign)
         if campaign.type_campaign == 2:
             return Response(
-                {"success":False, "message": "No se pueden agragar datosp para una campaña entrante"},
+                {
+                    "success":False, 
+                    "message": "No se pueden agragar datosp para una campaña entrante"},
                 status=status.HTTP_400_BAD_REQUEST,
                 content_type='application/json'
             )
