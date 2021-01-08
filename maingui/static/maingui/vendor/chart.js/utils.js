@@ -14,6 +14,10 @@ window.chartColors = {
 	lightgreen: 'rgb(0, 204, 0)',
 	lightblue: 'rgb(153, 51, 0)',
 	lightpurple: 'rgb(204, 0, 204)',
+	pink: 'rgb(255, 153, 255)',
+	yellowgray: 'rgb(153, 153, 102)',
+	shadowpurple: 'rgb(102, 0, 51)',
+	fucsia: 'rgb(153, 0, 255)',
 };
 
 (function(global) {
