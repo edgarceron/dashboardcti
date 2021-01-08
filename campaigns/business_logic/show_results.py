@@ -118,7 +118,7 @@ def headers_csv(quesitons):
     for header in DATA_LLAMADA_HEADER:
         row[header] = header
     for header in quesitons:
-        row[header.id] = header.text.encode("utf-8").decode("cp1252")
+        row[header.id] = header.text.encode("utf-8").decode("latin-1")
     return row
 
 def collect_data(id_campaign, start_date="", end_date=""):
@@ -135,12 +135,12 @@ def collect_data(id_campaign, start_date="", end_date=""):
         row = new_row(questions)
         data_llamada = DataLlamada.objects.get(id=header.data_llamada.id)
 
-        row['telefono'] = data_llamada.telefono.encode("utf-8").decode("cp1252")
-        row['name'] = data_llamada.name.encode("utf-8").decode("cp1252")
-        row['cedula'] = data_llamada.cedula.encode("utf-8").decode("cp1252")
-        row['correo'] = data_llamada.correo.encode("utf-8").decode("cp1252")
-        row['placa'] = data_llamada.placa.encode("utf-8").decode("cp1252")
-        row['linea_veh'] = data_llamada.linea_veh.encode("utf-8").decode("cp1252")
+        row['telefono'] = data_llamada.telefono.encode("utf-8").decode("latin-1")
+        row['name'] = data_llamada.name.encode("utf-8").decode("latin-1")
+        row['cedula'] = data_llamada.cedula.encode("utf-8").decode("latin-1")
+        row['correo'] = data_llamada.correo.encode("utf-8").decode("latin-1")
+        row['placa'] = data_llamada.placa.encode("utf-8").decode("latin-1")
+        row['linea_veh'] = data_llamada.linea_veh.encode("utf-8").decode("latin-1")
 
         bodies = AnswersBody.objects.filter(header=header.id)
         multiple_resolved = []
