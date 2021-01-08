@@ -1,4 +1,3 @@
-
 from datetime import timedelta, datetime, date
 from django.db.models import Q
 from django.conf import settings
@@ -23,8 +22,8 @@ def check_fails(start_date, end_date):
         row['cedula'] = x.cedula
         row['placa'] = x.placa
         row['fecha'] = x.fecha
-        row['motivo'] = x.motivo.name
-        row['sede'] = x.sede.name
+        row['motivo'] = x.motivo
+        row['sede'] = x.sede
         data.append(row)
     return data
 

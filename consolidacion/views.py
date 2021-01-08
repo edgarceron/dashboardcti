@@ -123,7 +123,7 @@ def download_fails(request, start_date, end_date):
     validation = permission_obj.validate('download_fails')
     if validation['status']:
         collected_data = fail_management.check_fails(start_date, end_date)
-        file_path = show_results.data_to_csv(collected_data)
+        file_path = show_results.data_to_csv(collected_data, False)
         if os.path.exists(file_path):
             with open(file_path, 'rb') as fh:
                 response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")

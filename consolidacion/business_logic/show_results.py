@@ -7,12 +7,13 @@ from sedes.models import Sede
 from agent_console.models import Calls, CallEntry
 from consolidacion.models import CallConsolidacion, CitaNoCall, CallEntryCita
 
-def data_to_csv(collected_data):
+def data_to_csv(collected_data, header=True):
     """Transforms the collected data into a csv file a return"""
     csvfile = open(settings.STATIC_ROOT + 'result.csv', 'w')
     writer = csv.writer(
         csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator = '\n')
-    writer.writerow(put_headers())
+    if header: 
+        writer.writerow(put_headers())
     for row in collected_data:
         writer.writerow(to_dict(row))
     return settings.STATIC_ROOT + 'result.csv'
