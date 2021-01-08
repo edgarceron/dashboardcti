@@ -118,7 +118,7 @@ def headers_csv(quesitons):
     for header in DATA_LLAMADA_HEADER:
         row[header] = header
     for header in quesitons:
-        row[header.id] = header.text
+        row[header.id] = header.text.encode('utf-8').decode('iso-8859-1')
     return row
 
 def collect_data(id_campaign, start_date="", end_date=""):
