@@ -8,12 +8,12 @@ window.chartColors = {
 	blue: 'rgb(54, 162, 235)',
 	purple: 'rgb(153, 102, 255)',
 	grey: 'rgb(201, 203, 207)',
-	lightred: 'rgb(255, 120, 162)',
-	lightorange: 'rgb(255, 189, 94)',
-	lightyellow: 'rgb(255, 235, 116)',
-	lightgreen: 'rgb(105, 222, 222)',
-	lightblue: 'rgb(84, 192, 255)',
-	lightpurple: 'rgb(183, 132, 255)',
+	lightred: 'rgb(204, 0, 0)',
+	lightorange: 'rgb(204, 51, 0)',
+	lightyellow: 'rgb(255, 255, 102)',
+	lightgreen: 'rgb(0, 204, 0)',
+	lightblue: 'rgb(153, 51, 0)',
+	lightpurple: 'rgb(204, 0, 204)',
 };
 
 (function(global) {
