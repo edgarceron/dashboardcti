@@ -12,7 +12,7 @@ def data_to_csv(collected_data, header=True):
     csvfile = open(settings.STATIC_ROOT + 'result.csv', 'w')
     writer = csv.writer(
         csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator = '\n')
-    if header: 
+    if header:
         writer.writerow(put_headers())
     for row in collected_data:
         writer.writerow(to_dict(row))

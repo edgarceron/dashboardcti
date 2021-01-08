@@ -22,8 +22,8 @@ def check_fails(start_date, end_date):
         row['cedula'] = x.cedula
         row['placa'] = x.placa
         row['fecha'] = x.fecha
-        row['motivo'] = x.motivo
-        row['sede'] = x.sede
+        row['motivo'] = x.motivo.id
+        row['sede'] = x.sede.id
         data.append(row)
     return data
 
