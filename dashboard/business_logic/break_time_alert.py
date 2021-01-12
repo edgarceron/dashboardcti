@@ -18,7 +18,7 @@ def get_break_time_alerts():
                 init = pendulum.instance(init)
                 total = (today_aware - init).in_seconds()
                 allowed = BreakTimes.objects.get(id_break=active_break.id_break.id).minutes
-                remain = timedelta(minutes=allowed).seconds - total.seconds
+                remain = timedelta(minutes=allowed).seconds - total
                 agent = Agent.objects.get(pk=active_break.id_agent.id)
                 if remain < 0:
                     total = -1 * remain
