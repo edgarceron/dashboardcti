@@ -15,9 +15,9 @@ def get_break_time_alerts():
         if active_break != None:
             try:
                 init = active_break.datetime_init
-                timezone = pytz.timezone("America/Bogota")
+                timezone = pytz.timezone("Asia/Samarkand")
                 init = init.replace(tzinfo=timezone)
-                init = pendulum.instance(init, 'America/Bogota')
+                init = pendulum.instance(init)
                 total = (today_aware - init).in_seconds()
                 allowed = BreakTimes.objects.get(id_break=active_break.id_break.id).minutes
                 remain = timedelta(minutes=allowed).seconds - total
