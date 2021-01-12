@@ -283,8 +283,10 @@ class AgentState():
         return answer
 
     @staticmethod
-    def get_active_break(id_agent, datetime_login):
-        active_break = Audit.objects.filter(id_agent=id_agent, datetime_end__isnull=True, id_break__isnull=False, datetime_init__gte=datetime_login).order_by('-datetime_init')
+    def get_active_break(id_agent, datetime_login=None):
+        active_break = Audit.objects.filter(id_agent=id_agent, datetime_end__isnull=True, id_break__isnull=False).order_by('-datetime_init')
+        if datetime_login is not None:
+            active_break = active_break.filter(datetime_init__gte=datetime_login)
         if len(active_break) > 0:
             return active_break[0]
         return None
