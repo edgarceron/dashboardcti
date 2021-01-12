@@ -11,7 +11,7 @@ def get_break_time_alerts():
     today_aware = pendulum.instance(datetime.now(), 'America/Bogota')
     alerts = []
     for agent in active_agents:
-        active_break = AgentState.get_active_break(agent.id_agent)
+        active_break = AgentState.get_active_break(agent.id_agent, agent.datetime_init)
         if active_break != None:
             try:
                 init = active_break.datetime_init
