@@ -15,7 +15,7 @@ def get_break_time_alerts():
         if active_break != None:
             try:
                 init = active_break.datetime_init
-                total = today_aware - init.astimezone(timezone)
+                total = today_aware.astimezone(pytz.utc) - init
                 allowed = BreakTimes.objects.get(id_break=active_break.id_break.id).minutes
                 remain = timedelta(minutes=allowed).seconds - total.seconds
                 agent = Agent.objects.get(pk=active_break.id_agent.id)
