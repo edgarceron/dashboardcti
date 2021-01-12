@@ -6,7 +6,7 @@ from agent_console.console_functions.agent_state import AgentState
 
 def get_break_time_alerts():
     """Return info about the agent that have exceeded the break allowed time"""
-    active_agents = Audit.objects.filter(id_break__isnull=False, datetime_end__isnull=True)
+    active_agents = Audit.objects.filter(id_break__isnull=True, datetime_end__isnull=True)
     timezone = pytz.timezone("UTC")
     today_aware = timezone.localize(datetime.now())
     alerts = []
