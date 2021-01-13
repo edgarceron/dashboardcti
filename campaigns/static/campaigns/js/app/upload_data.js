@@ -37,7 +37,7 @@ function saveForm(){
             }
         },
         error:  (request, status, error, result) => {
-            SoftNotification.show("Hubo un error al intentar subir el archivo", "danger")
+            SoftNotification.show(request.responseJSON.message, "danger")
         },
         complete: () => {
             $('#spiner').addClass('d-none');
