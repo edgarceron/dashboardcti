@@ -1,5 +1,8 @@
-import csv, json
+"""Manages the results to show on a campaign"""
+import csv
+import json
 from datetime import timedelta, datetime
+from django.db.models import Count
 from django.conf import settings
 from agent_console.models import Calls, CallEntry
 from campaigns.models import CampaignForm, AnswersBody, AnswersHeader, DataLlamada, Question, Answer
@@ -58,6 +61,7 @@ def headers_date_range(start_date, end_date, campaign):
         calls = list(CallEntry.objects.values_list('id', flat=True).filter(**criteria))
 
     headers = AnswersHeader.objects.filter(call_id__in=calls, campaign=campaign.id)
+    headers = headers.annotate(num_bodies=Count('answersbody')).filter(num_bodies__gt=0)
     return headers
 
 def data_chart(id_campaign, start_date, end_date):
