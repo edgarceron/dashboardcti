@@ -34,6 +34,7 @@ def data_outgoing(request):
     pending_consolidacion = conversion_rate.get_today_pending_consolidacion(start_date, end_date)
     success_consolidacion = conversion_rate.get_success_consolidacion(start_date, end_date)
     dialed_consolidacion = conversion_rate.get_dialed_consolidacion(start_date, end_date)
+    scheduled_consolidacion = conversion_rate.get_scheduled_consolidacion(start_date, end_date)
 
     completion_rate = conversion_rate.get_completion_rate(
         pending_consolidacion, today_consolidacion
@@ -57,6 +58,7 @@ def data_outgoing(request):
         'completion_rate': completion_rate,
         'success_rate': success_rate,
         'consolidacion_count': consolidacion_count,
+        'scheduled_consolidacion': scheduled_consolidacion,
         'polls_attended': polls_attended,
         'alerts': alerts
     }

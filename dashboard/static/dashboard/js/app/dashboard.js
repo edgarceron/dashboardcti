@@ -25,6 +25,7 @@ function getDataOut(){
         'success': function(result){
             drawHoursChartOut(result.calls_out_per_hour);
             setStatsLabelsOut(result.calls_count);
+            setScheduledLabel(result.scheduled_consolidacion);
             drawCompletionChart(result.completion_rate);
             drawSuccessChart(result.success_rate);
             setStatsOperations(

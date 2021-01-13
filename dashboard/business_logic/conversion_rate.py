@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 import pytz
 from agent_console.models import Calls
-from consolidacion.models import CallConsolidacion
+from consolidacion.models import CallConsolidacion, Consolidacion
 
 def get_today_pending_consolidacion(start_date, end_date):
     """Gets the number of pending calls for the current date"""
@@ -27,6 +27,15 @@ def get_success_consolidacion(start_date, end_date):
     ).values_list('call', flat=True))
     success_consolidacion = Calls.objects.filter(id__in=today_consolidations, status='Success')
     return success_consolidacion.count()
+
+def get_scheduled_consolidacion(start_date, end_date):
+    """Gets the number of success calls for the current date"""
+    criteria = get_filter(start_date, end_date, True)
+    criteria['cita_tall_id__isnull'] = False
+    today_scheduled = CallConsolidacion.objects.filter(
+        **criteria
+    )
+    return today_scheduled.count()
 
 def get_dialed_consolidacion(start_date, end_date):
     """Gets the number of dialed calls for the current date"""

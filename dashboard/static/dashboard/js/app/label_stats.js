@@ -32,6 +32,10 @@ function setStatsAverageEntry(average){
     $("#lblAverageTime").html(time);
 }
 
+function setScheduledLabel(scheduled){
+    $("#lblScheduled").html(scheduled);
+}
+
 function setStatsLabelsOut(callsCount){
     var pendientes = callsCount["Placing"] + callsCount[null];
     var fallidas = callsCount["Abandoned"] + callsCount["Failure"] + callsCount["ShortCall"] + callsCount["NoAsnwer"];
