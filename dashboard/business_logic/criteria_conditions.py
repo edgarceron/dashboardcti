@@ -4,7 +4,6 @@ from datetime import timedelta, datetime
 def get_call_criteria(start_date, end_date, agent, campaign):
     """Returns a conditions dictonary"""
     conditions = {}
-    
 
     if (start_date != "" and end_date != ""):
         start_date = datetime.strptime(start_date, '%Y-%m-%d')
@@ -31,11 +30,11 @@ def get_call_out_criteria(start_date, end_date, agent, campaign):
     if (start_date != "" and end_date != ""):
         start_date = datetime.strptime(start_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(seconds=86399)
-        conditions['datetime_originate__range'] = (start_date, end_date)
+        conditions['start_time__range'] = (start_date, end_date)
     elif start_date != "":
-        conditions['datetime_originate__gte'] = start_date
+        conditions['start_time__gte'] = start_date
     elif end_date != "":
-        conditions['datetime_originate__lte'] = end_date
+        conditions['start_time__lte'] = end_date
 
     if agent != "":
         conditions['id_agent'] = agent

@@ -1,8 +1,8 @@
 """Manages functions for calculating outgoing calls graphic stats values"""
 from datetime import datetime, timedelta
-import pytz
 from agent_console.models import Calls
-from consolidacion.models import CallConsolidacion, Consolidacion
+from consolidacion.models import CallConsolidacion
+from dashboard.business_logic import criteria_conditions
 
 def get_today_pending_consolidacion(start_date, end_date):
     """Gets the number of pending calls for the current date"""
@@ -30,8 +30,12 @@ def get_success_consolidacion(start_date, end_date):
 
 def get_scheduled_consolidacion(start_date, end_date):
     """Gets the number of success calls for the current date"""
-    criteria = get_filter(start_date, end_date, True)
+    criteria_calls = criteria_conditions.get_call_out_criteria(start_date, end_date, "", "")
+    calls = list(Calls.objects.filter(**criteria_calls).values_list('id', flat=True))
+    criteria = {}
+    criteria['call__in'] = calls
     criteria['cita_tall_id__isnull'] = False
+
     today_scheduled = CallConsolidacion.objects.filter(
         **criteria
     )
