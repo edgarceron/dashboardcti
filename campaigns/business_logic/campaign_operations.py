@@ -22,11 +22,12 @@ def upload_calls_campaign(request):
             return Response(
                 {
                     "success":False, 
-                    "message": "No se pueden agragar datosp para una campaña entrante"},
+                    "message": "No se pueden agragar datos para una campaña entrante"},
                 status=status.HTTP_400_BAD_REQUEST,
                 content_type='application/json'
             )
         del data['id']
+        message = "Error al intentar guardar el archivo"
         file_serializer = ConsolidacionFileUploadsSerializer(data=data)
         if file_serializer.is_valid():
             file_serializer.save()
@@ -41,6 +42,13 @@ def upload_calls_campaign(request):
                     if data_llamada.is_valid():
                         campaign_isabel = campaign.isabel_campaign
                         call_id = create_call(data['telefono'], campaign_isabel)
+                        if call_id is None:
+                            message = "La campaña no esta asociada a una campaña en isabel"
+                            return Response(
+                                {"success":False, "message": message},
+                                status=status.HTTP_400_BAD_REQUEST,
+                                content_type='application/json'
+                            )
                         model_data_llamada = data_llamada.save()
                         answer_header = create_answer_header(campaign, call_id, model_data_llamada)
                         answer_header.save()
@@ -57,7 +65,7 @@ def upload_calls_campaign(request):
                 content_type='application/json'
             )
         return Response(
-            {"success":False, "message": "Error al intentar guardar el archivo"},
+            {"success":False, "message": message},
             status=status.HTTP_400_BAD_REQUEST,
             content_type='application/json'
         )
@@ -71,12 +79,15 @@ def get_campaign(id_campaign):
     return campaign
 
 def create_call(phone, id_campaign):
-    campaign = Campaign.objects.get(id=id_campaign)
-    campaign.estatus = 'A'
-    campaign.save()
-    call = Calls(phone=phone, id_campaign=campaign, retries=0, dnc=0, scheduled=0)
-    call.save()
-    return call.id
+    try:
+        campaign = Campaign.objects.get(id=id_campaign)
+        campaign.estatus = 'A'
+        campaign.save()
+        call = Calls(phone=phone, id_campaign=campaign, retries=0, dnc=0, scheduled=0)
+        call.save()
+        return call.id
+    except Campaign.DoesNotExist:
+        return None
 
 def create_answer_header(campaign, call_id, model_data_llamada):
     answer_header = AnswersHeader(
