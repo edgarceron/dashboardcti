@@ -6,6 +6,7 @@ from dms.serializers import TallCitasSerializer, TallCitasSerializerSimple
 from sedes.models import Sede
 from agent_console.models import Calls, CallEntry
 from consolidacion.models import CallConsolidacion, CitaNoCall, CallEntryCita
+from django.db.models import Q
 
 def data_to_csv(collected_data, header=True):
     """Transforms the collected data into a csv file a return"""
@@ -234,7 +235,7 @@ def filter_citas_tall(agent, start_date, end_date):
     citas_buscar = citas_no_call_ids + citas_call_ids + citas_call_entry_ids
     return citas_buscar
 
-def get_citas_manticore(agent, start_date, end_date, date_type, sede, estado, start, length):
+def get_citas_manticore(agent, start_date, end_date, date_type, sede, estado, start, length, search=""):
     """Gets the citas tall for a datatable"""
     if date_type == 2:
         citas_call = calls_date_range(
@@ -262,11 +263,22 @@ def get_citas_manticore(agent, start_date, end_date, date_type, sede, estado, st
         criteria['estado_cita'] = estado
 
     citas_taller = TallCitas.objects.filter(**criteria)
+
+    if search != "":
+        citas_taller = citas_taller.filter(
+            Q(nombre_cliente__icontains=search) |
+            Q(nombre_encargado__icontains=search) |
+            Q(asesor__icontains=search) |
+            Q(telefonos__icontains=search) |
+            Q(notas__icontains=search) |
+            Q(mail__icontains=search) |
+        )
     if start != "":
         filtered = citas_taller[start:start + length]
     else:
         filtered = citas_taller
     result = TallCitasSerializerSimple(filtered, many=True)
+    
     data = result.data
     return data, citas_taller.count()
 
