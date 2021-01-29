@@ -270,7 +270,6 @@ def get_citas_manticore(agent, start_date, end_date, date_type, sede, estado, st
             Q(nombre_encargado__icontains=search) |
             Q(asesor__icontains=search) |
             Q(telefonos__icontains=search) |
-            Q(notas__icontains=search) |
             Q(mail__icontains=search) 
         )
     if start != "":
