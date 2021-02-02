@@ -272,7 +272,7 @@ def get_citas_manticore(agent, start_date, end_date, date_type, sede, estado, st
             Q(telefonos__icontains=search) |
             Q(mail__icontains=search) |
             Q(placa__icontains=search) |
-            Q(nit__icontains=search) 
+            Q(nit__nit__icontains=search) 
         )
     if start != "":
         filtered = citas_taller[start:start + length]
