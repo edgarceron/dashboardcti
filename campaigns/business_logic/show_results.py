@@ -159,7 +159,7 @@ def collect_data(id_campaign, start_date="", end_date=""):
                 for ans in answers:
                     result = result + ans.answer_text + "-"
             else:
-                result = body.answer_text
+                result = body.answer_text.replace('\n'," ")
             row[body.question.id] = result
         collected_data.append(row)
     return collected_data
