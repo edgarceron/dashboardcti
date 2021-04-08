@@ -19,8 +19,8 @@ def create_call(data : dict):
         new_call.end_time = datetime.now()
         new_call.duration = 0
         new_call.dnc = 0
-        new_call.date_init = datetime.date()
-        new_call.date_end = datetime.date()
+        new_call.date_init = datetime.today()
+        new_call.date_end = datetime.today()
         new_call.time_init = datetime.now()
         new_call.time_end = datetime.now()
         new_call.scheduled = 0
