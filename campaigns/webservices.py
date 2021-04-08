@@ -74,7 +74,8 @@ def upload_calls_campaign(request):
 @api_view(['POST'])
 def add_header(request):
     """Tries to create a header and returns the result"""
-    crud_object = Crud(AnswersHeaderSerializer, AnswersHeader)
+    operation = manual_calls.create_call
+    crud_object = Crud(AnswersHeaderSerializer, AnswersHeader, operation)
     return crud_object.add(request, 'add_header')
 
 @api_view(['POST'])
@@ -92,8 +93,7 @@ def save_answers(request, header_id):
 @api_view(['POST'])
 def add_data_llamada(request):
     """Tries to create a header and returns the result"""
-    operation = manual_calls.create_call
-    crud_object = Crud(DataLlamadaSerializar, DataLlamada, operation)
+    crud_object = Crud(DataLlamadaSerializar, DataLlamada)
     return crud_object.add(request, 'add_data_llamada')
 
 @api_view(['POST'])
