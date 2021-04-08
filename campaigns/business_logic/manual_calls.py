@@ -26,7 +26,7 @@ def create_call(data):
         new_call.scheduled = 0
         try: 
             new_call.save()
-            data["call_id"] = new_call.id 
+            data.update({"call_id": new_call.id})
             return data
         except Exception as e:
             return data
