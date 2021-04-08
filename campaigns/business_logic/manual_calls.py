@@ -4,30 +4,30 @@ from agent_console.models import Calls, Campaign, Agent
 from campaigns.models import DataLlamada, CampaignForm
 
 def create_call(request_data):
-    call_id = request_data.get('call_id')
-    if call_id is None:
-        data_llamada = DataLlamada.objects.get(pk=request_data.get("data_llamada"))
-        campaign_form = CampaignForm.objects.get(pk=request_data.get("campaign"))
-        new_call = Calls()
-        new_call.id_campaign = Campaign(campaign_form.isabel_campaign)
-        new_call.phone = data_llamada.telefono
-        new_call.agent = Agent(request_data.get('agent'))
-        new_call.retries = 0
-        new_call.status = "Success"
-        new_call.fecha_llamada = datetime.now()
-        new_call.start_time = datetime.now()
-        new_call.end_time = datetime.now()
-        new_call.duration = 0
-        new_call.dnc = 0
-        new_call.date_init = datetime.today()
-        new_call.date_end = datetime.today()
-        new_call.time_init = datetime.now()
-        new_call.time_end = datetime.now()
-        new_call.scheduled = 0
-        try: 
-            new_call.save()
-            request_data.update({"call_id": new_call.id})
-            return request_data
-        except Exception as e:
-            return request_data
+    # call_id = request_data.get('call_id')
+    # if call_id is None:
+    #     data_llamada = DataLlamada.objects.get(pk=request_data.get("data_llamada"))
+    #     campaign_form = CampaignForm.objects.get(pk=request_data.get("campaign"))
+    #     new_call = Calls()
+    #     new_call.id_campaign = Campaign(campaign_form.isabel_campaign)
+    #     new_call.phone = data_llamada.telefono
+    #     new_call.agent = Agent(request_data.get('agent'))
+    #     new_call.retries = 0
+    #     new_call.status = "Success"
+    #     new_call.fecha_llamada = datetime.now()
+    #     new_call.start_time = datetime.now()
+    #     new_call.end_time = datetime.now()
+    #     new_call.duration = 0
+    #     new_call.dnc = 0
+    #     new_call.date_init = datetime.today()
+    #     new_call.date_end = datetime.today()
+    #     new_call.time_init = datetime.now()
+    #     new_call.time_end = datetime.now()
+    #     new_call.scheduled = 0
+    #     try: 
+    #         new_call.save()
+    #         request_data.update({"call_id": new_call.id})
+    #         return request_data
+    #     except Exception as e:
+    #         return request_data
     return request_data
