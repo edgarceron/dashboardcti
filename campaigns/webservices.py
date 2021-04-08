@@ -1,7 +1,7 @@
 """Contains the webservices for the form_creator app"""
 from rest_framework.decorators import api_view
 from core.crud.standard import Crud
-from campaigns.business_logic import data_filters, campaign_operations
+from campaigns.business_logic import data_filters, campaign_operations, manual_calls
 from .models import CampaignForm, AnswersHeader, DataLlamada
 from .serializers import CampaignFormSerializer, AnswersHeaderSerializer, DataLlamadaSerializar
 
@@ -92,7 +92,8 @@ def save_answers(request, header_id):
 @api_view(['POST'])
 def add_data_llamada(request):
     """Tries to create a header and returns the result"""
-    crud_object = Crud(DataLlamadaSerializar, DataLlamada)
+    operation = manual_calls.create_call
+    crud_object = Crud(DataLlamadaSerializar, DataLlamada, operation)
     return crud_object.add(request, 'add_data_llamada')
 
 @api_view(['POST'])

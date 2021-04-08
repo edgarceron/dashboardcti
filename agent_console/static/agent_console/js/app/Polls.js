@@ -15,6 +15,7 @@ class Polls {
             'success': function(result){
                 if(result.success){
                     $('#nombrePollInput').val(result.nombres);
+                    Polls.tercero = result.nit;
                     Polls.terceroValid = true;
                 }
                 else {

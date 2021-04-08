@@ -25,6 +25,7 @@ def check_tercero_cedula(request):
         else:
             answer['success'] = True
             answer['nombres'] = tercero.nombres
+            answer['nit'] = tercero.nit
         return Response(answer, status.HTTP_200_OK, content_type='application/json')
     return permission_obj.error_response_webservice(validation, request)    
 
