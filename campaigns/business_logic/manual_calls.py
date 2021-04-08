@@ -1,6 +1,6 @@
 """Manages operations to save manual calls"""
 from datetime import datetime
-from agent_console.models import Calls
+from agent_console.models import Calls, Campaign, Agent
 from campaigns.models import DataLlamada, CampaignForm
 
 def create_call(data : dict):
@@ -9,9 +9,9 @@ def create_call(data : dict):
         data_llamada = DataLlamada.objects.get(pk=data.get("data_llamada"))
         campaign_form = CampaignForm.objects.get(pk=data.get("campaign"))
         new_call = Calls()
-        new_call.id_campaign = campaign_form.isabel_campaign
+        new_call.id_campaign = Campaign(campaign_form.isabel_campaign)
         new_call.phone = data_llamada.telefono
-        new_call.agent = data.get('agent')
+        new_call.agent = Agent(data.get('agent'))
         new_call.retries = 0
         new_call.status = "Success"
         new_call.fecha_llamada = datetime.now()
