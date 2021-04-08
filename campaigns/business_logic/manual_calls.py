@@ -26,6 +26,7 @@ def create_call(data : dict):
         new_call.scheduled = 0
         try: 
             new_call.save()
-            return True
+            data["call_id"] = new_call.id 
+            return data
         except Exception as e:
-            return False
+            return data
