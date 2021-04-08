@@ -3,15 +3,15 @@ from datetime import datetime
 from agent_console.models import Calls, Campaign, Agent
 from campaigns.models import DataLlamada, CampaignForm
 
-def create_call(data):
-    call_id = data.get('call_id')
+def create_call(request_data):
+    call_id = request_data.get('call_id')
     if call_id is None:
-        data_llamada = DataLlamada.objects.get(pk=data.get("data_llamada"))
-        campaign_form = CampaignForm.objects.get(pk=data.get("campaign"))
+        data_llamada = DataLlamada.objects.get(pk=request_data.get("data_llamada"))
+        campaign_form = CampaignForm.objects.get(pk=request_data.get("campaign"))
         new_call = Calls()
         new_call.id_campaign = Campaign(campaign_form.isabel_campaign)
         new_call.phone = data_llamada.telefono
-        new_call.agent = Agent(data.get('agent'))
+        new_call.agent = Agent(request_data.get('agent'))
         new_call.retries = 0
         new_call.status = "Success"
         new_call.fecha_llamada = datetime.now()
@@ -26,8 +26,8 @@ def create_call(data):
         new_call.scheduled = 0
         try: 
             new_call.save()
-            data.update({"call_id": new_call.id})
+            request_data.update({"call_id": new_call.id})
             return data
         except Exception as e:
-            return data
-    return data
+            return request_data
+    return request_data
