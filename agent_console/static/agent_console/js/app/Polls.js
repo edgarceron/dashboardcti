@@ -16,6 +16,7 @@ class Polls {
                 if(result.success){
                     $('#nombrePollInput').val(result.nombres);
                     Polls.tercero = result.nit;
+                    console.log(Polls.tercero);
                     Polls.terceroValid = true;
                 }
                 else {
@@ -163,9 +164,10 @@ class Polls {
 
     static saveHeader(){
         var data = {};
+        console.log(Polls.tercero);
         data['campaign'] = Polls.campaign;
         data['tercero'] = Polls.tercero;
-        data['agente'] = Polls.agente;
+        data['agente'] = id_agent;
         data['call_id'] = Polls.call_id;
         data['data_llamada'] = Polls.data_llamada;
         var header_id = Polls.header;
