@@ -3,7 +3,7 @@ from datetime import datetime
 from agent_console.models import Calls, Campaign, Agent
 from campaigns.models import DataLlamada, CampaignForm
 
-def create_call(data : dict):
+def create_call(data):
     call_id = data.get('call_id')
     if call_id is None:
         data_llamada = DataLlamada.objects.get(pk=data.get("data_llamada"))
