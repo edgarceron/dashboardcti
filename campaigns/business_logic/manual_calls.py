@@ -27,7 +27,7 @@ def create_call(request_data):
         try: 
             new_call.save()
             request_data.update({"call_id": new_call.id})
-            return data
+            return request_data
         except Exception as e:
             return request_data
     return request_data
