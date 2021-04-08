@@ -30,3 +30,4 @@ def create_call(data):
             return data
         except Exception as e:
             return data
+    return data
