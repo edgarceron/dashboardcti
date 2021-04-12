@@ -5,9 +5,10 @@ from agent_console.models import Calls, Campaign, Agent
 from campaigns.models import DataLlamada, CampaignForm
 
 
-def create_call(request_data, answer_header_id):
+def create_call(request, answer_header_id):
     answer_header = AnswersHeader(answer_header_id)
     if answer_header.call_id is None:
+        request_data = request.data.copy()
         data_llamada = DataLlamada.objects.get(pk=request_data.get("data_llamada"))
         campaign_form = CampaignForm.objects.get(pk=request_data.get("campaign"))
         new_call = Calls()
