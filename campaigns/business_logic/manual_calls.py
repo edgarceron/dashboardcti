@@ -29,4 +29,6 @@ def create_call(request, answer_header_id):
         new_call.scheduled = 0
         new_call.save()
         answer_header.call_id = new_call.id
+        answer_header.campaign = campaign_form
+        answer_header.data_llamada = data_llamada
         answer_header.save()
