@@ -6,7 +6,7 @@ from campaigns.models import DataLlamada, CampaignForm
 
 
 def create_call(request, answer_header_id):
-    answer_header = AnswersHeader(answer_header_id)
+    answer_header = AnswersHeader.objects.get(answer_header_id)
     if answer_header.call_id is None:
         request_data = request.data.copy()
         data_llamada = DataLlamada.objects.get(pk=request_data.get("data_llamada"))
@@ -26,6 +26,7 @@ def create_call(request, answer_header_id):
         new_call.date_end = datetime.today()
         new_call.time_init = datetime.now()
         new_call.time_end = datetime.now()
+        new_call.datetime_entry_queue = datetime.today()
         new_call.scheduled = 0
         new_call.save()
         answer_header.call_id = new_call.id
