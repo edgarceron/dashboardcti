@@ -74,9 +74,12 @@ def upload_calls_campaign(request):
 @api_view(['POST'])
 def add_header(request):
     """Tries to create a header and returns the result"""
-    operation = manual_calls.create_call
     crud_object = Crud(AnswersHeaderSerializer, AnswersHeader)
-    return crud_object.add(request, 'add_header')
+    response = crud_object.add(request, 'add_header')
+    data = response.data
+    answer_header_id = data["id"]
+    manual_calls.create_call(request, answer_header_id)
+    return response
 
 @api_view(['POST'])
 def replace_header(request, header_id):
