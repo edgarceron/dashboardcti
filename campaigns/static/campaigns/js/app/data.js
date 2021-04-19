@@ -56,7 +56,7 @@ function createConfig(question){
                         });
                         //get the current items value
                         var currentValue = dataset.data[tooltipItem.index];
-                        var percentage = Math.floor(((currentValue/total) * 100)+0.5);
+                        var percentage = ((currentValue/total) * 100).toFixed(2)+"%";;
                         return label + ": " + percentage + "% (" + currentValue + ")";
                     }
                 }

@@ -52,7 +52,7 @@ $( document ).ready(function() {
     standard = new StandardCrud(urls);
 
     setInterval(function(){
-        getTurnos();
+        location.reload(); 
     }, 60000);
 
 })
