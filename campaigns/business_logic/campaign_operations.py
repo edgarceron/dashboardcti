@@ -1,12 +1,13 @@
 """Contains crud extra operations for campaigns app"""
 import csv
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from users.permission_validation import PermissionValidation
 from consolidacion.serializers import ConsolidacionFileUploadsSerializer
 from agent_console.models import Calls, Campaign
 from campaigns.serializers import DataLlamadaSerializar
-from campaigns.models import CampaignForm, AnswersHeader, Question, AnswersBody, Answer
+from campaigns.models import CampaignForm, AnswersHeader, Question, AnswersBody, Answer, DataLlamada
 from campaigns.business_logic import show_results, fail_management
 import json
 
@@ -19,13 +20,7 @@ def upload_calls_campaign(request):
         id_campaign = data['id']
         campaign = get_campaign(id_campaign)
         if campaign.type_campaign == 2:
-            return Response(
-                {
-                    "success":False, 
-                    "message": "No se pueden agragar datos para una campaña entrante"},
-                status=status.HTTP_400_BAD_REQUEST,
-                content_type='application/json'
-            )
+            return error_outbound_campaign()
         del data['id']
         message = "Error al intentar guardar el archivo"
         file_serializer = ConsolidacionFileUploadsSerializer(data=data)
@@ -55,21 +50,19 @@ def upload_calls_campaign(request):
                     else:
                         fails.append(';'.join(row))
                     line += 1
-            return Response(
-                {
-                    "success":True,
-                    "message": "Archivo subido correctamente",
-                    "fails": fails
-                },
-                status=status.HTTP_201_CREATED,
-                content_type='application/json'
-            )
-        return Response(
-            {"success":False, "message": message},
-            status=status.HTTP_400_BAD_REQUEST,
-            content_type='application/json'
-        )
+            return ok_response_upload(fails)
+        return error_respose_upload()
     return permission_obj.error_response_webservice(validation, request)
+
+def error_outbound_campaign():
+    return Response(
+        {
+            "success":False, 
+            "message": "No se pueden agragar datos para una campaña entrante"
+        },
+        status=status.HTTP_400_BAD_REQUEST,
+        content_type='application/json'
+    )
 
 def get_campaign(id_campaign):
     try:
@@ -225,3 +218,111 @@ def fail_prepare_polls(request):
             content_type='application/json'
         )
     return permission_obj.error_response_webservice(validation, request)
+
+def new_upload_calls_campaign(request):
+    """Creates the data for making manual calls from a file"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('new_upload_calls_campaign')
+    if validation['status']:
+        data = request.data.copy()
+        id_campaign = data['id']
+        campaign = get_campaign(id_campaign)
+        if campaign.type_campaign == 2:
+            return error_outbound_campaign()
+        del data['id']
+        
+        file_serializer = ConsolidacionFileUploadsSerializer(data=data)
+        if file_serializer.is_valid():
+            file_serializer.save()
+            file_name = file_serializer.data['file']
+            fails = go_through_file(file_name, campaign)
+            return ok_response_upload(fails)
+        return error_respose_upload()
+    return permission_obj.error_response_webservice(validation, request)
+
+def go_through_file(file_name, campaign):
+    fails = ""
+    with open(file_name, newline='', encoding='latin-1') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
+        line = 1
+        for row in spamreader:
+            data = obtain_data_from_row(row)
+            data_llamada = DataLlamadaSerializar(data=data)
+            if data_llamada.is_valid():
+                campaign_isabel = campaign.isabel_campaign
+                model_data_llamada = data_llamada.save()
+                answer_header = create_answer_header(campaign, None, model_data_llamada)
+                answer_header.save()
+            else:
+                fails.append(';'.join(row))
+            line += 1
+    return fails
+
+def ok_response_upload(fails):
+    return Response(
+        {
+            "success":True,
+            "message": "Archivo subido correctamente",
+            "fails": fails
+        },
+        status=status.HTTP_201_CREATED,
+        content_type='application/json'
+    )
+
+def error_respose_upload():
+    message = "Error al intentar guardar el archivo"
+    return Response(
+        {"success":False, "message": message},
+        status=status.HTTP_400_BAD_REQUEST,
+        content_type='application/json'
+    )
+
+def detect_peding_calls(campaign):
+    isabel_campaign = Campaign.objects.get(pk=campaign.isabel_campaign)
+    retries = isabel_campaign.retries
+    pending_calls = Calls.objects.filter(id_campaign=isabel_campaign.id, Q(retries_lt=retries) | Q(status="Placing") )
+    return pending_calls
+
+def process_more_calls(request):
+    validation = permission_obj.validate('process_more_calls')
+    if validation['status']:
+        data = request.data
+        id_campaign = data['id_campaign']
+        simmultaneous = data['simmultaneous']
+        campaign = CampaignForm.objects.get(pk=id_campaign)
+        putted, pending_headers = put_more_calls(campaign, simmultaneous)
+        return Response(
+            {
+                "success":True,
+                "fails": putted,
+                "pending_headers": pending_headers - putted
+            },
+            status=status.HTTP_200_OK,
+            content_type='application/json'
+        )
+    return permission_obj.error_response_webservice(validation, request)
+
+def put_more_calls(campaign, simmultaneous):
+    isabel_campaign = Campaign.objects.get(pk=campaign.isabel_campaign)
+    pending_calls = detect_peding_calls(campaign)
+    calls_to_put = simmultaneous - pedingcalls.count()
+    headers = AnswersHeader.objects.filter(campaign=campaign.id, call_id=None)
+    pending_headers = headers.count()
+    putted = 0
+    for header in headers:
+        if calls_to_put > 0:
+            phone = get_phone(header.data_llamada)
+            create_call(phone, isabel_campaign)
+            calls_to_put-=1
+            putted+=1
+        else:
+            break
+    return putted, pending_headers
+
+
+def get_phone(data_llamada_id):
+    try:
+        data_llamada = DataLlamada.objects.get(pk=data_llamada_id)
+        return data_llamada.telefono
+    except DataLlamada.DoesNotExist:
+        return None

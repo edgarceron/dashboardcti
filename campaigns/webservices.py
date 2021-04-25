@@ -21,6 +21,11 @@ def get_actions():
         {"name": "add_data_llamada", "label": "Webservice para crear los datos de un usuario en llamada para encuesta"},
         {"name": "replace_data_llamada", "label": "Webservice actualizar los datos de un usuario en llamada para encuesta"},
         {"name": "fail_prepare_polls", "label": "Webservice crear nuevas llamadas a partir de las encuentas fallidas"},
+        {"name": "process_more_calls", "label": "Webservice para encolar más llamadas"},
+        {
+            "name": "new_upload_calls_campaign",
+            "label": "Webservice para subir los datos y crear una marcación manual"
+        },
     ]
     return actions
 
@@ -72,6 +77,11 @@ def upload_calls_campaign(request):
     return campaign_operations.upload_calls_campaign(request)
 
 @api_view(['POST'])
+def new_upload_calls_campaign(request):
+    """Uploads the calls for the campaign"""
+    return campaign_operations.new_upload_calls_campaign(request)
+
+@api_view(['POST'])
 def add_header(request):
     """Tries to create a header and returns the result"""
     crud_object = Crud(AnswersHeaderSerializer, AnswersHeader)
@@ -114,3 +124,8 @@ def data_chart(request):
 def fail_prepare_polls(request):
     """Create new Header for failed AnswerHeaders in a given date range"""
     return campaign_operations.fail_prepare_polls(request)
+
+@api_view(['POST'])
+def process_more_calls(request):
+    """Create new Header for failed AnswerHeaders in a given date range"""
+    return campaign_operations.process_more_calls(request)

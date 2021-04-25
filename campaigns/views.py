@@ -15,6 +15,7 @@ def get_actions():
         {"name": "download_poll_answers", "label": "Descargar datos de campaña"},
         {"name": "download_fails_polls", "label": "Descargar datos de encuestas fallidas"},
         {"name": "data_campaign", "label": "Pagina ver datos de la campaña"},
+        {"name": "campaign_launcher", "label": "Pagina para lanzar campaña semi-automatica"},
     ]
     return actions
 
@@ -113,6 +114,21 @@ def data_campaign(request, campaign_id):
             {
                 'id':campaign_id,
                 'campaign_name':campaign.name,
+                'username': permission_obj.user.name
+            }
+        )
+    return permission_obj.error_response_view(validation, request)
+
+def campaign_launcher(request):
+    """Shows the view for campaign data"""
+    permission_obj = PermissionValidation(request)
+    validation = permission_obj.validate('campaign_launcher')
+    if validation['status']:
+        campaign = CampaignForm.objects.get(id=campaign_id)
+        return render(
+            request,
+            'campaigns/campaign_launcher.html',
+            {
                 'username': permission_obj.user.name
             }
         )

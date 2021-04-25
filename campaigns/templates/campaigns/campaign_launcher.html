@@ -1,0 +1,71 @@
+{% extends 'maingui/index.html' %}
+{% load static %}
+{% block title %}
+    Subir datos de contacto
+{% endblock %}
+{% block topTitle %}
+    Subir datos de contacto
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-11">
+            <form action="" class="needs-validation w-100" novalidate>
+                
+                <div class='col-md-6'>
+                    <div class="form-group">
+                        <label for='campaignInput'>Campaña</label>
+                        <select class='form-control' id='campaignInput'>
+                            <option value="">Escoja una opción</option>
+                        </select>
+                        <div class='valid-feedback' id='campaignValid'>Correcto.</div>
+                        <div class='invalid-feedback' id = 'campaignInvalid'>Debe ingresar una campaña.</div>
+                    </div>
+                </div>    
+
+                <div class='col-md-6'>
+                    <div class='form-group'>
+                        <label for='concurrentInput'>Llamadas salientes simultaneas</label>
+                        <select class="form-control" id="concurrentInput">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='col-md-6'>
+                        <div class='form-group'>
+                            <button type="button" class="btn btn-primary" id="startButton">Iniciar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-1">
+            <div class="spinner-border d-none" role="status" id="spiner">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascript %}
+    <script src='{% static "maingui/js/app/FormFunctions.js" %}'></script>
+    <script src="{% static 'maingui/js/app/StandardCrud.js' %}"></script> 
+    <script src="{% static 'maingui/vendor/bootsrap-select/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'campaigns/js/app/upload_data.js' %}"></script> 
+
+    <script>
+        $( document ).ready(function() {
+            upload_url = "{% url 'new_upload_calls_campaign' %}";
+        });
+    </script>
+{% endblock %}

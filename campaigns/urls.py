@@ -28,11 +28,13 @@ urlpatterns = [
     path('delete/<int:campaign_id>', webservices.delete_campaign, name='delete_campaign'),
     path('toggle/<int:campaign_id>', webservices.toggle_campaign, name='toggle_campaign'),
     path('upload_calls_campaign', webservices.upload_calls_campaign, name='upload_calls_campaign'),
+    path('new_upload_calls_campaign', webservices.new_upload_calls_campaign, name='new_upload_calls_campaign'),
     path('add_header', webservices.add_header, name='add_header'),
     path('replace_header/<int:header_id>', webservices.replace_header, name='replace_header'),
     path('save_answers/<int:header_id>', webservices.save_answers, name='save_answers'),
     path('add_data_llamada', webservices.add_data_llamada, name='add_data_llamada'),
     path('data_chart_campaign', webservices.data_chart, name='data_chart_campaign'),
+    path('process_more_calls', webservices.process_more_calls, name='process_more_calls'),
     path(
         'replace_data_llamada/<int:data_llamada_id>',
         webservices.replace_data_llamada,
