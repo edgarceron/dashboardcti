@@ -280,7 +280,7 @@ def error_respose_upload():
 def detect_peding_calls(campaign):
     isabel_campaign = Campaign.objects.get(pk=campaign.isabel_campaign)
     retries = isabel_campaign.retries
-    pending_calls = Calls.objects.filter(id_campaign=isabel_campaign.id, Q(retries_lt=retries) | Q(status="Placing") )
+    pending_calls = Calls.objects.filter(id_campaign=isabel_campaign.id, (Q(retries_lt=retries) | Q(status="Placing")) )
     return pending_calls
 
 def process_more_calls(request):
