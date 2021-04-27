@@ -24,8 +24,8 @@
 
                 <div class='col-md-6'>
                     <div class='form-group'>
-                        <label for='concurrentInput'>Llamadas salientes simultaneas</label>
-                        <select class="form-control" id="concurrentInput">
+                        <label for='simmultaneousInput'>Llamadas salientes simultaneas</label>
+                        <select class="form-control" id="simmultaneousInput">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -44,6 +44,9 @@
                     <div class='col-md-6'>
                         <div class='form-group'>
                             <button type="button" class="btn btn-primary" id="startButton">Iniciar</button>
+                        </div>
+                        <div class='form-group'>
+                            <button type="button" class="btn btn-primary" id="stopButton">Detener</button>
                         </div>
                     </div>
                 </div>
@@ -65,7 +68,9 @@
 
     <script>
         $( document ).ready(function() {
-            upload_url = "{% url 'new_upload_calls_campaign' %}";
+            process_more_calls_url = "{% url 'process_more_calls' %}";
+            picker_search_campaign_manticore_url = "{% url 'picker_search_campaign_manticore' %}";
         });
     </script>
+    <script src="{% static 'campaigns/js/app/campaign_launcher.js' %}"></script>
 {% endblock %}
