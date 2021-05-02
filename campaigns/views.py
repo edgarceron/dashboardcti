@@ -124,7 +124,6 @@ def campaign_launcher(request):
     permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('campaign_launcher')
     if validation['status']:
-        campaign = CampaignForm.objects.get(id=campaign_id)
         return render(
             request,
             'campaigns/campaign_launcher.html',
