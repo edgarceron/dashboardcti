@@ -307,9 +307,11 @@ def process_more_calls(request):
         except CampaignForm.DoesNotExist:
             response_data["success"] = False
             response_data["message"] = "La campaña fue borrada, actualice esta pagina"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         except ValueError:
             response_data["success"] = False
             response_data["message"] = "Seleccione una campaña"
+            status_code=status.HTTP_400_BAD_REQUEST
         
         return Response(
             response_data,
