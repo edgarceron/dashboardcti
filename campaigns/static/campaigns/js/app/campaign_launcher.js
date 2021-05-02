@@ -18,8 +18,8 @@ function processMoreCalls(){
         'complete': function(){
             waitForProcess();
         },
-        'error': function(result){
-            console.log(result);
+        'error': function(request){
+            let result = request.responseJSON;
             if(result.message) SoftNotification.show(result.message, "danger");
             else SoftNotification.show(result.message, "danger");
         }
