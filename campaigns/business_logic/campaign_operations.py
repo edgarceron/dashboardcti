@@ -284,6 +284,7 @@ def detect_peding_calls(campaign):
     return pending_calls
 
 def process_more_calls(request):
+    permission_obj = PermissionValidation(request)
     validation = permission_obj.validate('process_more_calls')
     if validation['status']:
         data = request.data
