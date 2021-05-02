@@ -292,34 +292,47 @@ def process_more_calls(request):
         simmultaneous = data['simmultaneous']
         campaign = CampaignForm.objects.get(pk=id_campaign)
         putted, pending_headers = put_more_calls(campaign, simmultaneous)
+        response_data = {}
+        if id_campaign == "":
+            response_data["success"] = False
+            response_data["message"] = "Seleccione una campaña"
+            status_code=status.HTTP_400_BAD_REQUEST
+        elif putted is None:
+            response_data["success"] = False
+            response_data["message"] = "La campaña en isabel fue borrada o no esta bien asignada"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        else: 
+            response_data["success"] = True
+            response_data["fails"] = putted
+            response_data["pending_headers"] = pending_headers - putted
+            status_code=status.HTTP_200_OK
+
         return Response(
-            {
-                "success":True,
-                "fails": putted,
-                "pending_headers": pending_headers - putted
-            },
-            status=status.HTTP_200_OK,
+            response_data
+            status=status_code,
             content_type='application/json'
         )
     return permission_obj.error_response_webservice(validation, request)
 
 def put_more_calls(campaign, simmultaneous):
-    isabel_campaign = Campaign.objects.get(pk=campaign.isabel_campaign)
-    pending_calls = detect_peding_calls(campaign)
-    calls_to_put = int(simmultaneous) - pending_calls.count()
-    headers = AnswersHeader.objects.filter(campaign=campaign.id, call_id=None)
-    pending_headers = headers.count()
-    putted = 0
-    for header in headers:
-        if calls_to_put > 0:
-            phone = get_phone(header.data_llamada)
-            create_call(phone, isabel_campaign)
-            calls_to_put-=1
-            putted+=1
-        else:
-            break
-    return putted, pending_headers
-
+    try:
+        isabel_campaign = Campaign.objects.get(pk=campaign.isabel_campaign)
+        pending_calls = detect_peding_calls(campaign)
+        calls_to_put = int(simmultaneous) - pending_calls.count()
+        headers = AnswersHeader.objects.filter(campaign=campaign.id, call_id=None)
+        pending_headers = headers.count()
+        putted = 0
+        for header in headers:
+            if calls_to_put > 0:
+                phone = get_phone(header.data_llamada)
+                create_call(phone, isabel_campaign)
+                calls_to_put-=1
+                putted+=1
+            else:
+                break
+        return putted, pending_headers
+    except Campaign.DoesNotExist:
+        return None, None
 
 def get_phone(data_llamada_id):
     try:
