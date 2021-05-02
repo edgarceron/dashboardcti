@@ -18,7 +18,11 @@ function processMoreCalls(){
         'complete': function(){
             waitForProcess();
         },
-        'error': standard.standardError
+        'error': function(result){
+            console.log(result);
+            if(result.message) SoftNotification.show(result.message, "danger");
+            else SoftNotification.show(result.message, "danger");
+        }
     }
     standard.makePetition(getValues(), 'process_more_calls_url', ajaxFunctions);
 }
