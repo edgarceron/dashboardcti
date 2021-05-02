@@ -290,23 +290,27 @@ def process_more_calls(request):
         data = request.data
         id_campaign = data['id_campaign']
         simmultaneous = data['simmultaneous']
-        campaign = CampaignForm.objects.get(pk=id_campaign)
-        putted, pending_headers = put_more_calls(campaign, simmultaneous)
         response_data = {}
-        if id_campaign == "":
+        try:
+            campaign = CampaignForm.objects.get(pk=id_campaign)
+            putted, pending_headers = put_more_calls(campaign, simmultaneous)
+            if putted is None:
+                response_data["success"] = False
+                response_data["message"] = "La campaña en isabel fue borrada o no esta bien asignada"
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            else: 
+                response_data["success"] = True
+                response_data["fails"] = putted
+                response_data["pending_headers"] = pending_headers - putted
+                status_code=status.HTTP_200_OK
+
+        except CampaignForm.DoesNotExist:
+            response_data["success"] = False
+            response_data["message"] = "La campaña fue borrada, actualice esta pagina"
+        except ValueError:
             response_data["success"] = False
             response_data["message"] = "Seleccione una campaña"
-            status_code=status.HTTP_400_BAD_REQUEST
-        elif putted is None:
-            response_data["success"] = False
-            response_data["message"] = "La campaña en isabel fue borrada o no esta bien asignada"
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-        else: 
-            response_data["success"] = True
-            response_data["fails"] = putted
-            response_data["pending_headers"] = pending_headers - putted
-            status_code=status.HTTP_200_OK
-
+        
         return Response(
             response_data,
             status=status_code,
