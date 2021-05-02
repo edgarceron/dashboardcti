@@ -306,7 +306,7 @@ def process_more_calls(request):
 def put_more_calls(campaign, simmultaneous):
     isabel_campaign = Campaign.objects.get(pk=campaign.isabel_campaign)
     pending_calls = detect_peding_calls(campaign)
-    calls_to_put = simmultaneous - pending_calls.count()
+    calls_to_put = int(simmultaneous) - pending_calls.count()
     headers = AnswersHeader.objects.filter(campaign=campaign.id, call_id=None)
     pending_headers = headers.count()
     putted = 0
