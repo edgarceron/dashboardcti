@@ -20,6 +20,7 @@ urlpatterns = [
         views.download_fails_polls,
         name='download_fails_polls'),
     path('data_campaign/<int:campaign_id>', views.data_campaign, name='data_campaign'),
+    path('campaign_launcher', views.campaign_launcher, name='campaign_launcher'),
     path('add', webservices.add_campaign, name='add_campaign'),
     path('replace/<int:campaign_id>', webservices.replace_campaign, name='replace_campaign'),
     path('picker_search', webservices.picker_search_campaign, name='picker_search_campaign_manticore'),
