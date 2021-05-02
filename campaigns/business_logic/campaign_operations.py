@@ -308,7 +308,7 @@ def process_more_calls(request):
             status_code=status.HTTP_200_OK
 
         return Response(
-            response_data
+            response_data,
             status=status_code,
             content_type='application/json'
         )
